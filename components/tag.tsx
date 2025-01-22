@@ -1,4 +1,5 @@
-import { Icon, IconName } from './icon';
+import type { IconName } from './icon';
+import { Icon } from './icon';
 
 const baseClasses = {
   wrapperClasses:
@@ -16,9 +17,15 @@ export default function Tag({
   iconLeft,
   iconRight,
   title,
-  onClick = () => {},
-  onClickIconLeft = () => {},
-  onClickIconRight = () => {},
+  onClick = () => {
+    return;
+  },
+  onClickIconLeft = () => {
+    return;
+  },
+  onClickIconRight = () => {
+    return;
+  },
 }: {
   wrapperClasses?: string;
   titleClasses?: string;

@@ -1,6 +1,6 @@
+import { createPortal } from 'react-dom';
 import Button from './button';
 import { Icon } from './icon';
-import { createPortal } from 'react-dom';
 
 export default function Modal({
   backdropClasses = 'fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50',
