@@ -1,5 +1,4 @@
-import type { IconName } from './icon';
-import { Icon } from './icon';
+import { Icon, type IconifyIcon } from '@iconify-icon/react';
 
 const baseClasses = {
   wrapperClasses:
@@ -31,8 +30,8 @@ export default function Tag({
   titleClasses?: string;
   iconLeftClasses?: string;
   iconRightClasses?: string;
-  iconLeft?: IconName;
-  iconRight?: IconName;
+  iconLeft?: IconifyIcon | string;
+  iconRight?: IconifyIcon | string;
   title: string;
   onClick?: () => void;
   onClickIconLeft?: () => void;
@@ -40,9 +39,9 @@ export default function Tag({
 }) {
   return (
     <div className={wrapperClasses} onClick={onClick}>
-      {iconLeft && <Icon name={iconLeft} className={iconLeftClasses} onClick={onClickIconLeft} />}
+      {iconLeft && <Icon icon={iconLeft} className={iconLeftClasses} onClick={onClickIconLeft} />}
       <div className={titleClasses}>{title}</div>
-      {iconRight && <Icon name={iconRight} className={iconRightClasses} onClick={onClickIconRight} />}
+      {iconRight && <Icon icon={iconRight} className={iconRightClasses} onClick={onClickIconRight} />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
+import type { IconifyIcon } from '@iconify-icon/react';
+import { Icon } from '@iconify-icon/react';
 import type { MouseEvent } from 'react';
-import type { IconName } from './icon';
-import { Icon } from './icon';
 import LoadingIndicator from './loadingIndicator';
 
 const baseClasses = {
@@ -68,8 +68,8 @@ export default function Button({
   variant: 'primary' | 'secondary' | 'error' | 'alert' | 'active-secondary';
   label: string;
   loading?: boolean;
-  iconLeft?: IconName;
-  iconRight?: IconName;
+  iconLeft?: IconifyIcon;
+  iconRight?: IconifyIcon;
   onClick: (e: MouseEvent) => Promise<void> | void;
 }) {
   const classes = [classesBase, className];
@@ -98,9 +98,9 @@ export default function Button({
   }
   return (
     <button onClick={async (e) => await onClick(e)} className={classes.join(' ')} disabled={disabled} type={type}>
-      {iconLeft && <Icon className={iconLeftClasses} name={iconLeft} />}
+      {iconLeft && <Icon className={iconLeftClasses} icon={iconLeft} />}
       {label && <span>{label}</span>}
-      {iconRight && <Icon className={iconRightClasses} name={iconRight} />}
+      {iconRight && <Icon className={iconRightClasses} icon={iconRight} />}
       {loading && <LoadingIndicator className={loadingClasses.join(' ')} />}
     </button>
   );
