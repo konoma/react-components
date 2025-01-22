@@ -1,5 +1,6 @@
 {
   "name": "react-components",
+  "packageManager": "yarn@4.6.0",
   "version": "0.0.1",
   "main": "index.js",
   "repository": "git@github.com:konoma/react-components.git",
