@@ -1,6 +1,7 @@
 import { Icon } from '@iconify-icon/react';
 import { useRef } from 'react';
 import { IMaskInput } from 'react-imask';
+
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -90,6 +91,7 @@ export default function Input<DataType>({
       <div className="relative">
         {mask ? (
           <IMaskInput
+            // @ts-expect-error - The type of the "mask" property makes absolutely no sense and is not properly documented anywhere
             mask={mask}
             radix="."
             unmask={true}

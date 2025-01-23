@@ -1,6 +1,7 @@
 import type { IconifyIcon } from '@iconify-icon/react';
 import { Icon } from '@iconify-icon/react';
 import type { MouseEvent } from 'react';
+
 import LoadingIndicator from './loadingIndicator';
 
 const baseClasses = {

@@ -3,6 +3,7 @@ import type { Identifier, XYCoord } from 'dnd-core';
 import type { JSX } from 'react';
 import { useContext, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+
 import Input from '../form/input';
 import { FilterContext } from './FilterContext';
 import type { TableColumn } from './table';

@@ -1,6 +1,7 @@
 import { Icon } from '@iconify-icon/react';
 import { Resizable } from 're-resizable';
 import { useMemo, useRef, useState } from 'react';
+
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {

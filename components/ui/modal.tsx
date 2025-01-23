@@ -1,5 +1,6 @@
 import { Icon } from '@iconify-icon/react';
 import { createPortal } from 'react-dom';
+
 import Button from './button';
 
 export default function Modal({

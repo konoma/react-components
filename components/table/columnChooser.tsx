@@ -1,5 +1,6 @@
 import type { ExtendedRefs, FloatingContext } from '@floating-ui/react';
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
+
 import ColumnChooserEntry from './columnChooserEntry';
 import type { TableColumn } from './table';
 

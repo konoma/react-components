@@ -1,7 +1,7 @@
+import { useId } from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import { useId } from 'react';
 import type { Classes, FormFieldProps, FormValue, Option } from './types';
 
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';

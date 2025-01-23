@@ -2,18 +2,17 @@
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "always",
-    "source.organizeImports": "always",
-    "source.addMissingImports.ts": "always"
+    "source.organizeImports": "never",
+    "source.addMissingImports.ts": "always",
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "editor.indentSize": 2,
   "search.exclude": {
     "**/.yarn": true,
-    "**/.pnp.*": true
+    "**/.pnp.*": true,
+    "**/node_modules": true
   },
-  "eslint.nodePath": ".yarn/sdks",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.tsdk": "node_modules/typescript/lib",
 }

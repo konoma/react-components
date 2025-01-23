@@ -1,5 +1,6 @@
 import { Icon } from '@iconify-icon/react';
 import { useEffect, useRef } from 'react';
+
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {

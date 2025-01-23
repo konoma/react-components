@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "arcanis.vscode-zipfs",
-    "dbaeumer.vscode-eslint",
-    "antfu.iconify"
-  ]
+  "recommendations": ["arcanis.vscode-zipfs", "dbaeumer.vscode-eslint", "antfu.iconify"]
 }

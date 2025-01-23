@@ -1,5 +1,6 @@
 import type { JSX } from 'react';
 import { useMemo, useRef } from 'react';
+
 import type { ColumnClasses } from './column';
 import { FilterContext } from './FilterContext';
 import type { PaginationClasses } from './pagination';
