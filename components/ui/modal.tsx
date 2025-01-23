@@ -40,57 +40,61 @@ export default function Modal({
   hasCloseIcon?: boolean;
   onClose: () => void;
 }) {
-  return createPortal(
-    <div className={backdropClasses} onMouseDown={onClose} role="presentation">
-      <div
-        role="presentation"
-        className={contentClasses}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        {/* TODO: Handle close and header simultaneously */}
-        {hasCloseIcon && (
-          <div className={closeWrapperClasses}>
-            <button onClick={onClose}>
-              <Icon icon="heroicons:x-mark-16-solid" className={iconClasses} />
-            </button>
-          </div>
-        )}
-        {headerContent ||
-          (title ? (
-            <div className={headerWrapperClasses}>
-              <span className={titleClasses}>{title}</span>
-            </div>
-          ) : null)}
-        <div className="grow">{children}</div>
-        {footerContent ||
-          (footerActions && (
-            <>
-              <div className={footerWrapperClasses}>
-                <div className={footerLeftClasses}>
-                  {footerActions
-                    .filter(({ position }) => position === 'left')
-                    .map(({ label, variant, onClick }, i) => (
-                      <div key={i}>
-                        <Button variant={variant ?? 'primary'} onClick={onClick} label={label} />
-                      </div>
-                    ))}
-                </div>
-                <div className={footerRightClasses}>
-                  {footerActions
-                    .filter(({ position }) => position === 'right')
-                    .map(({ variant, ...buttonProps }, i) => (
-                      <div key={i}>
-                        <Button variant={variant ?? 'secondary'} {...buttonProps} />
-                      </div>
-                    ))}
-                </div>
+  return (
+    <>
+      {createPortal(
+        <div className={backdropClasses} onMouseDown={onClose} role="presentation">
+          <div
+            role="presentation"
+            className={contentClasses}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {/* TODO: Handle close and header simultaneously */}
+            {hasCloseIcon && (
+              <div className={closeWrapperClasses}>
+                <button onClick={onClose}>
+                  <Icon icon="heroicons:x-mark-16-solid" className={iconClasses} />
+                </button>
               </div>
-            </>
-          ))}
-      </div>
-    </div>,
-    document.body
+            )}
+            {headerContent ||
+              (title ? (
+                <div className={headerWrapperClasses}>
+                  <span className={titleClasses}>{title}</span>
+                </div>
+              ) : null)}
+            <div className="grow">{children}</div>
+            {footerContent ||
+              (footerActions && (
+                <>
+                  <div className={footerWrapperClasses}>
+                    <div className={footerLeftClasses}>
+                      {footerActions
+                        .filter(({ position }) => position === 'left')
+                        .map(({ label, variant, onClick }, i) => (
+                          <div key={i}>
+                            <Button variant={variant ?? 'primary'} onClick={onClick} label={label} />
+                          </div>
+                        ))}
+                    </div>
+                    <div className={footerRightClasses}>
+                      {footerActions
+                        .filter(({ position }) => position === 'right')
+                        .map(({ variant, ...buttonProps }, i) => (
+                          <div key={i}>
+                            <Button variant={variant ?? 'secondary'} {...buttonProps} />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </>
+              ))}
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

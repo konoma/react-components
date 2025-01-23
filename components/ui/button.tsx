@@ -71,7 +71,7 @@ export default function Button({
   loading?: boolean;
   iconLeft?: IconifyIcon;
   iconRight?: IconifyIcon;
-  onClick: (e: MouseEvent) => Promise<void> | void;
+  onClick?: (e: MouseEvent) => Promise<void> | void;
 }) {
   const classes = [classesBase, className];
   const loadingClasses = [loadingClassesBase];
@@ -98,7 +98,7 @@ export default function Button({
       break;
   }
   return (
-    <button onClick={async (e) => await onClick(e)} className={classes.join(' ')} disabled={disabled} type={type}>
+    <button onClick={async (e) => await onClick?.(e)} className={classes.join(' ')} disabled={disabled} type={type}>
       {iconLeft && <Icon className={iconLeftClasses} icon={iconLeft} />}
       {label && <span>{label}</span>}
       {iconRight && <Icon className={iconRightClasses} icon={iconRight} />}
