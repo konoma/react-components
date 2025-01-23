@@ -25,6 +25,7 @@ export default function TagList<DataType>({
   error,
   required,
   values,
+  addTagTitle = '',
   onChange = () => {
     return;
   },
@@ -51,7 +52,7 @@ export default function TagList<DataType>({
           <Tag key={i} title={value.toString()} onClick={() => onChange(value)} iconRight="heroicons:x-mark-16-solid" />
         ))}
         <Tag
-          title="Tag hinzufügen"
+          title={addTagTitle}
           iconLeft="heroicons:plus-16-solid"
           wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-xl border border-secondary-300 px-3 py-1 bg-white"
           onClick={() => onChange('')}

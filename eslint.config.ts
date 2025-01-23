@@ -38,6 +38,7 @@ export default [
     },
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
+      // 'i18next/no-literal-string': ['error', { mode: 'all' }],
       'i18next/no-literal-string': ['error'],
       'sort-imports': 'off',
     },

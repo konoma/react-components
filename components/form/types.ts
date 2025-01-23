@@ -98,6 +98,7 @@ export interface FormFieldProps<DataType> extends Classes {
   placeholder?: string;
   required?: boolean;
   resizeIcon?: IconifyIcon | string;
+  addTagTitle?: string;
   searchable?: boolean;
   textRight?: string;
   type?: HTMLInputTypeAttribute;
