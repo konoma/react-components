@@ -7,7 +7,6 @@ import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 
-import { peerDependencies } from './package.json';
 import { name } from './package.json';
 
 const app = async (): Promise<UserConfigExport> => {

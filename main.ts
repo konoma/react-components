@@ -11,6 +11,7 @@ import Select from './components/form/select';
 import TagList from './components/form/tagList';
 import TextArea from './components/form/textarea';
 import type { Classes, FormFieldProps, FormValue, Mask, Option } from './components/form/types';
+import * as validators from './components/form/validators';
 import Column from './components/table/column';
 import ColumnChooser from './components/table/columnChooser';
 import ColumnChooserEntry from './components/table/columnChooserEntry';
@@ -19,6 +20,7 @@ import type { TableColumn } from './components/table/table';
 import Table from './components/table/table';
 import TableActions from './components/table/tableActions';
 import Button from './components/ui/button';
+import Icon from './components/ui/icon';
 import LoadingIndicator from './components/ui/loadingIndicator';
 import Modal from './components/ui/modal';
 import Tabs from './components/ui/tabs';
@@ -36,6 +38,7 @@ export {
   FormField,
   FormFieldProps,
   FormValue,
+  Icon,
   Input,
   LoadingIndicator,
   Mask,
@@ -52,4 +55,5 @@ export {
   Tag,
   TagList,
   TextArea,
+  validators,
 };

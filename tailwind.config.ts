@@ -25,3 +25,5 @@ const config: Config = {
   plugins: [],
 };
 export default config;
+
+export const tailwindContent = config.content as string[];
