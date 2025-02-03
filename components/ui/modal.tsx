@@ -5,7 +5,7 @@ import Button from './button';
 
 export default function Modal({
   backdropClasses = 'fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50',
-  contentClasses = 'rounded-lg bg-white shadow-lg flex flex-col',
+  contentClasses = 'rounded-krc-modal bg-white shadow-lg flex flex-col',
   headerWrapperClasses = 'w-full h-16 px-6 bg-primary-900 rounded-t justify-start items-center flex',
   footerWrapperClasses = 'w-full pb-4 px-6 bg-white rounded-b justify-between items-center flex flex-row',
   footerLeftClasses = 'flex flex-row gap-4 justify-start',

@@ -2,7 +2,7 @@ import Tag from '../ui/tag';
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
-  classes: 'w-full flex flex-row gap-2 flex-wrap items-center rounded-3xl p-4 bg-white',
+  classes: 'w-full flex flex-row gap-2 flex-wrap items-center rounded-krc-tagList p-4 bg-white',
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   iconLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-secondary-300',
@@ -54,7 +54,7 @@ export default function TagList<DataType>({
         <Tag
           title={addTagTitle}
           iconLeft="heroicons:plus-16-solid"
-          wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-xl border border-secondary-300 px-3 py-1 bg-white"
+          wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-krc-tagListAdd border border-secondary-300 px-3 py-1 bg-white"
           onClick={() => onChange('')}
         />
       </div>

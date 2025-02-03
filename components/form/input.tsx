@@ -6,7 +6,7 @@ import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes:
-    'w-full h-10 rounded-3xl px-3 py-2 outline-none placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none ',
+    'w-full h-10 rounded-krc-input px-3 py-2 outline-none placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none ',
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   iconLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-secondary-300',

@@ -1,3 +1,5 @@
+import './tailwind.css';
+
 import Checkbox from './components/form/checkbox';
 import CheckboxList from './components/form/checkboxList';
 import Form from './components/form/form';

@@ -18,6 +18,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "exports": {
+    "./css": "./dist/style.css"
+  },
   "engines": {
     "node": ">=22.0.0"
   },
@@ -47,24 +50,27 @@
     "re-resizable": "^6.10.3",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-imask": "^7.6.1",
     "react-select": "^5.9.0",
     "rollup": "^4.31.0",
+    "tailwindcss": "^3.0.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0",
     "vite": "^6.0.11",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-dts": "^4.5.0"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-select": "^5.9.0",
-    "react-dnd": "^16.0.1",
-    "react-imask": "^7.6.1",
-    "re-resizable": "^6.10.3",
     "dnd-core": "^16.0.1",
+    "re-resizable": "^6.10.3",
+    "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
     "react-dnd-touch-backend": "^16.0.1",
+    "react-dom": "^19.0.0",
+    "react-imask": "^7.6.1",
+    "react-select": "^5.9.0",
     "tailwindcss": "^3.0.0"
   }
 }

@@ -1,37 +1,53 @@
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
+import react from '@vitejs/plugin-react';
+import tailwindcss from 'tailwindcss';
+import type { UserConfigExport } from 'vite';
 import { defineConfig } from 'vite';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { peerDependencies } from './package.json';
+import { name } from './package.json';
 
-export default defineConfig({
-  build: {
-    // sourcemap: 'inline',
-    lib: {
-      entry: resolve(__dirname, 'main.ts'),
-      name: 'Konoma React Components',
-      formats: ['es'],
-      // the proper extensions will be added
-      fileName: '@konoma/react-components',
-    },
-    rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ['react', 'react/jsx-runtime'],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          react: 'React',
-        },
+const app = async (): Promise<UserConfigExport> => {
+  const formattedName = name.match(/[^/]+$/)?.[0] ?? name;
+
+  return defineConfig({
+    plugins: [
+      react(),
+      dts({
+        insertTypesEntry: true,
+      }),
+      cssInjectedByJsPlugin(),
+    ],
+    css: {
+      postcss: {
+        plugins: [tailwindcss],
       },
     },
-  },
-  plugins: [
-    dts({
-      insertTypesEntry: true,
-    }),
-  ],
-});
+    build: {
+      lib: {
+        entry: path.resolve(__dirname, 'main.ts'),
+        name: formattedName,
+        formats: ['es'],
+        fileName: `@konoma/react-components`,
+      },
+      rollupOptions: {
+        external: [...Object.keys(peerDependencies)],
+        output: {
+          globals: {
+            react: 'React',
+            'react/jsx-runtime': 'react/jsx-runtime',
+            'react-dom': 'ReactDOM',
+            tailwindcss: 'tailwindcss',
+          },
+        },
+      },
+      target: 'esnext',
+      sourcemap: true,
+    },
+  });
+};
+// https://vitejs.dev/config/
+export default app;

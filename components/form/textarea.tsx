@@ -5,7 +5,7 @@ import { useMemo, useRef, useState } from 'react';
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
-  classes: 'w-full bg-white text-sm cursor-text rounded-2xl p-4 text-secondary-900',
+  classes: 'w-full bg-white text-sm cursor-text rounded-krc-textarea p-4 text-secondary-900',
   classesNeutral: 'border border-secondary-300 has-[:focus]:ring-2 hover:border-secondary-400 has-[:focus]:ring-primary-900',
   classesError: 'ring-error-500 ring-2',
   errorClasses: 'text-sm text-error-500',
@@ -16,7 +16,7 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   resizeIconClasses: 'h-4 w-4',
   controlClasses: 'h-full w-full resize-none focus-visible:outline-none disabled:pointer-events-none  disabled:bg-primary-50',
   labelWrapperClasses: 'flex flex-row justify-between',
-  classesDisabled: 'w-full text-sm rounded-2xl p-4 pointer-events-none bg-primary-50',
+  classesDisabled: 'w-full text-sm rounded-krc-textarea p-4 pointer-events-none bg-primary-50',
 };
 
 export default function Textarea<DataType>({

@@ -43,9 +43,9 @@ const baseClasses: ColumnClasses = {
   filterWrapperClasses: 'h-12 bg-secondary-100 px-4 pb-4 text-xs font-medium text-secondary-500',
   filterInputClasses: 'h-10',
   rowStaticClasses: 'bg-white border-b last:border-none',
-  firstColumnRowClasses: 'last:rounded-bl-2xl',
+  firstColumnRowClasses: 'last:rounded-bl-krc-table',
   intermediateColumnRowClasses: 'last:rounded-b-none',
-  lastColumnRowClasses: 'last:rounded-br-2xl',
+  lastColumnRowClasses: 'last:rounded-br-krc-table',
   rowHoveringClasses: 'bg-primary-200 border-b last:border-none',
   cellClasses: 'h-14 truncate p-4',
 };

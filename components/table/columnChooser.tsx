@@ -5,7 +5,7 @@ import ColumnChooserEntry from './columnChooserEntry';
 import type { TableColumn } from './table';
 
 const baseClasses = {
-  wrapperClasses: 'flex flex-col rounded-md bg-white px-4 py-3 shadow z-[1]',
+  wrapperClasses: 'flex flex-col rounded-krc-tableColumnChooser bg-white px-4 py-3 shadow z-[1]',
   headerClasses: 'h-8',
   columnsWrapperClasses: 'ml-2 mt-3 flex max-h-[25rem] flex-col gap-1 overflow-y-auto',
   entryClasses: 'cursor-pointer px-4 py-2 text-sm font-medium text-secondary-600',

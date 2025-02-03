@@ -6,7 +6,7 @@ import LoadingIndicator from './loadingIndicator';
 
 const baseClasses = {
   classesBase:
-    'w-full rounded-3xl py-2.5 px-3.5 h-10 text-sm font-semibold shadow inline-flex justify-center items-center flex flex-row gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:ring-0 disabled:bg-secondary-200 disabled:text-secondary-500',
+    'w-full rounded-krc-button py-2.5 px-3.5 h-10 text-sm font-semibold shadow inline-flex justify-center items-center flex flex-row gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:ring-0 disabled:bg-secondary-200 disabled:text-secondary-500',
   classesPrimary:
     'bg-primary-600 border border-primary-600 text-white hover:bg-primary-700 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',
   classesSecondary: 'bg-white border border-secondary-200 hover:bg-secondary-50 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2',

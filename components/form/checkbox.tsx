@@ -5,10 +5,10 @@ import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classesFilled:
-    'flex h-4 w-4 flex-row items-center justify-center rounded border border-primary-600 bg-primary-600 shadow outline-offset-2 group-hover:border-primary-700 group-hover:bg-primary-700',
+    'flex h-4 w-4 flex-row items-center justify-center rounded-krc-checkbox border border-primary-600 bg-primary-600 shadow outline-offset-2 group-hover:border-primary-700 group-hover:bg-primary-700',
   classesEmpty:
-    'flex flex-row items-center justify-center h-4 w-4 rounded border border-secondary-300 bg-white shadow outline-offset-2 outline-primary-800 group-hover:border-secondary-400 group-active:outline',
-  classesError: 'h-4 w-4 rounded border border-error-500 bg-error-100 shadow outline-offset-2',
+    'flex flex-row items-center justify-center h-4 w-4 rounded-krc-checkbox border border-secondary-300 bg-white shadow outline-offset-2 outline-primary-800 group-hover:border-secondary-400 group-active:outline',
+  classesError: 'h-4 w-4 rounded-krc-checkbox border border-error-500 bg-error-100 shadow outline-offset-2',
   labelClassesFilled: 'ml-2 text-sm font-medium text-secondary-900',
   labelClassesError: 'ml-2 text-sm font-medium text-error-600',
   labelClassesEmpty: 'ml-2 text-sm font-medium text-secondary-900',
@@ -77,7 +77,7 @@ export default function Checkbox<DataType>({
           ref={ref}
           type="checkbox"
           name={name as string}
-          className="h-0 w-0 appearance-none rounded-lg"
+          className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
@@ -96,7 +96,7 @@ export default function Checkbox<DataType>({
           type="checkbox"
           name={name as string}
           value={0}
-          className="h-0 w-0 appearance-none rounded-lg"
+          className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}

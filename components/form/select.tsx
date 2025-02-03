@@ -7,14 +7,14 @@ import type { Classes, FormFieldProps, FormValue, Option } from './types';
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
 
 const baseClasses: { [key in keyof Classes]: string } = {
-  classes: 'rounded-3xl h-10 py-0 border shadow-none',
+  classes: 'rounded-krc-select h-10 py-0 border shadow-none',
   errorClasses: 'text-sm text-error-500',
   labelClasses: 'text-sm font-medium text-secondary-900',
   labelWrapperClasses: 'group flex flex-col gap-1',
   classesNeutral: 'border-secondary-300 group-hover:border-secondary-400',
   classesError: 'ring-error-500 ring-2',
   focusClasses: 'ring-2 ring-primary-900',
-  controlClasses: 'h-8 rounded-3xl py-0 text-secondary-900 text-sm border-none outline-none',
+  controlClasses: 'h-8 rounded-krc-select py-0 text-secondary-900 text-sm border-none outline-none',
   optionClasses: 'bg-white text-sm',
   optionSelectedClasses: 'bg-primary-500 text-sm',
   optionFocusedClasses: 'bg-white hover:bg-primary-200 text-sm',

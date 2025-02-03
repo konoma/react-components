@@ -23,12 +23,12 @@ export interface TableColumn<DataType> {
 }
 
 const baseClasses = {
-  wrapperClasses: 'flex flex-col rounded-2xl border',
+  wrapperClasses: 'flex flex-col rounded-krc-table border',
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
-  columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-2xl last:rounded-tr-2xl',
-  columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-2xl last:rounded-tr-2xl',
-  columnsRightClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-2xl last:rounded-tr-2xl',
-  noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-2xl bg-white text-secondary-500 w-full',
+  columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-krc-table last:rounded-tr-krc-table',
+  columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
+  columnsRightClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-krc-table last:rounded-tr-krc-table',
+  noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full',
 };
 
 export default function Table<DataType>({
@@ -114,12 +114,12 @@ export default function Table<DataType>({
           gridAutoFlow: 'row',
           gridAutoRows: 'auto',
         }}
-        className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-2xl"
+        className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table"
         onScroll={onScroll}
       >
         <FilterContext.Provider value={{ filters, setFilters: updateFilters }}>
           {/* Header */}
-          <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-2xl bg-secondary-100">
+          <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-100">
             {!!currentColumnsLeft.length && (
               <div className="sticky left-0 flex flex-row">
                 {currentColumnsLeft.map((column) => (
@@ -129,7 +129,7 @@ export default function Table<DataType>({
                       minWidth: column.initialWidth,
                       maxWidth: column.initialWidth,
                     }}
-                    className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-2xl"
+                    className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table"
                   >
                     {column.title}
                   </div>
@@ -143,7 +143,7 @@ export default function Table<DataType>({
                   minWidth: column.initialWidth,
                   maxWidth: column.initialWidth,
                 }}
-                className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-2xl last:rounded-tr-2xl"
+                className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table last:rounded-tr-krc-table"
               >
                 {column.title}
               </div>
@@ -157,7 +157,7 @@ export default function Table<DataType>({
                       minWidth: column.initialWidth,
                       maxWidth: column.initialWidth,
                     }}
-                    className="flex h-12 flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-2xl"
+                    className="flex h-12 flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                   >
                     {column.title}
                   </div>
@@ -170,7 +170,7 @@ export default function Table<DataType>({
             return (
               <div
                 key={i}
-                className={`group relative flex flex-row justify-between rounded-t-2xl bg-white last:rounded-b-2xl hover:bg-primary-100`}
+                className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
                 onClick={() => onRowClick(entry)}
                 onDoubleClick={() => onRowDoubleClick(entry)}
               >

@@ -2,7 +2,7 @@ import type { Classes, FormFieldProps, Option } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes: 'absolute left-[5px] top-[5px] h-1.5 w-1.5 rounded-full bg-white',
-  controlClasses: 'h-4 w-4 min-w-4 rounded-lg relative',
+  controlClasses: 'h-4 w-4 min-w-4 rounded-krc-radiobuttonGroup relative',
   wrapperClasses: 'flex flex-col gap-2',
   classesFilled: 'bg-primary-600',
   labelClasses: 'text-sm font-medium text-secondary-900',
