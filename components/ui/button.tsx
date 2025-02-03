@@ -69,8 +69,8 @@ export default function Button({
   variant: 'primary' | 'secondary' | 'error' | 'alert' | 'active-secondary';
   label: string;
   loading?: boolean;
-  iconLeft?: IconifyIcon;
-  iconRight?: IconifyIcon;
+  iconLeft?: IconifyIcon | string;
+  iconRight?: IconifyIcon | string;
   onClick?: (e: MouseEvent) => Promise<void> | void;
 }) {
   const classes = [classesBase, className];

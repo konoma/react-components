@@ -18,9 +18,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "exports": {
-    "./css": "./dist/style.css"
-  },
   "engines": {
     "node": ">=22.0.0"
   },

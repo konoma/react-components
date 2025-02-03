@@ -10,10 +10,12 @@ import RadioButtonGroup from './components/form/radiobuttonGroup';
 import Select from './components/form/select';
 import TagList from './components/form/tagList';
 import TextArea from './components/form/textarea';
+import type { Classes, FormFieldProps, FormValue, Mask, Option } from './components/form/types';
 import Column from './components/table/column';
 import ColumnChooser from './components/table/columnChooser';
 import ColumnChooserEntry from './components/table/columnChooserEntry';
 import Pagination from './components/table/pagination';
+import type { TableColumn } from './components/table/table';
 import Table from './components/table/table';
 import TableActions from './components/table/tableActions';
 import Button from './components/ui/button';
@@ -26,20 +28,26 @@ export {
   Button,
   Checkbox,
   CheckboxList,
+  Classes,
   Column,
   ColumnChooser,
   ColumnChooserEntry,
   Form,
   FormField,
+  FormFieldProps,
+  FormValue,
   Input,
   LoadingIndicator,
+  Mask,
   Modal,
+  Option,
   Pagination,
   PhoneInput,
   RadioButtonGroup,
   Select,
   Table,
   TableActions,
+  TableColumn,
   Tabs,
   Tag,
   TagList,

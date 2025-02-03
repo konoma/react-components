@@ -27,6 +27,7 @@ const app = async (): Promise<UserConfigExport> => {
       },
     },
     build: {
+      minify: false,
       lib: {
         entry: path.resolve(__dirname, 'main.ts'),
         name: formattedName,
@@ -34,7 +35,8 @@ const app = async (): Promise<UserConfigExport> => {
         fileName: `@konoma/react-components`,
       },
       rollupOptions: {
-        external: [...Object.keys(peerDependencies)],
+        // external: [...Object.keys(peerDependencies)],
+        external: ['react', 'react/jsx-runtime'],
         output: {
           globals: {
             react: 'React',
