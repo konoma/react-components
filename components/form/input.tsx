@@ -1,7 +1,7 @@
-import { Icon } from '@iconify-icon/react';
 import { useRef } from 'react';
 import { IMaskInput } from 'react-imask';
 
+import Icon from '../ui/icon';
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -32,8 +32,10 @@ export default function Input<DataType>({
   additionalClassesIconRight = baseClasses.additionalClassesIconRight,
   wrapperRightClasses = baseClasses.wrapperRightClasses,
   label,
-  iconLeft,
-  iconRight,
+  iconLeftPath,
+  iconLeftName,
+  iconRightPath,
+  iconRightName,
   textRight,
   centered,
   error,
@@ -45,6 +47,9 @@ export default function Input<DataType>({
   placeholder,
   className = '',
   onIconRightClick = () => {
+    return;
+  },
+  onIconLeftClick = () => {
     return;
   },
   onChange = () => {
@@ -62,10 +67,10 @@ export default function Input<DataType>({
   ...props
 }: FormFieldProps<DataType>) {
   const classesFull = [classes];
-  if (iconLeft) {
+  if (iconLeftPath || iconLeftName) {
     classesFull.push(additionalClassesIconLeft);
   }
-  if (iconRight || textRight) {
+  if (iconRightPath || iconRightName || textRight) {
     classesFull.push(additionalClassesIconRight);
   }
   if (centered) {
@@ -133,11 +138,15 @@ export default function Input<DataType>({
             name={name as string}
           />
         )}
-        {iconLeft && <Icon className={iconLeftClasses} icon={iconLeft} />}
-        {iconRight || textRight ? (
+        {(iconLeftPath || iconLeftName) && (
+          <Icon className={iconLeftClasses} name={iconLeftName} path={iconLeftPath} onClick={onIconLeftClick} />
+        )}
+        {iconRightPath || iconRightName || textRight ? (
           <div className={wrapperRightClasses}>
             {textRight && <span>{textRight}</span>}
-            {iconRight && <Icon className={iconRightClasses} icon={iconRight} onClick={onIconRightClick} />}
+            {(iconRightPath || iconRightName) && (
+              <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} onClick={onIconRightClick} />
+            )}
           </div>
         ) : null}
       </div>

@@ -1,10 +1,10 @@
-import { Icon } from '@iconify-icon/react';
 import type { Identifier, XYCoord } from 'dnd-core';
 import type { JSX } from 'react';
 import { useContext, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
 import Input from '../form/input';
+import Icon from '../ui/icon';
 import { FilterContext } from './FilterContext';
 import type { TableColumn } from './table';
 
@@ -226,7 +226,7 @@ export default function Column<DataType>({
           <div>
             <Icon
               className={headerIconClasses}
-              icon={
+              name={
                 column.sorting
                   ? {
                       '+': 'heroicons:chevron-down-16-solid',
@@ -261,7 +261,7 @@ export default function Column<DataType>({
                     }
                   }}
                   className={filterInputClasses}
-                  iconRight="heroicons:magnifying-glass-16-solid"
+                  iconRightName="heroicons:magnifying-glass-16-solid"
                 />
               )}
             </>

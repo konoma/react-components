@@ -24,7 +24,7 @@ export default function ColumnChooser<DataType>({
   entryClasses = baseClasses.entryClasses,
   visibleColumnClasses = baseClasses.visibleColumnClasses,
   hiddenColumnClasses = baseClasses.hiddenColumnClasses,
-  columsLabel,
+  columnsLabel,
   updateColumns,
   getFloatingProps,
 }: {
@@ -38,7 +38,7 @@ export default function ColumnChooser<DataType>({
   visibleColumnClasses?: string;
   hiddenColumnClasses?: string;
   entryClasses?: string;
-  columsLabel?: string;
+  columnsLabel?: string;
   updateColumns: (column: TableColumn<DataType>) => void;
   getFloatingProps: () => Record<string, unknown>;
 }) {
@@ -56,7 +56,7 @@ export default function ColumnChooser<DataType>({
       <FloatingPortal>
         <FloatingFocusManager context={context} modal={false}>
           <div className={wrapperClasses} ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
-            <div className={headerClasses}>{columsLabel}</div>
+            <div className={headerClasses}>{columnsLabel}</div>
             <div className={columnsWrapperClasses}>
               {columns
                 .filter((c) => c.title)

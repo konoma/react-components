@@ -1,6 +1,6 @@
-import { Icon } from '@iconify-icon/react';
 import { useEffect, useRef } from 'react';
 
+import Icon from '../ui/icon';
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -64,7 +64,7 @@ export default function Checkbox<DataType>({
           {...props}
         />
         <div className={classesFilled}>
-          <Icon icon="heroicons:check-16-solid" className={iconClassesFilled} />
+          <Icon name="heroicons:check-16-solid" className={iconClassesFilled} />
         </div>
         <span className={labelClassesFilled}>{label}</span>
       </label>

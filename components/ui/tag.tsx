@@ -1,4 +1,4 @@
-import { Icon, type IconifyIcon } from '@iconify-icon/react';
+import Icon from './icon';
 
 const baseClasses = {
   wrapperClasses:
@@ -13,8 +13,10 @@ export default function Tag({
   titleClasses = baseClasses.titleClasses,
   iconLeftClasses = baseClasses.iconLeftClasses,
   iconRightClasses = baseClasses.iconRightClasses,
-  iconLeft,
-  iconRight,
+  iconLeftPath,
+  iconLeftName,
+  iconRightPath,
+  iconRightName,
   title,
   onClick = () => {
     return;
@@ -30,8 +32,10 @@ export default function Tag({
   titleClasses?: string;
   iconLeftClasses?: string;
   iconRightClasses?: string;
-  iconLeft?: IconifyIcon | string;
-  iconRight?: IconifyIcon | string;
+  iconLeftPath?: string;
+  iconLeftName?: string;
+  iconRightPath?: string;
+  iconRightName?: string;
   title: string;
   onClick?: () => void;
   onClickIconLeft?: () => void;
@@ -39,9 +43,13 @@ export default function Tag({
 }) {
   return (
     <div className={wrapperClasses} onClick={onClick}>
-      {iconLeft && <Icon icon={iconLeft} className={iconLeftClasses} onClick={onClickIconLeft} />}
+      {(iconLeftPath || iconLeftName) && (
+        <Icon name={iconLeftName} path={iconLeftPath} className={iconLeftClasses} onClick={onClickIconLeft} />
+      )}
       <div className={titleClasses}>{title}</div>
-      {iconRight && <Icon icon={iconRight} className={iconRightClasses} onClick={onClickIconRight} />}
+      {(iconRightPath || iconRightName) && (
+        <Icon name={iconRightName} path={iconRightPath} className={iconRightClasses} onClick={onClickIconRight} />
+      )}
     </div>
   );
 }

@@ -10,12 +10,10 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   wrapperLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-sm text-secondary-900',
-  iconRightClasses: 'h-5 w-5',
   wrapperRightClasses: 'absolute bottom-0 right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm',
   errorClasses: 'text-sm text-error-500',
   classesError: 'ring-error-500 ring-2',
   classesNeutral: 'border-secondary-300 border focus:ring-2 hover:border-secondary-400 focus:ring-primary-900',
-  additionalClassesIconRight: 'pr-12',
 };
 
 interface CountryCode {
@@ -53,10 +51,7 @@ export default function PhoneInput<DataType>({
   errorClasses = baseClasses.errorClasses,
   classesError = baseClasses.classesError,
   classesNeutral = baseClasses.classesNeutral,
-  additionalClassesIconRight = baseClasses.additionalClassesIconRight,
   label,
-  iconRight,
-  textRight,
   centered,
   error,
   required,
@@ -80,9 +75,6 @@ export default function PhoneInput<DataType>({
 }: FormFieldProps<DataType>) {
   const classesFull = [classes];
 
-  if (iconRight || textRight) {
-    classesFull.push(additionalClassesIconRight);
-  }
   if (centered) {
     classesFull.push('text-center');
   }

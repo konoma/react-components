@@ -1,7 +1,7 @@
-import { Icon } from '@iconify-icon/react';
 import { Resizable } from 're-resizable';
 import { useMemo, useRef, useState } from 'react';
 
+import Icon from '../ui/icon';
 import type { Classes, FormFieldProps } from './types';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -32,7 +32,8 @@ export default function Textarea<DataType>({
   controlClasses = baseClasses.controlClasses,
   labelWrapperClasses = baseClasses.labelWrapperClasses,
   classesDisabled = baseClasses.classesDisabled,
-  resizeIcon,
+  resizeIconPath,
+  resizeIconName,
   label,
   error,
   required,
@@ -101,11 +102,11 @@ export default function Textarea<DataType>({
           className={classesFull.join(' ')}
           enable={{ bottom: true }}
           handleComponent={
-            resizeIcon
+            resizeIconName || resizeIconPath
               ? {
                   bottom: (
                     <div className={resizeClasses} draggable={true}>
-                      <Icon icon={resizeIcon} className={resizeIconClasses} />
+                      <Icon name={resizeIconName} path={resizeIconPath} className={resizeIconClasses} />
                     </div>
                   ),
                 }

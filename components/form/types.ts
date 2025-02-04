@@ -1,4 +1,3 @@
-import type { IconifyIcon } from '@iconify-icon/react';
 import type { ChangeEvent, HTMLInputTypeAttribute, JSX, MouseEvent } from 'react';
 
 type LabelPosition = 'top' | 'bottom' | 'left' | 'right';
@@ -84,8 +83,10 @@ export interface FormFieldProps<DataType> extends Classes {
   disabled?: boolean;
   error?: string[];
   forgotPWText?: string;
-  iconLeft?: IconifyIcon | string;
-  iconRight?: IconifyIcon | string;
+  iconLeftPath?: string;
+  iconLeftName?: string;
+  iconRightPath?: string;
+  iconRightName?: string;
   indeterminate?: boolean;
   isClearable?: boolean;
   replacements?: Record<string, string>;
@@ -97,7 +98,8 @@ export interface FormFieldProps<DataType> extends Classes {
   options?: Option[];
   placeholder?: string;
   required?: boolean;
-  resizeIcon?: IconifyIcon | string;
+  resizeIconPath?: string;
+  resizeIconName?: string;
   addTagTitle?: string;
   searchable?: boolean;
   textRight?: string;
@@ -123,6 +125,7 @@ export interface FormFieldProps<DataType> extends Classes {
   onInput?: (value: FormValue, event?: InputEvent) => void;
   onClick?: (e: MouseEvent) => void;
   onIconRightClick?: () => void;
+  onIconLeftClick?: () => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
 }
 

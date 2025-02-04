@@ -10,8 +10,9 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import { Icon } from '@iconify-icon/react';
 import { useState } from 'react';
+
+import Icon from '../ui/icon';
 
 export default function TableActions({ children, classes = 'h-14 p-4' }: { children: React.ReactNode; classes?: string }) {
   const [actionsVisible, setActionsVisible] = useState(false);
@@ -30,7 +31,7 @@ export default function TableActions({ children, classes = 'h-14 p-4' }: { child
   return (
     <div className={classes}>
       <div ref={refs.setReference} {...getReferenceProps()} className="cursor-pointer">
-        <Icon icon="heroicons:ellipsis-vertical-16-solid" className="h-5 w-5" />
+        <Icon name="heroicons:ellipsis-vertical-16-solid" className="h-5 w-5" />
       </div>
       {actionsVisible && (
         <FloatingPortal>

@@ -1,7 +1,7 @@
-import { Icon } from '@iconify-icon/react';
 import { createPortal } from 'react-dom';
 
 import Button from './button';
+import Icon from './icon';
 
 export default function Modal({
   backdropClasses = 'fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50',
@@ -55,7 +55,7 @@ export default function Modal({
             {hasCloseIcon && (
               <div className={closeWrapperClasses}>
                 <button onClick={onClose}>
-                  <Icon icon="heroicons:x-mark-16-solid" className={iconClasses} />
+                  <Icon name="heroicons:x-mark-16-solid" className={iconClasses} />
                 </button>
               </div>
             )}
