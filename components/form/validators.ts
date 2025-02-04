@@ -1,8 +1,8 @@
 // Generic validators for form fields
 
 export function required(message = 'Bitte ausfüllen') {
-  return (value: string | number | boolean) => {
-    if (!value) {
+  return (value: string | number | boolean | null) => {
+    if (value === undefined || value === null || value === '') {
       return message;
     }
     return '';
@@ -10,7 +10,7 @@ export function required(message = 'Bitte ausfüllen') {
 }
 
 export function email(message = 'Ungültige E-Mail-Adresse') {
-  return (value: string | number | boolean) => {
+  return (value: string | number | boolean | null) => {
     if (!value) {
       return '';
     }

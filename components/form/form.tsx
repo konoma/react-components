@@ -26,7 +26,7 @@ export default function Form<DataType>({
   children: JSX.Element[] | JSX.Element;
   className?: string;
   data: DataType;
-  validators: Record<keyof DataType, ((value: string | number | boolean) => string)[]>;
+  validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>;
   onValidation?: (errors: Record<keyof DataType, string[]>) => void;
   onSubmit: () => Promise<void>;
 }) {
@@ -43,7 +43,7 @@ export default function Form<DataType>({
       }
       newErrors[name as keyof DataType] = validators[name as keyof DataType]
         .map((validator) => {
-          const validation = validator(value || '');
+          const validation = validator(value);
           if (validation) {
             invalid = true;
           }

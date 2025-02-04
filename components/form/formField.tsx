@@ -7,6 +7,7 @@ import Input from './input';
 import PhoneInput from './phoneInput';
 import RadioButtonGroup from './radiobuttonGroup';
 import Select from './select';
+import SelectWithNew from './selectWithNew';
 import TagList from './tagList';
 import Textarea from './textarea';
 import type { FormFieldProps, FormValue } from './types';
@@ -20,6 +21,8 @@ const FormFieldComponents = {
   textarea: Textarea,
   tagList: TagList,
   phoneInput: PhoneInput,
+  // TODO: Add the new component
+  selectWithNew: SelectWithNew,
 };
 
 export default function FormField<DataType>({

@@ -31,7 +31,9 @@ export default function TableActions({ children, classes = 'h-14 p-4' }: { child
   return (
     <div className={classes}>
       <div ref={refs.setReference} {...getReferenceProps()} className="cursor-pointer">
-        <Icon name="heroicons:ellipsis-vertical-16-solid" className="h-5 w-5" />
+        <div>
+          <Icon name="heroicons:ellipsis-vertical-16-solid" className="h-5 w-5" />
+        </div>
       </div>
       {actionsVisible && (
         <FloatingPortal>

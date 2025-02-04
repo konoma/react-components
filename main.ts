@@ -18,7 +18,7 @@ import ColumnChooserEntry from './components/table/columnChooserEntry';
 import Pagination from './components/table/pagination';
 import type { TableColumn } from './components/table/table';
 import Table from './components/table/table';
-import TableActions from './components/table/tableActions';
+import TableActions, { TableActionEntry } from './components/table/tableActions';
 import Button from './components/ui/button';
 import Icon from './components/ui/icon';
 import LoadingIndicator from './components/ui/loadingIndicator';
@@ -49,6 +49,7 @@ export {
   RadioButtonGroup,
   Select,
   Table,
+  TableActionEntry,
   TableActions,
   TableColumn,
   Tabs,
