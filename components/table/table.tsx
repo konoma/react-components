@@ -1,5 +1,9 @@
+import type { Identifier } from 'dnd-core';
 import type { JSX } from 'react';
 import { useMemo, useRef } from 'react';
+import type { XYCoord } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import type { ColumnClasses } from './column';
 import { FilterContext } from './FilterContext';
@@ -22,6 +26,12 @@ export interface TableColumn<DataType> {
   grow?: boolean;
 }
 
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
+
 const baseClasses = {
   wrapperClasses: 'flex flex-col rounded-krc-table border',
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
@@ -31,7 +41,7 @@ const baseClasses = {
   noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full',
 };
 
-export default function Table<DataType>({
+export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement> }>({
   noDataClasses = baseClasses.noDataClasses,
   paginationClasses,
   columnsCenter,
@@ -43,6 +53,10 @@ export default function Table<DataType>({
   pagination,
   totalRows,
   noEntryLabel,
+  allowReorder,
+  onMoveRow = () => {
+    return;
+  },
   onRowClick = () => {
     return;
   },
@@ -67,7 +81,7 @@ export default function Table<DataType>({
   columnsCenter: TableColumn<DataType>[];
   columnsRight?: TableColumn<DataType>[];
   columnsLeft?: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType) => JSX.Element };
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
   filterComponent?: { [key in keyof DataType]?: (data: DataType) => JSX.Element };
   filters?: Record<string, string>;
   showFilters?: boolean;
@@ -75,6 +89,8 @@ export default function Table<DataType>({
   pagination?: boolean;
   totalRows: number;
   noEntryLabel?: string;
+  allowReorder?: boolean;
+  onMoveRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
   onFirstPage?: () => void;
   onPreviousPage?: () => void;
@@ -166,17 +182,58 @@ export default function Table<DataType>({
             )}
           </div>
           {/* Body */}
-          {data.map((entry, i) => {
-            return (
-              <div
-                key={i}
-                className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
-                onClick={() => onRowClick(entry)}
-                onDoubleClick={() => onRowDoubleClick(entry)}
-              >
-                {!!currentColumnsLeft.length && (
-                  <div className="sticky left-0 flex flex-row border-r">
-                    {currentColumnsLeft.map((column) => {
+          {allowReorder ? (
+            <DndProvider backend={HTML5Backend} debugMode>
+              {data.map((entry, i) => {
+                return (
+                  <Row<DataType>
+                    key={i}
+                    index={i}
+                    entry={entry}
+                    moveRow={onMoveRow}
+                    currentColumnsCenter={currentColumnsCenter}
+                    currentColumnsLeft={currentColumnsLeft}
+                    currentColumnsRight={currentColumnsRight}
+                    cellRenderer={cellRenderer}
+                    header={header}
+                    onRowClick={onRowClick}
+                    onRowDoubleClick={onRowDoubleClick}
+                  />
+                );
+              })}
+            </DndProvider>
+          ) : (
+            <>
+              {data.map((entry, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+                    onClick={() => onRowClick(entry)}
+                    onDoubleClick={() => onRowDoubleClick(entry)}
+                  >
+                    {!!currentColumnsLeft.length && (
+                      <div className="sticky left-0 flex flex-row border-r">
+                        {currentColumnsLeft.map((column) => {
+                          return (
+                            <div
+                              key={column.id.toString()}
+                              style={{
+                                minWidth: column.initialWidth,
+                                maxWidth: column.initialWidth,
+                              }}
+                              className="bg-white group-hover:bg-primary-100"
+                              title={(entry[column.id] as string) || ''}
+                            >
+                              {cellRenderer?.[column.id]?.(entry) || (
+                                <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {currentColumnsCenter.map((column) => {
                       return (
                         <div
                           key={column.id.toString()}
@@ -184,8 +241,8 @@ export default function Table<DataType>({
                             minWidth: column.initialWidth,
                             maxWidth: column.initialWidth,
                           }}
-                          className="bg-white group-hover:bg-primary-100"
-                          title={(entry[column.id] as string) || ''}
+                          className="bg-white first:grow group-hover:bg-primary-100"
+                          title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
                         >
                           {cellRenderer?.[column.id]?.(entry) || (
                             <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
@@ -193,57 +250,214 @@ export default function Table<DataType>({
                         </div>
                       );
                     })}
-                  </div>
-                )}
-                {currentColumnsCenter.map((column) => {
-                  return (
+                    {!!currentColumnsRight.length && (
+                      <div className="sticky right-0 flex flex-row border-l">
+                        {currentColumnsRight.map((column) => {
+                          return (
+                            <div
+                              key={column.id.toString()}
+                              style={{
+                                minWidth: column.initialWidth,
+                                maxWidth: column.initialWidth,
+                              }}
+                              className="bg-white group-hover:bg-primary-100"
+                              title={(entry[column.id] as string) || ''}
+                            >
+                              {cellRenderer?.[column.id]?.(entry) || (
+                                <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                     <div
-                      key={column.id.toString()}
-                      style={{
-                        minWidth: column.initialWidth,
-                        maxWidth: column.initialWidth,
-                      }}
-                      className="bg-white first:grow group-hover:bg-primary-100"
-                      title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-                    >
-                      {cellRenderer?.[column.id]?.(entry) || (
-                        <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                      )}
-                    </div>
-                  );
-                })}
-                {!!currentColumnsRight.length && (
-                  <div className="sticky right-0 flex flex-row border-l">
-                    {currentColumnsRight.map((column) => {
-                      return (
-                        <div
-                          key={column.id.toString()}
-                          style={{
-                            minWidth: column.initialWidth,
-                            maxWidth: column.initialWidth,
-                          }}
-                          className="bg-white group-hover:bg-primary-100"
-                          title={(entry[column.id] as string) || ''}
-                        >
-                          {cellRenderer?.[column.id]?.(entry) || (
-                            <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                          )}
-                        </div>
-                      );
-                    })}
+                      style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+                      className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
+                    ></div>
                   </div>
-                )}
-                <div
-                  style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                  className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
-                ></div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </>
+          )}
         </FilterContext.Provider>
         {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
       </div>
       {pagination && data.length > 0 && <Pagination currentTotal={totalRows} currentLoaded={data.length} {...paginationClasses} />}
+    </div>
+  );
+}
+
+function Row<DataType>({
+  index,
+  entry,
+  moveRow,
+  onRowClick,
+  onRowDoubleClick,
+  currentColumnsLeft,
+  currentColumnsCenter,
+  currentColumnsRight,
+  cellRenderer,
+  header,
+}: {
+  index: number;
+  entry: DataType;
+  moveRow: (dragIndex: number, hoverIndex: number) => void;
+  onRowClick: (data: DataType) => void;
+  onRowDoubleClick: (data: DataType) => void;
+  currentColumnsLeft: TableColumn<DataType>[];
+  currentColumnsCenter: TableColumn<DataType>[];
+  currentColumnsRight: TableColumn<DataType>[];
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
+  header: React.MutableRefObject<HTMLDivElement | null>;
+}) {
+  const dragRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  if (!Object.prototype.hasOwnProperty.call(entry, 'index')) {
+    throw new Error('Entry must have index property');
+  }
+
+  const [{ handlerId }, drop] = useDrop<DragItem, undefined, { handlerId: Identifier | null }>({
+    accept: 'row',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!previewRef.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = previewRef.current?.getBoundingClientRect();
+
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      // Time to actually perform the action
+      moveRow(dragIndex, hoverIndex);
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ opacity }, drag, preview] = useDrag({
+    type: 'row',
+    item: () => {
+      return { id: (entry as DataType & { index: number }).index, index };
+    },
+    collect: (monitor: { isDragging: () => boolean }) => ({
+      opacity: monitor.isDragging() ? 0.4 : 1,
+    }),
+  });
+
+  preview(drop(previewRef));
+  drag(dragRef);
+  return (
+    <div
+      className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+      onClick={() => onRowClick(entry)}
+      onDoubleClick={() => onRowDoubleClick(entry)}
+      ref={previewRef}
+      style={{ opacity }}
+      data-handler-id={handlerId}
+    >
+      {!!currentColumnsLeft.length && (
+        <div className="sticky left-0 flex flex-row border-r">
+          {currentColumnsLeft.map((column) => {
+            return (
+              <div
+                key={column.id.toString()}
+                style={{
+                  minWidth: column.initialWidth,
+                  maxWidth: column.initialWidth,
+                }}
+                className="bg-white group-hover:bg-primary-100"
+                title={(entry[column.id] as string) || ''}
+              >
+                {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+                  <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {currentColumnsCenter.map((column) => {
+        return (
+          <div
+            key={column.id.toString()}
+            style={{
+              minWidth: column.initialWidth,
+              maxWidth: column.initialWidth,
+            }}
+            className="bg-white first:grow group-hover:bg-primary-100"
+            title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
+          >
+            {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+            )}
+          </div>
+        );
+      })}
+      {!!currentColumnsRight.length && (
+        <div className="sticky right-0 flex flex-row border-l">
+          {currentColumnsRight.map((column) => {
+            return (
+              <div
+                key={column.id.toString()}
+                style={{
+                  minWidth: column.initialWidth,
+                  maxWidth: column.initialWidth,
+                }}
+                className="bg-white group-hover:bg-primary-100"
+                title={(entry[column.id] as string) || ''}
+              >
+                {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+                  <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div
+        style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+        className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
+      ></div>
     </div>
   );
 }
