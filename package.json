@@ -1,14 +1,14 @@
 {
-  "name": "@konoma/react-components",
+  "name": "@konoma-development/react-components",
   "packageManager": "yarn@4.6.0",
   "version": "0.0.1",
   "files": [
     "dist"
   ],
-  "main": "./dist/@konoma/react-components.js",
-  "types": "./dist/@konoma/react-components.d.ts",
+  "main": "./dist/@konoma-development/react-components.js",
+  "types": "./dist/@konoma-development/react-components.d.ts",
   "type": "module",
-  "repository": "git@github.com:konoma/react-components.git",
+  "repository": "git@github.com:konoma-development/react-components.git",
   "author": "Konoma",
   "scripts": {
     "build": "vite build",

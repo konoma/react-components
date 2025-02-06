@@ -31,7 +31,7 @@ const app = async (): Promise<UserConfigExport> => {
         entry: path.resolve(__dirname, 'main.ts'),
         name: formattedName,
         formats: ['es'],
-        fileName: `@konoma/react-components`,
+        fileName: `@konoma-development/react-components`,
       },
       rollupOptions: {
         // external: [...Object.keys(peerDependencies)],
