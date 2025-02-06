@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org/
-      - run: echo "npmAuthToken:${secrets.npm_token}" >> ~/yarnrc.yml
+      - run: echo "npmAuthToken:\${secrets.npm_token}" >> ~/yarnrc.yml
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn build
