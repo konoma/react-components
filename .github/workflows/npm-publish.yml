@@ -26,6 +26,6 @@ jobs:
       - name: Build
         run: yarn build
 
-      - uses: simenandre/publish-with-yarn@v1
+      - uses: simenandre/publish-with-yarn@v2
         with:
           npm-auth-token: ${{ secrets.npm_token }}
