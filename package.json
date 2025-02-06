@@ -10,7 +10,6 @@
   "type": "module",
   "repository": "git@github.com:konoma/react-components.git",
   "author": "Konoma",
-  "private": true,
   "scripts": {
     "build": "vite build",
     "lint": "eslint .",
