@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: corepack enable
       - run: npx yarn install --immutable
       - run: npx yarn build
 
@@ -27,6 +28,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org/
+      - run: corepack enable
       - run: npx yarn install --immutable
       - run: npx yarn build
       - run: npx yarn npm publish
