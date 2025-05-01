@@ -15,6 +15,7 @@ import * as validators from './components/form/validators';
 import Column from './components/table/column';
 import ColumnChooser from './components/table/columnChooser';
 import ColumnChooserEntry from './components/table/columnChooserEntry';
+import { FilterContext } from './components/table/FilterContext';
 import Pagination from './components/table/pagination';
 import type { TableColumn } from './components/table/table';
 import Table from './components/table/table';
@@ -34,6 +35,7 @@ export {
   Column,
   ColumnChooser,
   ColumnChooserEntry,
+  FilterContext,
   Form,
   FormField,
   FormFieldProps,

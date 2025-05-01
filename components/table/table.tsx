@@ -5,8 +5,9 @@ import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import Input from '../form/input';
+import Icon from '../ui/icon';
 import type { ColumnClasses } from './column';
-import { FilterContext } from './FilterContext';
 import type { PaginationClasses } from './pagination';
 import Pagination from './pagination';
 
@@ -24,6 +25,7 @@ export interface TableColumn<DataType> {
   allowResize?: boolean;
   filterable?: boolean;
   grow?: boolean;
+  filterComponent?: (filters: Record<string, string>, setFilters: (filters: Record<string, string>) => Promise<void>) => JSX.Element;
 }
 
 interface DragItem {
@@ -54,6 +56,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   totalRows,
   noEntryLabel,
   allowReorder,
+  showFilters,
   onMoveRow = () => {
     return;
   },
@@ -67,6 +70,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
     return;
   },
   onUpdateFilters = async () => {
+    return;
+  },
+  onSort = () => {
     return;
   },
 }: {
@@ -105,12 +111,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
   onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
 }) {
-  // const hasFilters = !!(
-  //   showFilters &&
-  //   (columnsCenter.some((column) => column.filterable) ||
-  //     columnsLeft?.some((column) => column.filterable) ||
-  //     columnsRight?.some((column) => column.filterable))
-  // );
+  const hasFilters = !!(
+    showFilters &&
+    (columnsCenter.some((column) => column.filterable) ||
+      columnsLeft?.some((column) => column.filterable) ||
+      columnsRight?.some((column) => column.filterable))
+  );
 
   const header = useRef<HTMLDivElement>(null);
 
@@ -133,154 +139,274 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table"
         onScroll={onScroll}
       >
-        <FilterContext.Provider value={{ filters, setFilters: updateFilters }}>
-          {/* Header */}
-          <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-100">
-            {!!currentColumnsLeft.length && (
-              <div className="sticky left-0 flex flex-row">
-                {currentColumnsLeft.map((column) => (
-                  <div
-                    key={column.id.toString()}
-                    style={{
-                      minWidth: column.initialWidth,
-                      maxWidth: column.initialWidth,
-                    }}
-                    className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table"
-                  >
-                    {column.title}
-                  </div>
-                ))}
-              </div>
-            )}
-            {currentColumnsCenter.map((column) => (
-              <div
-                key={column.id.toString()}
-                style={{
-                  minWidth: column.initialWidth,
-                  maxWidth: column.initialWidth,
-                }}
-                className="flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table last:rounded-tr-krc-table"
-              >
-                {column.title}
-              </div>
-            ))}
-            {!!currentColumnsRight.length && (
-              <div className="sticky right-0 flex flex-row">
-                {currentColumnsRight.map((column) => (
-                  <div
-                    key={column.id.toString()}
-                    style={{
-                      minWidth: column.initialWidth,
-                      maxWidth: column.initialWidth,
-                    }}
-                    className="flex h-12 flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
-                  >
-                    {column.title}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Body */}
-          {allowReorder ? (
-            <DndProvider backend={HTML5Backend} debugMode>
-              {data.map((entry, i) => {
-                return (
-                  <Row<DataType>
-                    key={i}
-                    index={i}
-                    entry={entry}
-                    moveRow={onMoveRow}
-                    currentColumnsCenter={currentColumnsCenter}
-                    currentColumnsLeft={currentColumnsLeft}
-                    currentColumnsRight={currentColumnsRight}
-                    cellRenderer={cellRenderer}
-                    header={header}
-                    onRowClick={onRowClick}
-                    onRowDoubleClick={onRowDoubleClick}
-                  />
-                );
-              })}
-            </DndProvider>
-          ) : (
-            <>
-              {data.map((entry, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
-                    onClick={() => onRowClick(entry)}
-                    onDoubleClick={() => onRowDoubleClick(entry)}
-                  >
-                    {!!currentColumnsLeft.length && (
-                      <div className="sticky left-0 flex flex-row border-r">
-                        {currentColumnsLeft.map((column) => {
-                          return (
-                            <div
-                              key={column.id.toString()}
-                              style={{
-                                minWidth: column.initialWidth,
-                                maxWidth: column.initialWidth,
+        {/* Header */}
+        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-100">
+          {!!currentColumnsLeft.length && (
+            <div className="sticky left-0 flex flex-row">
+              {currentColumnsLeft.map((column) => (
+                <div
+                  key={column.id.toString()}
+                  style={{
+                    minWidth: column.initialWidth,
+                    maxWidth: column.initialWidth,
+                  }}
+                  onClick={() => {
+                    return (
+                      column.sortKey &&
+                      onSort(
+                        Object.assign({}, column, {
+                          sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
+                        })
+                      )
+                    );
+                  }}
+                  className={[
+                    'flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table',
+                    column.sortKey ? 'cursor-pointer' : '',
+                  ].join(' ')}
+                >
+                  <span>{column.title}</span>
+                  {column.sortKey && (
+                    <div>
+                      <Icon
+                        className="h-4 w-4"
+                        name={
+                          column.sorting
+                            ? {
+                                '+': 'heroicons:chevron-down-16-solid',
+                                '-': 'heroicons:chevron-up-16-solid',
+                              }[column.sorting]
+                            : 'heroicons:chevron-up-16-solid'
+                        }
+                      />
+                    </div>
+                  )}
+                  {/* Filter */}
+                  {hasFilters && (
+                    <div className="bg-secondary-100 px-4 text-xs font-medium text-secondary-500">
+                      {column.filterable && column.filterKey && (
+                        <>
+                          {column.filterComponent?.(filters, updateFilters) || (
+                            <Input
+                              defaultValue={filters[column.filterKey]}
+                              onKeyDown={async (e) => {
+                                if (e.key === 'Enter' && column.filterKey) {
+                                  const key = column.filterKey;
+                                  const value = (e.currentTarget as HTMLInputElement).value;
+                                  if (e) {
+                                    await updateFilters({ ...filters, [key]: value });
+                                  } else {
+                                    const newFilters = { ...filters };
+                                    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                                    delete newFilters[key];
+                                    await updateFilters(newFilters);
+                                  }
+                                }
                               }}
-                              className="bg-white group-hover:bg-primary-100"
-                              title={(entry[column.id] as string) || ''}
-                            >
-                              {cellRenderer?.[column.id]?.(entry) || (
-                                <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {currentColumnsCenter.map((column) => {
-                      return (
-                        <div
-                          key={column.id.toString()}
-                          style={{
-                            minWidth: column.initialWidth,
-                            maxWidth: column.initialWidth,
-                          }}
-                          className="bg-white first:grow group-hover:bg-primary-100"
-                          title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-                        >
-                          {cellRenderer?.[column.id]?.(entry) || (
-                            <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              className="h-10"
+                              iconRightName="heroicons:magnifying-glass-16-solid"
+                            />
                           )}
-                        </div>
-                      );
-                    })}
-                    {!!currentColumnsRight.length && (
-                      <div className="sticky right-0 flex flex-row border-l">
-                        {currentColumnsRight.map((column) => {
-                          return (
-                            <div
-                              key={column.id.toString()}
-                              style={{
-                                minWidth: column.initialWidth,
-                                maxWidth: column.initialWidth,
-                              }}
-                              className="bg-white group-hover:bg-primary-100"
-                              title={(entry[column.id] as string) || ''}
-                            >
-                              {cellRenderer?.[column.id]?.(entry) || (
-                                <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    <div
-                      style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                      className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
-                    ></div>
-                  </div>
-                );
-              })}
-            </>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
-        </FilterContext.Provider>
+          {currentColumnsCenter.map((column) => (
+            <div
+              key={column.id.toString()}
+              style={{
+                minWidth: column.initialWidth,
+                maxWidth: column.initialWidth,
+              }}
+              className={[
+                'flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table last:rounded-tr-krc-table',
+                column.sortKey ? 'cursor-pointer' : '',
+              ].join(' ')}
+              onClick={() => {
+                return (
+                  column.sortKey &&
+                  onSort(
+                    Object.assign({}, column, {
+                      sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
+                    })
+                  )
+                );
+              }}
+            >
+              <span>{column.title}</span>
+              {column.sortKey && (
+                <div>
+                  <Icon
+                    className="h-4 w-4"
+                    name={
+                      column.sorting
+                        ? {
+                            '+': 'heroicons:chevron-down-16-solid',
+                            '-': 'heroicons:chevron-up-16-solid',
+                          }[column.sorting]
+                        : 'heroicons:chevron-up-16-solid'
+                    }
+                  />
+                </div>
+              )}
+              {/* Filter */}
+              {hasFilters && (
+                <div className="bg-secondary-100 px-4 text-xs font-medium text-secondary-500">
+                  {column.filterable && column.filterKey && (
+                    <>
+                      {column.filterComponent?.(filters, updateFilters) || (
+                        <Input
+                          defaultValue={filters[column.filterKey]}
+                          onKeyDown={async (e) => {
+                            if (e.key === 'Enter' && column.filterKey) {
+                              const key = column.filterKey;
+                              const value = (e.currentTarget as HTMLInputElement).value;
+                              if (e) {
+                                await updateFilters({ ...filters, [key]: value });
+                              } else {
+                                const newFilters = { ...filters };
+                                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                                delete newFilters[key];
+                                await updateFilters(newFilters);
+                              }
+                            }
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className="h-10"
+                          iconRightName="heroicons:magnifying-glass-16-solid"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+          {!!currentColumnsRight.length && (
+            <div className="sticky right-0 flex flex-row">
+              {currentColumnsRight.map((column) => (
+                <div
+                  key={column.id.toString()}
+                  style={{
+                    minWidth: column.initialWidth,
+                    maxWidth: column.initialWidth,
+                  }}
+                  className="flex h-12 flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                >
+                  {column.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {/* Body */}
+        {allowReorder ? (
+          <DndProvider backend={HTML5Backend} debugMode>
+            {data.map((entry, i) => {
+              return (
+                <Row<DataType>
+                  key={i}
+                  index={i}
+                  entry={entry}
+                  moveRow={onMoveRow}
+                  currentColumnsCenter={currentColumnsCenter}
+                  currentColumnsLeft={currentColumnsLeft}
+                  currentColumnsRight={currentColumnsRight}
+                  cellRenderer={cellRenderer}
+                  header={header}
+                  onRowClick={onRowClick}
+                  onRowDoubleClick={onRowDoubleClick}
+                />
+              );
+            })}
+          </DndProvider>
+        ) : (
+          <>
+            {data.map((entry, i) => {
+              return (
+                <div
+                  key={i}
+                  className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+                  onClick={() => onRowClick(entry)}
+                  onDoubleClick={() => onRowDoubleClick(entry)}
+                >
+                  {!!currentColumnsLeft.length && (
+                    <div className="sticky left-0 flex flex-row border-r">
+                      {currentColumnsLeft.map((column) => {
+                        return (
+                          <div
+                            key={column.id.toString()}
+                            style={{
+                              minWidth: column.initialWidth,
+                              maxWidth: column.initialWidth,
+                            }}
+                            className="bg-white group-hover:bg-primary-100"
+                            title={(entry[column.id] as string) || ''}
+                          >
+                            {cellRenderer?.[column.id]?.(entry) || (
+                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {currentColumnsCenter.map((column) => {
+                    return (
+                      <div
+                        key={column.id.toString()}
+                        style={{
+                          minWidth: column.initialWidth,
+                          maxWidth: column.initialWidth,
+                        }}
+                        className="bg-white first:grow group-hover:bg-primary-100"
+                        title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
+                      >
+                        {cellRenderer?.[column.id]?.(entry) || (
+                          <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {!!currentColumnsRight.length && (
+                    <div className="sticky right-0 flex flex-row border-l">
+                      {currentColumnsRight.map((column) => {
+                        return (
+                          <div
+                            key={column.id.toString()}
+                            style={{
+                              minWidth: column.initialWidth,
+                              maxWidth: column.initialWidth,
+                            }}
+                            className="bg-white group-hover:bg-primary-100"
+                            title={(entry[column.id] as string) || ''}
+                          >
+                            {cellRenderer?.[column.id]?.(entry) || (
+                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div
+                    style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+                    className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
+                  ></div>
+                </div>
+              );
+            })}
+          </>
+        )}
         {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
       </div>
       {pagination && data.length > 0 && <Pagination currentTotal={totalRows} currentLoaded={data.length} {...paginationClasses} />}

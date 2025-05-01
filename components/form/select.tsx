@@ -164,6 +164,8 @@ export default function Select<DataType>({
           }}
           onChange={(option) => {
             if (!option) {
+              // Needed to handle clearing the select
+              onChange(false);
               return;
             }
             if (isMulti) {
