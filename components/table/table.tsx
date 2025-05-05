@@ -136,11 +136,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           gridAutoFlow: 'row',
           gridAutoRows: 'auto',
         }}
-        className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table"
+        className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline outline-secondary-300"
         onScroll={onScroll}
       >
         {/* Header */}
-        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-100">
+        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-50">
           {!!currentColumnsLeft.length && (
             <div className="sticky left-0 flex flex-row z-[1]">
               {currentColumnsLeft.map((column) => (
@@ -161,7 +161,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     );
                   }}
                   className={[
-                    'flex flex-col items-center truncate bg-secondary-100 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                    'flex flex-col items-center truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                     hasFilters ? 'h-24' : 'h-12',
                     column.sortKey ? 'cursor-pointer' : '',
                   ].join(' ')}
@@ -186,12 +186,13 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-secondary-100 text-xs font-medium text-secondary-500">
+                    <div className="bg-secondary-50 text-xs font-medium text-secondary-500">
                       {column.filterable && column.filterKey && (
                         <>
                           {column.filterComponent?.(filters, updateFilters) || (
                             <Input
                               defaultValue={filters[column.filterKey]}
+                              key={filters[column.filterKey]}
                               onKeyDown={async (e) => {
                                 if (e.key === 'Enter' && column.filterKey) {
                                   const key = column.filterKey;
@@ -209,11 +210,19 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}
-                              onIconRightClick={(e) => {
+                              onIconRightClick={async (e) => {
                                 e.stopPropagation();
+                                const key = column.filterKey;
+                                if (key) {
+                                  const newFilters = { ...filters };
+                                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                                  delete newFilters[key];
+                                  await updateFilters(newFilters);
+                                }
                               }}
+                              isClearable
                               className="h-10"
-                              iconRightName="heroicons:magnifying-glass-16-solid"
+                              iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
                             />
                           )}
                         </>
@@ -232,7 +241,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 maxWidth: column.initialWidth,
               }}
               className={[
-                'flex flex-col items-center truncate bg-secondary-100 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                'flex flex-col items-center truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                 hasFilters ? 'h-24' : 'h-12',
                 column.sortKey ? 'cursor-pointer' : '',
               ].join(' ')}
@@ -267,12 +276,13 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-secondary-100 text-xs font-medium text-secondary-500">
+                <div className="bg-secondary-50 text-xs font-medium text-secondary-500">
                   {column.filterable && column.filterKey && (
                     <>
                       {column.filterComponent?.(filters, updateFilters) || (
                         <Input
                           defaultValue={filters[column.filterKey]}
+                          key={filters[column.filterKey]}
                           onKeyDown={async (e) => {
                             if (e.key === 'Enter' && column.filterKey) {
                               const key = column.filterKey;
@@ -290,11 +300,19 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
-                          onIconRightClick={(e) => {
+                          onIconRightClick={async (e) => {
                             e.stopPropagation();
+                            const key = column.filterKey;
+                            if (key) {
+                              const newFilters = { ...filters };
+                              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                              delete newFilters[key];
+                              await updateFilters(newFilters);
+                            }
                           }}
+                          isClearable
                           className="h-10"
-                          iconRightName="heroicons:magnifying-glass-16-solid"
+                          iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
                         />
                       )}
                     </>
@@ -312,7 +330,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: column.initialWidth,
                   }}
-                  className="flex h-full flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                  className="flex h-full flex-row items-center justify-end truncate bg-secondary-50 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
                 </div>
@@ -347,7 +365,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               return (
                 <div
                   key={i}
-                  className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+                  className={`group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100`}
                   onClick={() => onRowClick(entry)}
                   onDoubleClick={() => onRowDoubleClick(entry)}
                 >
@@ -412,7 +430,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   )}
                   <div
                     style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                    className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
+                    className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
                   ></div>
                 </div>
               );
@@ -526,7 +544,7 @@ function Row<DataType>({
   drag(dragRef);
   return (
     <div
-      className={`group relative flex flex-row justify-between rounded-t-krc-table bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+      className={`group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100`}
       onClick={() => onRowClick(entry)}
       onDoubleClick={() => onRowDoubleClick(entry)}
       ref={previewRef}
@@ -594,7 +612,7 @@ function Row<DataType>({
       )}
       <div
         style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-        className="absolute bottom-0 left-0 right-0 h-px bg-secondary-100"
+        className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
       ></div>
     </div>
   );
