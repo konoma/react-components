@@ -142,7 +142,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         {/* Header */}
         <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-100">
           {!!currentColumnsLeft.length && (
-            <div className="sticky left-0 flex flex-row">
+            <div className="sticky left-0 flex flex-row z-[1]">
               {currentColumnsLeft.map((column) => (
                 <div
                   key={column.id.toString()}
@@ -161,29 +161,32 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     );
                   }}
                   className={[
-                    'flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table',
+                    'flex flex-col items-center truncate bg-secondary-100 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                    hasFilters ? 'h-24' : 'h-12',
                     column.sortKey ? 'cursor-pointer' : '',
                   ].join(' ')}
                 >
-                  <span>{column.title}</span>
-                  {column.sortKey && (
-                    <div>
-                      <Icon
-                        className="h-4 w-4"
-                        name={
-                          column.sorting
-                            ? {
-                                '+': 'heroicons:chevron-down-16-solid',
-                                '-': 'heroicons:chevron-up-16-solid',
-                              }[column.sorting]
-                            : 'heroicons:chevron-up-16-solid'
-                        }
-                      />
-                    </div>
-                  )}
+                  <div className="flex flex-row items-center gap-2 w-full justify-between">
+                    <span>{column.title}</span>
+                    {column.sortKey && (
+                      <div>
+                        <Icon
+                          className="h-4 w-4"
+                          name={
+                            column.sorting
+                              ? {
+                                  '+': 'heroicons:chevron-down-16-solid',
+                                  '-': 'heroicons:chevron-up-16-solid',
+                                }[column.sorting]
+                              : 'heroicons:chevron-up-down-16-solid'
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-secondary-100 px-4 text-xs font-medium text-secondary-500">
+                    <div className="bg-secondary-100 text-xs font-medium text-secondary-500">
                       {column.filterable && column.filterKey && (
                         <>
                           {column.filterComponent?.(filters, updateFilters) || (
@@ -206,6 +209,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}
+                              onIconRightClick={(e) => {
+                                e.stopPropagation();
+                              }}
                               className="h-10"
                               iconRightName="heroicons:magnifying-glass-16-solid"
                             />
@@ -226,7 +232,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 maxWidth: column.initialWidth,
               }}
               className={[
-                'flex h-12 flex-row items-center truncate bg-secondary-100 px-4 py-3 text-xs font-medium first:rounded-tl-krc-table last:rounded-tr-krc-table',
+                'flex flex-col items-center truncate bg-secondary-100 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                hasFilters ? 'h-24' : 'h-12',
                 column.sortKey ? 'cursor-pointer' : '',
               ].join(' ')}
               onClick={() => {
@@ -240,25 +247,27 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 );
               }}
             >
-              <span>{column.title}</span>
-              {column.sortKey && (
-                <div>
-                  <Icon
-                    className="h-4 w-4"
-                    name={
-                      column.sorting
-                        ? {
-                            '+': 'heroicons:chevron-down-16-solid',
-                            '-': 'heroicons:chevron-up-16-solid',
-                          }[column.sorting]
-                        : 'heroicons:chevron-up-16-solid'
-                    }
-                  />
-                </div>
-              )}
+              <div className="flex flex-row items-center gap-2 w-full justify-between">
+                <span>{column.title}</span>
+                {column.sortKey && (
+                  <div>
+                    <Icon
+                      className="h-4 w-4"
+                      name={
+                        column.sorting
+                          ? {
+                              '+': 'heroicons:chevron-down-16-solid',
+                              '-': 'heroicons:chevron-up-16-solid',
+                            }[column.sorting]
+                          : 'heroicons:chevron-up-down-16-solid'
+                      }
+                    />
+                  </div>
+                )}
+              </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-secondary-100 px-4 text-xs font-medium text-secondary-500">
+                <div className="bg-secondary-100 text-xs font-medium text-secondary-500">
                   {column.filterable && column.filterKey && (
                     <>
                       {column.filterComponent?.(filters, updateFilters) || (
@@ -281,6 +290,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
+                          onIconRightClick={(e) => {
+                            e.stopPropagation();
+                          }}
                           className="h-10"
                           iconRightName="heroicons:magnifying-glass-16-solid"
                         />
@@ -292,7 +304,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
             </div>
           ))}
           {!!currentColumnsRight.length && (
-            <div className="sticky right-0 flex flex-row">
+            <div className="sticky right-0 flex flex-row h-full items-center">
               {currentColumnsRight.map((column) => (
                 <div
                   key={column.id.toString()}
@@ -300,7 +312,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: column.initialWidth,
                   }}
-                  className="flex h-12 flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                  className="flex h-full flex-row items-center justify-end truncate bg-secondary-100 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
                 </div>

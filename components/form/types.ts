@@ -124,7 +124,7 @@ export interface FormFieldProps<DataType> extends Classes {
   onChange?: (value: FormValue | FormValue[], event?: ChangeEvent) => void;
   onInput?: (value: FormValue, event?: InputEvent) => void;
   onClick?: (e: MouseEvent) => void;
-  onIconRightClick?: () => void;
+  onIconRightClick?: (e: MouseEvent) => void;
   onIconLeftClick?: () => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
 }
