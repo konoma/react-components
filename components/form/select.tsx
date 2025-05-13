@@ -144,6 +144,7 @@ export default function Select<DataType>({
             singleValue: () => valueClasses || '',
             placeholder: () => placeholderClasses || '',
             dropdownIndicator: () => indicatorClasses || '',
+            menuPortal: () => 'z-[20]',
           }}
           isClearable={isClearable}
           placeholder={placeholder}
