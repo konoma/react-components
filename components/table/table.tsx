@@ -57,7 +57,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   noEntryLabel,
   allowReorder,
   showFilters,
-  onMoveRow = () => {
+  onDragRow = () => {
+    return;
+  },
+  onDropRow = () => {
     return;
   },
   onRowClick = () => {
@@ -96,7 +99,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   totalRows: number;
   noEntryLabel?: string;
   allowReorder?: boolean;
-  onMoveRow?: (dragIndex: number, hoverIndex: number) => void;
+  onDragRow?: (dragIndex: number, hoverIndex: number) => void;
+  onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
   onFirstPage?: () => void;
   onPreviousPage?: () => void;
@@ -347,7 +351,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   key={i}
                   index={i}
                   entry={entry}
-                  moveRow={onMoveRow}
+                  onDragRow={onDragRow}
+                  onDropRow={onDropRow}
                   currentColumnsCenter={currentColumnsCenter}
                   currentColumnsLeft={currentColumnsLeft}
                   currentColumnsRight={currentColumnsRight}
@@ -447,7 +452,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
 function Row<DataType>({
   index,
   entry,
-  moveRow,
+  onDragRow,
+  onDropRow,
   onRowClick,
   onRowDoubleClick,
   currentColumnsLeft,
@@ -458,7 +464,8 @@ function Row<DataType>({
 }: {
   index: number;
   entry: DataType;
-  moveRow: (dragIndex: number, hoverIndex: number) => void;
+  onDragRow: (dragIndex: number, hoverIndex: number) => void;
+  onDropRow: (dragIndex: number, hoverIndex: number) => void;
   onRowClick: (data: DataType) => void;
   onRowDoubleClick: (data: DataType) => void;
   currentColumnsLeft: TableColumn<DataType>[];
@@ -520,7 +527,7 @@ function Row<DataType>({
       }
 
       // Time to actually perform the action
-      moveRow(dragIndex, hoverIndex);
+      onDragRow(dragIndex, hoverIndex);
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
@@ -532,6 +539,15 @@ function Row<DataType>({
 
   const [{ opacity }, drag, preview] = useDrag({
     type: 'row',
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        return;
+      }
+      const dropResult = monitor.getDropResult<DragItem>();
+      if (dropResult) {
+        onDropRow(item.index, dropResult.index);
+      }
+    },
     item: () => {
       return { id: (entry as DataType & { index: number }).index, index };
     },
