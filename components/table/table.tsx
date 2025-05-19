@@ -35,16 +35,28 @@ interface DragItem {
 }
 
 const baseClasses = {
-  wrapperClasses: 'flex flex-col rounded-krc-table border',
+  wrapperClasses: 'relative h-full',
+  tableClasses:
+    'max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline outline-secondary-300 divide-y divide-secondary-200',
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
   columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsRightClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-krc-table last:rounded-tr-krc-table',
   noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full',
+  rowClasses: 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100',
+  rowLeftWrapperClasses: 'bg-white group-hover:bg-primary-100',
+  rowCenterWrapperClasses: 'bg-white first:grow group-hover:bg-primary-100',
+  rowRightWrapperClasses: 'bg-white group-hover:bg-primary-100',
 };
 
 export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement> }>({
   noDataClasses = baseClasses.noDataClasses,
+  wrapperClasses = baseClasses.wrapperClasses,
+  tableClasses = baseClasses.tableClasses,
+  rowClasses = baseClasses.rowClasses,
+  rowLeftWrapperClasses = baseClasses.rowLeftWrapperClasses,
+  rowCenterWrapperClasses = baseClasses.rowCenterWrapperClasses,
+  rowRightWrapperClasses = baseClasses.rowRightWrapperClasses,
   paginationClasses,
   columnsCenter,
   columnsRight,
@@ -80,6 +92,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   },
 }: {
   wrapperClasses?: string;
+  tableClasses?: string;
+  rowClasses?: string;
+  rowLeftWrapperClasses?: string;
+  rowCenterWrapperClasses?: string;
+  rowRightWrapperClasses?: string;
   columnsWrapperClasses?: string;
   columnsLeftClasses?: string;
   columnsCenterClasses?: string;
@@ -132,7 +149,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
     await onUpdateFilters(newFilters);
   }
   return (
-    <div className="relative h-full">
+    <div className={wrapperClasses}>
       <div
         style={{
           gridTemplateRows: `repeat(${data.length + 1}, auto)`,
@@ -140,7 +157,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           gridAutoFlow: 'row',
           gridAutoRows: 'auto',
         }}
-        className="max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline outline-secondary-300"
+        className={tableClasses}
         onScroll={onScroll}
       >
         {/* Header */}
@@ -360,6 +377,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   header={header}
                   onRowClick={onRowClick}
                   onRowDoubleClick={onRowDoubleClick}
+                  rowClasses={rowClasses}
+                  rowLeftWrapperClasses={rowLeftWrapperClasses}
+                  rowCenterWrapperClasses={rowCenterWrapperClasses}
+                  rowRightWrapperClasses={rowRightWrapperClasses}
                 />
               );
             })}
@@ -368,12 +389,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           <>
             {data.map((entry, i) => {
               return (
-                <div
-                  key={i}
-                  className={`group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100`}
-                  onClick={() => onRowClick(entry)}
-                  onDoubleClick={() => onRowDoubleClick(entry)}
-                >
+                <div key={i} className={rowClasses} onClick={() => onRowClick(entry)} onDoubleClick={() => onRowDoubleClick(entry)}>
                   {!!currentColumnsLeft.length && (
                     <div className="sticky left-0 flex flex-row border-r">
                       {currentColumnsLeft.map((column) => {
@@ -384,7 +400,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               minWidth: column.initialWidth,
                               maxWidth: column.initialWidth,
                             }}
-                            className="bg-white group-hover:bg-primary-100"
+                            className={rowLeftWrapperClasses}
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
@@ -403,7 +419,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           minWidth: column.initialWidth,
                           maxWidth: column.initialWidth,
                         }}
-                        className="bg-white first:grow group-hover:bg-primary-100"
+                        className={rowCenterWrapperClasses}
                         title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
                       >
                         {cellRenderer?.[column.id]?.(entry) || (
@@ -422,7 +438,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               minWidth: column.initialWidth,
                               maxWidth: column.initialWidth,
                             }}
-                            className="bg-white group-hover:bg-primary-100"
+                            className={rowRightWrapperClasses}
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
@@ -461,6 +477,10 @@ function Row<DataType>({
   currentColumnsRight,
   cellRenderer,
   header,
+  rowClasses,
+  rowLeftWrapperClasses,
+  rowCenterWrapperClasses,
+  rowRightWrapperClasses,
 }: {
   index: number;
   entry: DataType;
@@ -473,6 +493,10 @@ function Row<DataType>({
   currentColumnsRight: TableColumn<DataType>[];
   cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
   header: React.MutableRefObject<HTMLDivElement | null>;
+  rowClasses: string;
+  rowLeftWrapperClasses: string;
+  rowCenterWrapperClasses: string;
+  rowRightWrapperClasses: string;
 }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -560,7 +584,7 @@ function Row<DataType>({
   drag(dragRef);
   return (
     <div
-      className={`group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100`}
+      className={rowClasses}
       onClick={() => onRowClick(entry)}
       onDoubleClick={() => onRowDoubleClick(entry)}
       ref={previewRef}
@@ -577,7 +601,7 @@ function Row<DataType>({
                   minWidth: column.initialWidth,
                   maxWidth: column.initialWidth,
                 }}
-                className="bg-white group-hover:bg-primary-100"
+                className={rowLeftWrapperClasses}
                 title={(entry[column.id] as string) || ''}
               >
                 {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
@@ -596,7 +620,7 @@ function Row<DataType>({
               minWidth: column.initialWidth,
               maxWidth: column.initialWidth,
             }}
-            className="bg-white first:grow group-hover:bg-primary-100"
+            className={rowCenterWrapperClasses}
             title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
           >
             {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
@@ -615,7 +639,7 @@ function Row<DataType>({
                   minWidth: column.initialWidth,
                   maxWidth: column.initialWidth,
                 }}
-                className="bg-white group-hover:bg-primary-100"
+                className={rowRightWrapperClasses}
                 title={(entry[column.id] as string) || ''}
               >
                 {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
