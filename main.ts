@@ -12,7 +12,6 @@ import TagList from './components/form/tagList';
 import TextArea from './components/form/textarea';
 import type { Classes, FormFieldProps, FormValue, Mask, Option } from './components/form/types';
 import * as validators from './components/form/validators';
-import Column from './components/table/column';
 import ColumnChooser from './components/table/columnChooser';
 import ColumnChooserEntry from './components/table/columnChooserEntry';
 import { FilterContext } from './components/table/FilterContext';
@@ -32,7 +31,6 @@ export {
   Checkbox,
   CheckboxList,
   Classes,
-  Column,
   ColumnChooser,
   ColumnChooserEntry,
   FilterContext,

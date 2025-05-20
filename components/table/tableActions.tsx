@@ -56,23 +56,27 @@ export default function TableActions({ children, classes = 'h-14 p-4' }: { child
 type TableActionVariant = 'error' | 'success' | 'warning' | 'default';
 export function TableActionEntry({
   text,
+  errorClasses = 'cursor-pointer px-4 py-2 text-error-900 hover:bg-error-100',
+  defaultClasses = 'cursor-pointer px-4 py-2 text-secondary-900 hover:bg-primary-100',
   variant = 'default',
   onClick,
 }: {
   text: string;
+  errorClasses?: string;
+  defaultClasses?: string;
   variant?: TableActionVariant;
   onClick: () => void;
 }) {
   switch (variant) {
     case 'error':
       return (
-        <span onClick={onClick} className="cursor-pointer px-4 py-2 text-error-900 hover:bg-error-100">
+        <span onClick={onClick} className={errorClasses}>
           {text}
         </span>
       );
     default:
       return (
-        <span onClick={onClick} className="cursor-pointer px-4 py-2 text-secondary-900 hover:bg-primary-100">
+        <span onClick={onClick} className={defaultClasses}>
           {text}
         </span>
       );

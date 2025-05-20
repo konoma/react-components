@@ -7,7 +7,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Input from '../form/input';
 import Icon from '../ui/icon';
-import type { ColumnClasses } from './column';
 import type { PaginationClasses } from './pagination';
 import Pagination from './pagination';
 
@@ -49,7 +48,7 @@ const baseClasses = {
   rowRightWrapperClasses: 'bg-white group-hover:bg-primary-100',
 };
 
-export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement> }>({
+export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement>; index?: number }>({
   noDataClasses = baseClasses.noDataClasses,
   wrapperClasses = baseClasses.wrapperClasses,
   tableClasses = baseClasses.tableClasses,
@@ -103,7 +102,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsRightClasses?: string;
   noDataClasses?: string;
   paginationClasses?: PaginationClasses;
-  columnClasses?: ColumnClasses;
   columnsCenter: TableColumn<DataType>[];
   columnsRight?: TableColumn<DataType>[];
   columnsLeft?: TableColumn<DataType>[];
@@ -148,6 +146,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   async function updateFilters(newFilters: Record<string, string>) {
     await onUpdateFilters(newFilters);
   }
+
   return (
     <div className={wrapperClasses}>
       <div
@@ -182,7 +181,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     );
                   }}
                   className={[
-                    'flex flex-col items-center truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                    'flex flex-col items-start truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                     hasFilters ? 'h-24' : 'h-12',
                     column.sortKey ? 'cursor-pointer' : '',
                   ].join(' ')}
@@ -207,7 +206,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-secondary-50 text-xs font-medium text-secondary-500">
+                    <div className="bg-secondary-50 w-full text-xs font-medium text-secondary-500">
                       {column.filterable && column.filterKey && (
                         <>
                           {column.filterComponent?.(filters, updateFilters) || (
@@ -262,7 +261,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 maxWidth: column.initialWidth,
               }}
               className={[
-                'flex flex-col items-center truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                'flex flex-col items-start truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                 hasFilters ? 'h-24' : 'h-12',
                 column.sortKey ? 'cursor-pointer' : '',
               ].join(' ')}
@@ -297,7 +296,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-secondary-50 text-xs font-medium text-secondary-500">
+                <div className="bg-secondary-50 text-xs font-medium w-full text-secondary-500">
                   {column.filterable && column.filterKey && (
                     <>
                       {column.filterComponent?.(filters, updateFilters) || (
@@ -351,7 +350,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: column.initialWidth,
                   }}
-                  className="flex h-full flex-row items-center justify-end truncate bg-secondary-50 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                  className="flex h-full flex-row items-start justify-end truncate bg-secondary-50 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
                 </div>
