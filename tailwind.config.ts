@@ -21,6 +21,9 @@ const config: Config = {
         'krc-tableColumnChooser': 'var(--krc-tableColumnChooser-borderRadius, 0.375rem)',
         'krc-tableActions': 'var(--krc-tableActions-borderRadius, 0.375rem)',
       },
+      backgroundColor: {
+        'krc-table-header': 'var(--krc-table-header-backgroundColor, #F9FAFB)',
+      },
     },
   },
   plugins: [],

@@ -68,6 +68,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   noEntryLabel,
   allowReorder,
   showFilters,
+  xToY,
   onDragRow = () => {
     return;
   },
@@ -114,6 +115,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   totalRows: number;
   noEntryLabel?: string;
   allowReorder?: boolean;
+  xToY?: string;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -160,7 +162,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         onScroll={onScroll}
       >
         {/* Header */}
-        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-secondary-50">
+        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
           {!!currentColumnsLeft.length && (
             <div className="sticky left-0 flex flex-row z-[1]">
               {currentColumnsLeft.map((column) => (
@@ -181,7 +183,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     );
                   }}
                   className={[
-                    'flex flex-col items-start truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                    'flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                     hasFilters ? 'h-24' : 'h-12',
                     column.sortKey ? 'cursor-pointer' : '',
                   ].join(' ')}
@@ -206,7 +208,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-secondary-50 w-full text-xs font-medium text-secondary-500">
+                    <div className="bg-krc-table-header w-full text-xs font-medium text-secondary-500">
                       {column.filterable && column.filterKey && (
                         <>
                           {column.filterComponent?.(filters, updateFilters) || (
@@ -261,7 +263,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 maxWidth: column.initialWidth,
               }}
               className={[
-                'flex flex-col items-start truncate bg-secondary-50 justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                'flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
                 hasFilters ? 'h-24' : 'h-12',
                 column.sortKey ? 'cursor-pointer' : '',
               ].join(' ')}
@@ -296,7 +298,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-secondary-50 text-xs font-medium w-full text-secondary-500">
+                <div className="bg-krc-table-header text-xs font-medium w-full text-secondary-500">
                   {column.filterable && column.filterKey && (
                     <>
                       {column.filterComponent?.(filters, updateFilters) || (
@@ -350,7 +352,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: column.initialWidth,
                   }}
-                  className="flex h-full flex-row items-start justify-end truncate bg-secondary-50 px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                  className="flex h-full flex-row items-start justify-end truncate bg-krc-table-header px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
                 </div>
@@ -450,7 +452,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   )}
                   <div
                     style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                    className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
+                    className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
                   ></div>
                 </div>
               );
@@ -459,7 +461,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         )}
         {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
       </div>
-      {pagination && data.length > 0 && <Pagination currentTotal={totalRows} currentLoaded={data.length} {...paginationClasses} />}
+      {pagination && xToY && data.length > 0 && (
+        <Pagination xToY={xToY} currentTotal={totalRows} currentLoaded={data.length} {...paginationClasses} />
+      )}
     </div>
   );
 }

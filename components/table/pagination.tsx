@@ -27,7 +27,7 @@ export default function Pagination({
   wrapperClasses?: string;
   resultsClasses?: string;
   resultsTextClasses?: string;
-  xToY?: string;
+  xToY: string;
 }) {
   return (
     <div className={wrapperClasses}>
