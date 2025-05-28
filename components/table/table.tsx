@@ -57,6 +57,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   rowCenterWrapperClasses = baseClasses.rowCenterWrapperClasses,
   rowRightWrapperClasses = baseClasses.rowRightWrapperClasses,
   paginationClasses,
+  filterComponents,
   columnsCenter,
   columnsRight,
   columnsLeft,
@@ -107,7 +108,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsRight?: TableColumn<DataType>[];
   columnsLeft?: TableColumn<DataType>[];
   cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
-  filterComponent?: { [key in keyof DataType]?: (data: DataType) => JSX.Element };
+  filterComponents?: {
+    [key in keyof DataType]?: (
+      filters: Record<string, string>,
+      setFilters: (filters: Record<string, string>) => Promise<void>
+    ) => JSX.Element;
+  };
   filters?: Record<string, string>;
   showFilters?: boolean;
   data: DataType[];
@@ -208,10 +214,16 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-krc-table-header w-full text-xs font-medium text-secondary-500">
+                    <div
+                      className="bg-krc-table-header w-full text-xs font-medium text-secondary-500"
+                      key={Object.keys(filters).join('-')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
                       {column.filterable && column.filterKey && (
                         <>
-                          {column.filterComponent?.(filters, updateFilters) || (
+                          {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                             <Input
                               defaultValue={filters[column.filterKey]}
                               key={filters[column.filterKey]}
@@ -298,10 +310,16 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-krc-table-header text-xs font-medium w-full text-secondary-500">
+                <div
+                  className="bg-krc-table-header text-xs font-medium w-full text-secondary-500"
+                  key={Object.keys(filters).join('-')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   {column.filterable && column.filterKey && (
                     <>
-                      {column.filterComponent?.(filters, updateFilters) || (
+                      {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                         <Input
                           defaultValue={filters[column.filterKey]}
                           key={filters[column.filterKey]}
