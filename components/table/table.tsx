@@ -214,7 +214,13 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   </div>
                   {/* Filter */}
                   {hasFilters && (
-                    <div className="bg-krc-table-header w-full text-xs font-medium text-secondary-500">
+                    <div
+                      className="bg-krc-table-header w-full text-xs font-medium text-secondary-500"
+                      key={Object.keys(filters).join('-')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
                       {column.filterable && column.filterKey && (
                         <>
                           {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
@@ -304,7 +310,13 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               </div>
               {/* Filter */}
               {hasFilters && (
-                <div className="bg-krc-table-header text-xs font-medium w-full text-secondary-500">
+                <div
+                  className="bg-krc-table-header text-xs font-medium w-full text-secondary-500"
+                  key={Object.keys(filters).join('-')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   {column.filterable && column.filterKey && (
                     <>
                       {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
