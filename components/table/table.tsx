@@ -19,6 +19,7 @@ export interface TableColumn<DataType> {
   // Mutually exclusive with onClick
   sortKey?: string;
   filterKey?: string;
+  filterType?: 'filter' | 'fieldSearch';
   // Mutually exclusive with sorting
   onClick?: () => void;
   allowResize?: boolean;
