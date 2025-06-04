@@ -2,7 +2,7 @@ import './tailwind.css';
 
 import Checkbox from './components/form/checkbox';
 import CheckboxList from './components/form/checkboxList';
-import Form from './components/form/form';
+import Form, { ErrorContext } from './components/form/form';
 import FormField from './components/form/formField';
 import Input from './components/form/input';
 import PhoneInput from './components/form/phoneInput';
@@ -33,6 +33,7 @@ export {
   Classes,
   ColumnChooser,
   ColumnChooserEntry,
+  ErrorContext,
   FilterContext,
   Form,
   FormField,
