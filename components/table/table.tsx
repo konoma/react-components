@@ -5,10 +5,10 @@ import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import Input from '../form/input';
-import Icon from '../ui/icon';
-import type { PaginationClasses } from './pagination';
-import Pagination from './pagination';
+import Input from '../form/input.tsx';
+import Icon from '../ui/icon.tsx';
+import type { PaginationClasses } from './pagination.tsx';
+import Pagination from './pagination.tsx';
 
 export interface TableColumn<DataType> {
   id: keyof DataType;
@@ -37,7 +37,7 @@ interface DragItem {
 const baseClasses = {
   wrapperClasses: 'relative h-full',
   tableClasses:
-    'max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline outline-secondary-300 divide-y divide-secondary-200',
+    'max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline-solid outline-secondary-300 divide-y divide-secondary-200',
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
   columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
@@ -169,9 +169,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         onScroll={onScroll}
       >
         {/* Header */}
-        <div ref={header} className="sticky top-0 z-[1] flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
+        <div ref={header} className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
           {!!currentColumnsLeft.length && (
-            <div className="sticky left-0 flex flex-row z-[1]">
+            <div className="sticky left-0 flex flex-row z-1">
               {currentColumnsLeft.map((column) => (
                 <div
                   key={column.id.toString()}
@@ -228,7 +228,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             <Input
                               defaultValue={filters[column.filterKey]}
                               key={filters[column.filterKey]}
-                              onKeyDown={async (e) => {
+                              onKeyDown={async (e: React.KeyboardEvent<HTMLElement>) => {
                                 if (e.key === 'Enter' && column.filterKey) {
                                   const key = column.filterKey;
                                   const value = (e.currentTarget as HTMLInputElement).value;
@@ -242,10 +242,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                   }
                                 }
                               }}
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent<Element>) => {
                                 e.stopPropagation();
                               }}
-                              onIconRightClick={async (e) => {
+                              onIconRightClick={async (e: React.MouseEvent<Element>) => {
                                 e.stopPropagation();
                                 const key = column.filterKey;
                                 if (key) {
@@ -324,7 +324,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                         <Input
                           defaultValue={filters[column.filterKey]}
                           key={filters[column.filterKey]}
-                          onKeyDown={async (e) => {
+                          onKeyDown={async (e: React.KeyboardEvent) => {
                             if (e.key === 'Enter' && column.filterKey) {
                               const key = column.filterKey;
                               const value = (e.currentTarget as HTMLInputElement).value;
@@ -338,10 +338,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               }
                             }
                           }}
-                          onClick={(e) => {
+                          onClick={(e: React.MouseEvent<Element>) => {
                             e.stopPropagation();
                           }}
-                          onIconRightClick={async (e) => {
+                          onIconRightClick={async (e: React.MouseEvent<Element>) => {
                             e.stopPropagation();
                             const key = column.filterKey;
                             if (key) {
@@ -513,15 +513,15 @@ function Row<DataType>({
   currentColumnsLeft: TableColumn<DataType>[];
   currentColumnsCenter: TableColumn<DataType>[];
   currentColumnsRight: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => JSX.Element };
   header: React.MutableRefObject<HTMLDivElement | null>;
   rowClasses: string;
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
   rowRightWrapperClasses: string;
 }) {
-  const dragRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
 
   if (!Object.prototype.hasOwnProperty.call(entry, 'index')) {
     throw new Error('Entry must have index property');
@@ -626,7 +626,7 @@ function Row<DataType>({
                 className={rowLeftWrapperClasses}
                 title={(entry[column.id] as string) || ''}
               >
-                {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+                {(dragRef && cellRenderer?.[column.id]?.({ ...entry, dragRef })) || (
                   <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
                 )}
               </div>

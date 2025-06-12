@@ -1,6 +1,6 @@
-import Checkbox from './checkbox';
-import type { Classes, FormFieldProps } from './types';
-import { positionClasses } from './types';
+import Checkbox from './checkbox.tsx';
+import type { Classes, FormFieldProps } from './types.ts';
+import { positionClasses } from './types.ts';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   labelClasses: 'text-sm font-medium text-secondary-900',

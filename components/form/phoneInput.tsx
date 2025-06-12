@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 
-import Select from './select';
-import type { Classes, FormFieldProps, FormValue } from './types';
+import Select from './select.tsx';
+import type { Classes, FormFieldProps, FormValue } from './types.ts';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes:
-    'w-full h-10 rounded-krc-phoneInput rounded-l-none px-3 py-2 outline-none placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none ',
+    'w-full h-10 rounded-krc-phone-input rounded-l-none px-3 py-2 outline-hidden placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none ',
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   wrapperLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-sm text-secondary-900',
@@ -130,7 +130,7 @@ export default function PhoneInput<DataType>({
       )}
       <div className="flex flex-row">
         <Select
-          className="w-[4.5rem] rounded-r-none"
+          className="w-18 rounded-r-none"
           valueClasses="text-secondary-900 text-sm pl-1 pr-0"
           valueContainerClasses="pr-0"
           indicatorClasses="text-secondary-500 pl-0"
@@ -153,16 +153,16 @@ export default function PhoneInput<DataType>({
             placeholder={placeholders[countryCode.label]}
             value={internalValue}
             defaultValue={defaultValue?.toString()}
-            onInput={(e) => {
+            onInput={(e: React.InputEvent<HTMLInputElement>) => {
               setInternalValue(e.currentTarget.value);
               onChangeInternal(e.currentTarget.value);
             }}
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               onClick(e);
             }}
             onBlur={onBlur}
             onKeyDown={onKeyDown}
-            className={classesFull.concat(countryCode.value.length === 3 ? 'pl-[2.75rem]' : 'pl-[3.25rem]').join(' ')}
+            className={classesFull.concat(countryCode.value.length === 3 ? 'pl-11' : 'pl-13').join(' ')}
             name={name as string}
           />
           <div className={wrapperLeftClasses}>{countryCode.value}</div>

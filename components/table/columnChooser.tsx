@@ -1,13 +1,13 @@
 import type { ExtendedRefs, FloatingContext } from '@floating-ui/react';
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
 
-import ColumnChooserEntry from './columnChooserEntry';
-import type { TableColumn } from './table';
+import ColumnChooserEntry from './columnChooserEntry.tsx';
+import type { TableColumn } from './table.tsx';
 
 const baseClasses = {
-  wrapperClasses: 'flex flex-col rounded-krc-tableColumnChooser bg-white px-4 py-3 shadow z-[1]',
+  wrapperClasses: 'flex flex-col rounded-krc-table-column-chooser bg-white px-4 py-3 shadow-sm z-1',
   headerClasses: 'h-8',
-  columnsWrapperClasses: 'ml-2 mt-3 flex max-h-[25rem] flex-col gap-1 overflow-y-auto',
+  columnsWrapperClasses: 'ml-2 mt-3 flex max-h-100 flex-col gap-1 overflow-y-auto',
   entryClasses: 'cursor-pointer px-4 py-2 text-sm font-medium text-secondary-600',
   visibleColumnClasses: 'bg-primary-100',
   hiddenColumnClasses: 'bg-white',

@@ -1,16 +1,16 @@
 import path from 'node:path';
 
 import react from '@vitejs/plugin-react';
-import tailwindcss from 'tailwindcss';
+import tailwindcss from '@tailwindcss/postcss';
 import type { UserConfigExport } from 'vite';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 
-import { name } from './package.json';
+import packageJson from './package.json' with { type: 'json' };
 
 const app = async (): Promise<UserConfigExport> => {
-  const formattedName = name.match(/[^/]+$/)?.[0] ?? name;
+  const formattedName = packageJson.name.match(/[^/]+$/)?.[0] ?? packageJson.name;
 
   return defineConfig({
     plugins: [
@@ -22,7 +22,7 @@ const app = async (): Promise<UserConfigExport> => {
     ],
     css: {
       postcss: {
-        plugins: [tailwindcss],
+        plugins: [tailwindcss()],
       },
     },
     build: {

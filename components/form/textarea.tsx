@@ -1,12 +1,12 @@
 import { Resizable } from 're-resizable';
 import { useMemo, useRef, useState } from 'react';
 
-import Icon from '../ui/icon';
-import type { Classes, FormFieldProps } from './types';
+import Icon from '../ui/icon.tsx';
+import type { Classes, FormFieldProps } from './types.ts';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes: 'w-full bg-white text-sm cursor-text rounded-krc-textarea p-4 text-secondary-900',
-  classesNeutral: 'border border-secondary-300 has-[:focus]:ring-2 hover:border-secondary-400 has-[:focus]:ring-primary-900',
+  classesNeutral: 'border border-secondary-300 has-focus:ring-2 hover:border-secondary-400 has-[:focus]:ring-primary-900',
   classesError: 'ring-error-500 ring-2',
   errorClasses: 'text-sm text-error-500',
   labelClasses: 'flex flex-row justify-start text-sm text-secondary-900 font-medium',
@@ -14,7 +14,7 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   wrapperClasses: 'flex flex-col gap-1',
   resizeClasses: 'absolute bottom-4 right-4 h-4 w-4 cursor-row-resize text-secondary-300',
   resizeIconClasses: 'h-4 w-4',
-  controlClasses: 'h-full w-full resize-none focus-visible:outline-none disabled:pointer-events-none  disabled:bg-primary-50',
+  controlClasses: 'h-full w-full resize-none focus-visible:outline-hidden disabled:pointer-events-none  disabled:bg-primary-50',
   labelWrapperClasses: 'flex flex-row justify-between',
   classesDisabled: 'w-full text-sm rounded-krc-textarea p-4 pointer-events-none bg-primary-50',
 };

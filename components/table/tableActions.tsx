@@ -12,7 +12,7 @@ import {
 } from '@floating-ui/react';
 import { useState } from 'react';
 
-import Icon from '../ui/icon';
+import Icon from '../ui/icon.tsx';
 
 export default function TableActions({ children, classes = 'h-14 p-4' }: { children: React.ReactNode; classes?: string }) {
   const [actionsVisible, setActionsVisible] = useState(false);
@@ -39,7 +39,7 @@ export default function TableActions({ children, classes = 'h-14 p-4' }: { child
         <FloatingPortal>
           <FloatingFocusManager context={context} modal={false}>
             <div
-              className="flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow"
+              className="flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm"
               ref={refs.setFloating}
               style={floatingStyles}
               {...getFloatingProps()}

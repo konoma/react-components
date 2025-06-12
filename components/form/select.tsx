@@ -2,7 +2,7 @@ import { useId } from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import type { Classes, FormFieldProps, FormValue, Option } from './types';
+import type { Classes, FormFieldProps, FormValue, Option } from './types.ts';
 
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
 
@@ -14,7 +14,7 @@ const baseClasses: { [key in keyof Classes]: string } = {
   classesNeutral: 'border-secondary-300 group-hover:border-secondary-400',
   classesError: 'ring-error-500 ring-2',
   focusClasses: 'ring-2 ring-primary-900',
-  controlClasses: 'h-8 rounded-krc-select py-0 text-secondary-900 text-sm border-none outline-none',
+  controlClasses: 'h-8 rounded-krc-select py-0 text-secondary-900 text-sm border-none outline-hidden',
   optionClasses: 'bg-white text-sm',
   optionSelectedClasses: 'bg-primary-500 text-sm',
   optionFocusedClasses: 'bg-white hover:bg-primary-200 text-sm',
@@ -144,7 +144,7 @@ export default function Select<DataType>({
             singleValue: () => valueClasses || '',
             placeholder: () => placeholderClasses || '',
             dropdownIndicator: () => indicatorClasses || '',
-            menuPortal: () => 'z-[20]',
+            menuPortal: () => 'z-20',
             indicatorsContainer: () => (disabled ? 'hidden' : ''),
           }}
           isClearable={isClearable}
