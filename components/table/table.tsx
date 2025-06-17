@@ -38,15 +38,16 @@ const baseClasses = {
   wrapperClasses: 'relative h-full',
   tableClasses:
     'max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline-solid outline-secondary-300 divide-y divide-secondary-200',
+  headerClasses: "flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2",
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
   columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsRightClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-krc-table last:rounded-tr-krc-table',
   noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full',
-  rowClasses: 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100',
-  rowLeftWrapperClasses: 'bg-white group-hover:bg-primary-100',
-  rowCenterWrapperClasses: 'bg-white first:grow group-hover:bg-primary-100',
-  rowRightWrapperClasses: 'bg-white group-hover:bg-primary-100',
+  rowClasses: 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100 h-fit',
+  rowLeftWrapperClasses: 'bg-white group-hover:bg-primary-100 h-fit',
+  rowCenterWrapperClasses: 'bg-white first:grow group-hover:bg-primary-100 h-fit',
+  rowRightWrapperClasses: 'bg-white group-hover:bg-primary-100 h-fit',
 };
 
 export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement>; index?: number }>({
@@ -57,6 +58,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   rowLeftWrapperClasses = baseClasses.rowLeftWrapperClasses,
   rowCenterWrapperClasses = baseClasses.rowCenterWrapperClasses,
   rowRightWrapperClasses = baseClasses.rowRightWrapperClasses,
+  headerClasses = baseClasses.headerClasses,
   paginationClasses,
   filterComponents,
   columnsCenter,
@@ -102,7 +104,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsWrapperClasses?: string;
   columnsLeftClasses?: string;
   columnsCenterClasses?: string;
-  columnsRightClasses?: string;
+    columnsRightClasses?: string;
+  headerClasses?: string;
   noDataClasses?: string;
   paginationClasses?: PaginationClasses;
   columnsCenter: TableColumn<DataType>[];
@@ -190,7 +193,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     );
                   }}
                   className={[
-                    'flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                    headerClasses,
                     hasFilters ? 'h-24' : 'h-12',
                     column.sortKey ? 'cursor-pointer' : '',
                   ].join(' ')}
@@ -276,7 +279,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 maxWidth: column.initialWidth,
               }}
               className={[
-                'flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
+                headerClasses,
                 hasFilters ? 'h-24' : 'h-12',
                 column.sortKey ? 'cursor-pointer' : '',
               ].join(' ')}

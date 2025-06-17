@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 
@@ -153,7 +154,7 @@ export default function PhoneInput<DataType>({
             placeholder={placeholders[countryCode.label]}
             value={internalValue}
             defaultValue={defaultValue?.toString()}
-            onInput={(e: React.InputEvent<HTMLInputElement>) => {
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
               setInternalValue(e.currentTarget.value);
               onChangeInternal(e.currentTarget.value);
             }}
