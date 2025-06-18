@@ -108,6 +108,12 @@ export default function Select<DataType>({
           instanceId={useId()}
           classNamePrefix="select"
           className={wrapperClasses}
+          styles={{
+            control: (base) => ({
+              ...base,
+              borderRadius: undefined,
+            }),
+          }}
           isSearchable={searchable}
           menuPlacement="auto"
           isDisabled={disabled}

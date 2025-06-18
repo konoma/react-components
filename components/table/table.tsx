@@ -38,7 +38,8 @@ const baseClasses = {
   wrapperClasses: 'relative h-full',
   tableClasses:
     'max-h-full max-w-full overflow-x-auto overflow-y-auto rounded-krc-table outline-1 outline-solid outline-secondary-300 divide-y divide-secondary-200',
-  headerClasses: "flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2",
+  headerClasses:
+    'flex flex-col items-start truncate bg-krc-table-header justify-center px-4 py-3 text-xs font-medium first:rounded-tl-krc-table gap-2',
   columnsWrapperClasses: 'flex flex-row overflow-x-auto overflow-y-auto h-full',
   columnsLeftClasses: 'flex flex-row h-fit overflow-x-auto border-r first:rounded-tl-krc-table last:rounded-tr-krc-table',
   columnsCenterClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
@@ -104,7 +105,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsWrapperClasses?: string;
   columnsLeftClasses?: string;
   columnsCenterClasses?: string;
-    columnsRightClasses?: string;
+  columnsRightClasses?: string;
   headerClasses?: string;
   noDataClasses?: string;
   paginationClasses?: PaginationClasses;
@@ -192,11 +193,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       )
                     );
                   }}
-                  className={[
-                    headerClasses,
-                    hasFilters ? 'h-24' : 'h-12',
-                    column.sortKey ? 'cursor-pointer' : '',
-                  ].join(' ')}
+                  className={[headerClasses, hasFilters ? 'h-24' : 'h-12', column.sortKey ? 'cursor-pointer' : ''].join(' ')}
                 >
                   <div className="flex flex-row items-center gap-2 w-full justify-between">
                     <span>{column.title}</span>
@@ -278,11 +275,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 minWidth: column.initialWidth,
                 maxWidth: column.initialWidth,
               }}
-              className={[
-                headerClasses,
-                hasFilters ? 'h-24' : 'h-12',
-                column.sortKey ? 'cursor-pointer' : '',
-              ].join(' ')}
+              className={[headerClasses, hasFilters ? 'h-24' : 'h-12', column.sortKey ? 'cursor-pointer' : ''].join(' ')}
               onClick={() => {
                 return (
                   column.sortKey &&

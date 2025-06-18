@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 
 import { includeIgnoreFile } from '@eslint/compat';
 import eslint from '@eslint/js';
-import i18next from 'eslint-plugin-i18next';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactPlugin from 'eslint-plugin-react';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -19,9 +18,9 @@ export default [
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
-  i18next.configs['flat/recommended'],
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
+  eslintPluginPrettierRecommended,
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     plugins: {
@@ -42,11 +41,24 @@ export default [
     },
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
-      // 'i18next/no-literal-string': ['error', { mode: 'all' }],
-      'i18next/no-literal-string': ['error'],
       'sort-imports': ['off'],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      'prettier/prettier': 'error',
+      'arrow-body-style': 'off',
+      'prefer-arrow-callback': 'off',
+      radix: 'off',
+      'no-underscore-dangle': 'off',
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': 'off',
+      'no-param-reassign': 'off',
+      'react/require-default-props': 'off',
+      'react/jsx-props-no-spreading': 'off',
+      '@typescript-eslint/naming-convention': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'react/no-array-index-key': 'off',
+      'import/no-anonymous-default-export': 'off',
+      curly: ['error', 'all'],
     },
     settings: {
       react: {
@@ -54,5 +66,4 @@ export default [
       },
     },
   },
-  eslintPluginPrettierRecommended,
 ];
