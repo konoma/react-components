@@ -104,6 +104,7 @@ export interface FormFieldProps<DataType> extends Classes {
   searchable?: boolean;
   textRight?: string;
   type?: HTMLInputTypeAttribute;
+  step?: React.InputHTMLAttributes<HTMLInputElement>['step'];
   initialHeight?: number;
   mask?: Mask | Mask[];
   min?: number;

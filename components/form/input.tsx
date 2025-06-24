@@ -39,6 +39,7 @@ export default function Input<DataType>({
   textRight,
   centered,
   error,
+  step,
   required,
   name,
   value,
@@ -100,6 +101,7 @@ export default function Input<DataType>({
             radix="."
             unmask={true}
             ref={ref}
+            step={step}
             inputRef={inputRef}
             placeholder={placeholder}
             value={value?.toString()}
@@ -131,6 +133,7 @@ export default function Input<DataType>({
               ref.current?.showPicker();
               onClick(e);
             }}
+            step={step}
             onBlur={onBlur}
             onKeyDown={onKeyDown}
             className={classesFull.join(' ')}
