@@ -25,7 +25,7 @@ export interface TableColumn<DataType> {
   allowResize?: boolean;
   filterable?: boolean;
   grow?: boolean;
-  filterComponent?: (filters: Record<string, string>, setFilters: (filters: Record<string, string>) => Promise<void>) => JSX.Element;
+  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => JSX.Element;
 }
 
 interface DragItem {
@@ -115,11 +115,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
   filterComponents?: {
     [key in keyof DataType]?: (
-      filters: Record<string, string>,
-      setFilters: (filters: Record<string, string>) => Promise<void>
+      filters: Record<string, string[]>,
+      setFilters: (filters: Record<string, string[]>) => Promise<void>
     ) => JSX.Element;
   };
-  filters?: Record<string, string>;
+  filters?: Record<string, string[]>;
   showFilters?: boolean;
   data: DataType[];
   pagination?: boolean;
@@ -138,7 +138,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onRowClick?: (data: DataType) => void;
   onRowDoubleClick?: (data: DataType) => void;
   onSort?: (column: TableColumn<DataType>) => void;
-  onUpdateFilters?: (filters: Record<string, string>) => Promise<void>;
+  onUpdateFilters?: (filters: Record<string, string[]>) => Promise<void>;
   onUpdateColumnsLeft?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
   onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
   onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
@@ -156,7 +156,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   const currentColumnsCenter = useMemo(() => columnsCenter?.filter((column) => !column?.hidden) || [], [columnsCenter]);
   const currentColumnsRight = useMemo(() => columnsRight?.filter((column) => !column?.hidden) || [], [columnsRight]);
 
-  async function updateFilters(newFilters: Record<string, string>) {
+  async function updateFilters(newFilters: Record<string, string[]>) {
     await onUpdateFilters(newFilters);
   }
 
@@ -226,14 +226,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                         <>
                           {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                             <Input
-                              defaultValue={filters[column.filterKey]}
-                              key={filters[column.filterKey]}
+                              defaultValue={filters[column.filterKey]?.join(', ')}
+                              key={filters[column.filterKey]?.join(', ')}
                               onKeyDown={async (e: React.KeyboardEvent<HTMLElement>) => {
                                 if (e.key === 'Enter' && column.filterKey) {
                                   const key = column.filterKey;
                                   const value = (e.currentTarget as HTMLInputElement).value;
                                   if (e) {
-                                    await updateFilters({ ...filters, [key]: value });
+                                    await updateFilters({ ...filters, [key]: [value] });
                                   } else {
                                     const newFilters = { ...filters };
                                     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -318,14 +318,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     <>
                       {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                         <Input
-                          defaultValue={filters[column.filterKey]}
-                          key={filters[column.filterKey]}
+                          defaultValue={filters[column.filterKey]?.join(', ')}
+                          key={filters[column.filterKey]?.join(', ')}
                           onKeyDown={async (e: React.KeyboardEvent) => {
                             if (e.key === 'Enter' && column.filterKey) {
                               const key = column.filterKey;
                               const value = (e.currentTarget as HTMLInputElement).value;
                               if (e) {
-                                await updateFilters({ ...filters, [key]: value });
+                                await updateFilters({ ...filters, [key]: [value] });
                               } else {
                                 const newFilters = { ...filters };
                                 // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
