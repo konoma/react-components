@@ -116,6 +116,8 @@ export interface FormFieldProps<DataType> extends Classes {
   /** Used for selects that have no visible selected value */
   noValue?: boolean;
   isMulti?: boolean;
+  /** [select only] Default placement of the menu in relation to the control. 'auto' will flip when there isn't enough space below the control. */
+  menuPlacement?: 'auto' | 'top' | 'bottom';
   valueTransformer?: (value: FormValue) => FormValue;
   /** Used to place the dropdown element of a Select */
   menuPortalTarget?: HTMLElement;

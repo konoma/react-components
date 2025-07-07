@@ -48,6 +48,7 @@ export default function Select<DataType>({
   required,
   error,
   defaultValue,
+  menuPlacement = 'auto',
   searchable = false,
   label,
   name,
@@ -115,7 +116,7 @@ export default function Select<DataType>({
             }),
           }}
           isSearchable={searchable}
-          menuPlacement="auto"
+          menuPlacement={menuPlacement}
           isDisabled={disabled}
           name={name as string}
           classNames={{
