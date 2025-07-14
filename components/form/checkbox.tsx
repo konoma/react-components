@@ -26,7 +26,7 @@ export default function Checkbox<DataType>({
   value,
   defaultValue,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the input */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   onInput = () => {
     return;
   },
@@ -64,7 +64,7 @@ export default function Checkbox<DataType>({
           {...props}
         />
         <div className={classesFilled}>
-          <Icon name="heroicons:check-16-solid" className={iconClassesFilled} />
+          <Icon name={indeterminate ? 'heroicons:minus' : 'heroicons:check-16-solid'} className={iconClassesFilled} />
         </div>
         <span className={labelClassesFilled}>{label}</span>
       </label>

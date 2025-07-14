@@ -70,10 +70,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   data,
   pagination,
   totalRows,
+  totalPagesProp,
+  currentPage = 0,
   noEntryLabel,
   allowReorder,
   showFilters,
+  pagesize = 10,
   xToY,
+  isInfinite = true,
   onDragRow = () => {
     return;
   },
@@ -95,6 +99,21 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onSort = () => {
     return;
   },
+  onFirstPage = () => {
+    return;
+  },
+  onPreviousPage = () => {
+    return;
+  },
+  onNextPage = () => {
+    return;
+  },
+  onLastPage = () => {
+    return;
+  },
+  toPage = (page: number) => {
+    return;
+  },
 }: {
   wrapperClasses?: string;
   tableClasses?: string;
@@ -108,6 +127,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsRightClasses?: string;
   headerClasses?: string;
   noDataClasses?: string;
+  currentPage: number;
+  totalPagesProp?: number;
   paginationClasses?: PaginationClasses;
   columnsCenter: TableColumn<DataType>[];
   columnsRight?: TableColumn<DataType>[];
@@ -127,6 +148,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   noEntryLabel?: string;
   allowReorder?: boolean;
   xToY?: string;
+  isInfinite?: boolean;
+  pagesize?: number;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -149,6 +172,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
       columnsLeft?.some((column) => column.filterable) ||
       columnsRight?.some((column) => column.filterable))
   );
+
+  const totalPages = totalPagesProp || Math.ceil(totalRows / pagesize);
+  const currentStart = (currentPage - 1) * pagesize;
+  const currentEnd = currentPage * pagesize;
 
   const header = useRef<HTMLDivElement>(null);
 
@@ -477,7 +504,22 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
       </div>
       {pagination && xToY && data.length > 0 && (
-        <Pagination xToY={xToY} currentTotal={totalRows} currentLoaded={data.length} {...paginationClasses} />
+        <Pagination
+          showButtons={!isInfinite}
+          xToY={xToY}
+          currentTotal={totalRows}
+          currentLoaded={data.length}
+          currentStart={currentStart}
+          currentEnd={currentEnd}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onFirstPage={onFirstPage}
+          onPreviousPage={onPreviousPage}
+          onNextPage={onNextPage}
+          onLastPage={onLastPage}
+          toPage={toPage}
+          {...paginationClasses}
+        />
       )}
     </div>
   );
