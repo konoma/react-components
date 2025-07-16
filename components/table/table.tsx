@@ -127,7 +127,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsRightClasses?: string;
   headerClasses?: string;
   noDataClasses?: string;
-  currentPage: number;
+  currentPage?: number;
   totalPagesProp?: number;
   paginationClasses?: PaginationClasses;
   columnsCenter: TableColumn<DataType>[];
@@ -208,7 +208,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   key={column.id.toString()}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: column.initialWidth,
+                    maxWidth: !column.grow ? column.initialWidth : undefined,
                   }}
                   onClick={() => {
                     return (
@@ -220,7 +220,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       )
                     );
                   }}
-                  className={[headerClasses, hasFilters ? 'h-24' : 'h-12', column.sortKey ? 'cursor-pointer' : ''].join(' ')}
+                  className={[
+                    headerClasses,
+                    hasFilters ? 'h-24' : 'h-12',
+                    column.sortKey ? 'cursor-pointer' : '',
+                    column.grow ? 'grow' : '',
+                  ].join(' ')}
                 >
                   <div className="flex flex-row items-center gap-2 w-full justify-between">
                     <span>{column.title}</span>
@@ -300,9 +305,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               key={column.id.toString()}
               style={{
                 minWidth: column.initialWidth,
-                maxWidth: column.initialWidth,
+                maxWidth: !column.grow ? column.initialWidth : undefined,
               }}
-              className={[headerClasses, hasFilters ? 'h-24' : 'h-12', column.sortKey ? 'cursor-pointer' : ''].join(' ')}
+              className={[
+                headerClasses,
+                hasFilters ? 'h-24' : 'h-12',
+                column.sortKey ? 'cursor-pointer' : '',
+                column.grow ? 'grow' : '',
+              ].join(' ')}
               onClick={() => {
                 return (
                   column.sortKey &&
@@ -392,7 +402,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   key={column.id.toString()}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: column.initialWidth,
+                    maxWidth: !column.grow ? column.initialWidth : undefined,
                   }}
                   className="flex h-full flex-row items-start justify-end truncate bg-krc-table-header px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
@@ -441,9 +451,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             key={column.id.toString()}
                             style={{
                               minWidth: column.initialWidth,
-                              maxWidth: column.initialWidth,
+                              maxWidth: !column.grow ? column.initialWidth : undefined,
                             }}
-                            className={rowLeftWrapperClasses}
+                            className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
@@ -460,9 +470,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                         key={column.id.toString()}
                         style={{
                           minWidth: column.initialWidth,
-                          maxWidth: column.initialWidth,
+                          maxWidth: !column.grow ? column.initialWidth : undefined,
                         }}
-                        className={rowCenterWrapperClasses}
+                        className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                         title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
                       >
                         {cellRenderer?.[column.id]?.(entry) || (
@@ -479,9 +489,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             key={column.id.toString()}
                             style={{
                               minWidth: column.initialWidth,
-                              maxWidth: column.initialWidth,
+                              maxWidth: !column.grow ? column.initialWidth : undefined,
                             }}
-                            className={rowRightWrapperClasses}
+                            className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
@@ -659,9 +669,9 @@ function Row<DataType>({
                 key={column.id.toString()}
                 style={{
                   minWidth: column.initialWidth,
-                  maxWidth: column.initialWidth,
+                  maxWidth: !column.grow ? column.initialWidth : undefined,
                 }}
-                className={rowLeftWrapperClasses}
+                className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                 title={(entry[column.id] as string) || ''}
               >
                 {(dragRef && cellRenderer?.[column.id]?.({ ...entry, dragRef })) || (
@@ -678,9 +688,9 @@ function Row<DataType>({
             key={column.id.toString()}
             style={{
               minWidth: column.initialWidth,
-              maxWidth: column.initialWidth,
+              maxWidth: !column.grow ? column.initialWidth : undefined,
             }}
-            className={rowCenterWrapperClasses}
+            className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
             title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
           >
             {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
@@ -697,9 +707,9 @@ function Row<DataType>({
                 key={column.id.toString()}
                 style={{
                   minWidth: column.initialWidth,
-                  maxWidth: column.initialWidth,
+                  maxWidth: !column.grow ? column.initialWidth : undefined,
                 }}
-                className={rowRightWrapperClasses}
+                className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                 title={(entry[column.id] as string) || ''}
               >
                 {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
