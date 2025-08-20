@@ -35,7 +35,7 @@ const app = async (): Promise<UserConfigExport> => {
       },
       rollupOptions: {
         // external: [...Object.keys(peerDependencies)],
-        external: ['react', 'react/jsx-runtime'],
+        external: ['react', 'react/jsx-runtime', '@emotion/react', '@emotion/styled'],
         output: {
           globals: {
             react: 'React',
