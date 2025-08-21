@@ -248,7 +248,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   {/* Filter */}
                   {hasFilters && (
                     <div
-                      className="bg-krc-table-header w-full text-xs font-medium text-secondary-500"
+                      className="bg-krc-table-header w-full text-xs font-medium text-secondary-500 min-h-10"
                       key={Object.keys(filters).join('-')}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -345,7 +345,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               {/* Filter */}
               {hasFilters && (
                 <div
-                  className="bg-krc-table-header text-xs font-medium w-full text-secondary-500"
+                  className="bg-krc-table-header text-xs font-medium w-full text-secondary-500 min-h-10"
                   key={Object.keys(filters).join('-')}
                   onClick={(e) => {
                     e.stopPropagation();
