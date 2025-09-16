@@ -17,7 +17,7 @@ const baseClasses: { [key in keyof Classes]: string } = {
   controlClasses: 'h-8 rounded-krc-select py-0 text-secondary-900 text-sm border-none outline-hidden',
   optionClasses: 'bg-white text-sm',
   optionSelectedClasses: 'bg-primary-500 text-sm',
-  optionFocusedClasses: 'bg-white hover:bg-primary-200 text-sm',
+  optionFocusedClasses: 'bg-primary-200 text-sm',
   valueClasses: 'text-secondary-900 text-sm',
   placeholderClasses: 'text-secondary-500 text-sm',
   wrapperClasses: 'w-full h-auto',
