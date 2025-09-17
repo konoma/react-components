@@ -49,7 +49,7 @@ export default function Select<DataType>({
   error,
   defaultValue,
   menuPlacement = 'auto',
-  searchable = false,
+  searchable = true,
   label,
   name,
   isClearable = false,
