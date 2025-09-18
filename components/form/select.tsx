@@ -1,7 +1,9 @@
-import { useId } from 'react';
+import { useLocale } from 'next-intl';
+import { useContext, useId } from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { i18nContext } from '../wrapper.tsx';
 import type { Classes, FormFieldProps, FormValue, Option } from './types.ts';
 
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
@@ -43,7 +45,7 @@ export default function Select<DataType>({
   indicatorClasses = baseClasses.indicatorClasses,
   valueContainerClasses = baseClasses.valueContainerClasses,
   options = [],
-  placeholder = 'Bitte auswählen',
+  placeholder,
   className,
   required,
   error,
@@ -70,6 +72,8 @@ export default function Select<DataType>({
   },
   ...props
 }: FormFieldProps<DataType>) {
+  const { locale } = useContext(i18nContext);
+
   const classesFull = [classes, className];
   const optionsInternal = options
     .filter((o) => !!o.value && o.value !== CUSTOM_ENTRY_VALUE)
@@ -105,7 +109,7 @@ export default function Select<DataType>({
           </span>
         )}
         <Component<FormValue, boolean>
-          key={key}
+          key={key + locale}
           instanceId={useId()}
           classNamePrefix="select"
           className={wrapperClasses}

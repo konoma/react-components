@@ -1,6 +1,6 @@
 // Generic validators for form fields
 
-export function required(message = 'Bitte ausfüllen') {
+export function required(message: string) {
   return (value: string | number | boolean | null) => {
     if (value === undefined || value === null || value === '') {
       return message;
@@ -9,7 +9,7 @@ export function required(message = 'Bitte ausfüllen') {
   };
 }
 
-export function email(message = 'Ungültige E-Mail-Adresse') {
+export function email(message: string) {
   return (value: string | number | boolean | null) => {
     if (!value) {
       return '';

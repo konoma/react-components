@@ -46,7 +46,6 @@ export default function Textarea<DataType>({
   defaultValue,
   maxLengthLabel,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the textarea */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onInput = () => {
     return;
   },

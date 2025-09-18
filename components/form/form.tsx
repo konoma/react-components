@@ -1,4 +1,4 @@
-import type { JSX, Ref } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { createContext, useCallback, useEffect, useState } from 'react';
 
 export const ErrorContext = createContext<{
@@ -23,7 +23,7 @@ export default function Form<DataType>({
   onSubmit,
 }: {
   formRef?: Ref<HTMLFormElement>;
-  children: JSX.Element[] | JSX.Element;
+  children: ReactNode;
   className?: string;
   data: DataType;
   validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>;

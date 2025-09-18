@@ -1,4 +1,4 @@
-import type { ChangeEvent, HTMLInputTypeAttribute, JSX, MouseEvent } from 'react';
+import type { ChangeEvent, HTMLInputTypeAttribute, MouseEvent, ReactNode } from 'react';
 
 type LabelPosition = 'top' | 'bottom' | 'left' | 'right';
 
@@ -90,7 +90,7 @@ export interface FormFieldProps<DataType> extends Classes {
   indeterminate?: boolean;
   isClearable?: boolean;
   replacements?: Record<string, string>;
-  label?: string | JSX.Element;
+  label?: ReactNode;
   labelPosition?: LabelPosition;
   maxLength?: number;
   maxLengthLabel?: string;

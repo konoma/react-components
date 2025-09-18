@@ -1,18 +1,19 @@
 import type { Identifier } from 'dnd-core';
-import type { JSX } from 'react';
-import { useMemo, useRef } from 'react';
+import type { ReactNode } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Input from '../form/input.tsx';
 import Icon from '../ui/icon.tsx';
+import { i18nContext } from '../wrapper.tsx';
 import type { PaginationClasses } from './pagination.tsx';
 import Pagination from './pagination.tsx';
 
 export interface TableColumn<DataType> {
   id: keyof DataType;
-  title: string | JSX.Element;
+  title: ReactNode;
   initialWidth?: string | number;
   hidden?: boolean;
   sorting?: '+' | '-' | undefined;
@@ -25,7 +26,7 @@ export interface TableColumn<DataType> {
   allowResize?: boolean;
   filterable?: boolean;
   grow?: boolean;
-  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => JSX.Element;
+  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => ReactNode;
 }
 
 interface DragItem {
@@ -133,12 +134,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsCenter: TableColumn<DataType>[];
   columnsRight?: TableColumn<DataType>[];
   columnsLeft?: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => ReactNode };
   filterComponents?: {
     [key in keyof DataType]?: (
       filters: Record<string, string[]>,
       setFilters: (filters: Record<string, string[]>) => Promise<void>
-    ) => JSX.Element;
+    ) => ReactNode;
   };
   filters?: Record<string, string[]>;
   showFilters?: boolean;
@@ -166,6 +167,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
   onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
 }) {
+  const { locale } = useContext(i18nContext);
+
   const hasFilters = !!(
     showFilters &&
     (columnsCenter.some((column) => column.filterable) ||
@@ -200,7 +203,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         onScroll={onScroll}
       >
         {/* Header */}
-        <div ref={header} className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
+        <div
+          ref={header}
+          key={locale}
+          className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header"
+        >
           {!!currentColumnsLeft.length && (
             <div className="sticky left-0 flex flex-row z-1">
               {currentColumnsLeft.map((column) => (
@@ -561,8 +568,8 @@ function Row<DataType>({
   currentColumnsLeft: TableColumn<DataType>[];
   currentColumnsCenter: TableColumn<DataType>[];
   currentColumnsRight: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => JSX.Element };
-  header: React.MutableRefObject<HTMLDivElement | null>;
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => ReactNode };
+  header: React.RefObject<HTMLDivElement | null>;
   rowClasses: string;
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
