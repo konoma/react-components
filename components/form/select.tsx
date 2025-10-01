@@ -1,4 +1,3 @@
-import { useLocale } from 'next-intl';
 import { useContext, useId } from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
