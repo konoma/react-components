@@ -33,7 +33,7 @@ jobs:
 
       - name: Set version to release tag
         shell: bash
-        run: npm version --allow-same-version --no-commit-hooks --no-git-tag-version from-git
+        run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
 
       - name: Publish
         shell: bash
