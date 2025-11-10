@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.ref_name }}
 
       - name: Activate corepack
         run: corepack enable
@@ -28,6 +28,19 @@ jobs:
       - name: Build
         run: yarn build
 
-      - uses: simenandre/publish-with-yarn@v2
+      - name: Set version to release tag
+        shell: bash
+        run: npm version --allow-same-version --no-commit-hooks --no-git-tag-version from-git
+
+      - name: Publish
+        shell: bash
+        run: yarn npm publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.npm_token }}
+
+      - name: Push version changes to branch
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          npm-auth-token: ${{ secrets.npm_token }}
+          commit_message: "chore: release ${{ github.event.release.tag_name }}"
+          branch: ${{ github.ref_name }}
+          file_pattern: package.json
