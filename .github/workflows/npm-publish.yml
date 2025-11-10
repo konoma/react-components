@@ -1,14 +1,23 @@
 name: Release to NPM
 
 on:
-  release:
-    types: [released]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The git ref to release from'
+        required: true
+        default: 'develop'
+      version:
+        description: 'The version to release (will be used as the tag name)'
+        required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
 
       - name: Activate corepack
         run: corepack enable
@@ -26,6 +35,29 @@ jobs:
       - name: Build
         run: yarn build
 
-      - uses: simenandre/publish-with-yarn@v2
+      - name: Set version to release tag
+        shell: bash
+        run: npm version --allow-same-version --no-commit-hooks --no-git-tag-version from-git
+
+      - name: Publish
+        shell: bash
+        run: yarn npm publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.npm_token }}
+
+      - name: Generate tag
+        uses: actions/create-release@v1
         with:
-          npm-auth-token: ${{ secrets.npm_token }}
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push version changes to branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: release ${{ github.event.inputs.ref }}"
+          branch: ${{ github.ref_name }}
+          file_pattern: package.json
