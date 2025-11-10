@@ -3,10 +3,6 @@ name: Release to NPM
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: 'The git ref to release from'
-        required: true
-        default: 'develop'
       version:
         description: 'The version to release (will be used as the tag name)'
         required: true
@@ -17,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Activate corepack
         run: corepack enable
@@ -58,6 +54,6 @@ jobs:
       - name: Push version changes to branch
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: release ${{ github.event.inputs.ref }}"
+          commit_message: "chore: release ${{ github.ref_name }}"
           branch: ${{ github.ref_name }}
           file_pattern: package.json
