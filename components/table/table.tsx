@@ -1,6 +1,6 @@
 import type { Identifier } from 'dnd-core';
 import type { JSX } from 'react';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -71,6 +71,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagination,
   totalRows,
   totalPagesProp,
+  detailsRow,
   currentPage = 0,
   noEntryLabel,
   allowReorder,
@@ -146,6 +147,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagination?: boolean;
   totalRows: number;
   noEntryLabel?: string;
+  detailsRow?: (data: DataType) => JSX.Element;
   allowReorder?: boolean;
   xToY?: string;
   isInfinite?: boolean;
@@ -201,8 +203,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
       >
         {/* Header */}
         <div ref={header} className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
-          {!!currentColumnsLeft.length && (
+          {(detailsRow || !!currentColumnsLeft.length) && (
             <div className="sticky left-0 flex flex-row z-1">
+              {detailsRow && <div className={[headerClasses, 'w-12', hasFilters ? 'h-24' : 'h-12'].join(' ')}></div>}
               {currentColumnsLeft.map((column) => (
                 <div
                   key={column.id.toString()}
@@ -413,104 +416,33 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           )}
         </div>
         {/* Body */}
-        {allowReorder ? (
-          <DndProvider backend={HTML5Backend} debugMode>
-            {data.map((entry, i) => {
-              return (
-                <Row<DataType>
-                  key={i}
-                  index={i}
-                  entry={entry}
-                  onDragRow={onDragRow}
-                  onDropRow={onDropRow}
-                  currentColumnsCenter={currentColumnsCenter}
-                  currentColumnsLeft={currentColumnsLeft}
-                  currentColumnsRight={currentColumnsRight}
-                  cellRenderer={cellRenderer}
-                  header={header}
-                  onRowClick={onRowClick}
-                  onRowDoubleClick={onRowDoubleClick}
-                  rowClasses={rowClasses}
-                  rowLeftWrapperClasses={rowLeftWrapperClasses}
-                  rowCenterWrapperClasses={rowCenterWrapperClasses}
-                  rowRightWrapperClasses={rowRightWrapperClasses}
-                />
-              );
-            })}
-          </DndProvider>
-        ) : (
-          <>
-            {data.map((entry, i) => {
-              return (
-                <div key={i} className={rowClasses} onClick={() => onRowClick(entry)} onDoubleClick={() => onRowDoubleClick(entry)}>
-                  {!!currentColumnsLeft.length && (
-                    <div className="sticky left-0 flex flex-row border-r">
-                      {currentColumnsLeft.map((column) => {
-                        return (
-                          <div
-                            key={column.id.toString()}
-                            style={{
-                              minWidth: column.initialWidth,
-                              maxWidth: !column.grow ? column.initialWidth : undefined,
-                            }}
-                            className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                            title={(entry[column.id] as string) || ''}
-                          >
-                            {cellRenderer?.[column.id]?.(entry) || (
-                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {currentColumnsCenter.map((column) => {
-                    return (
-                      <div
-                        key={column.id.toString()}
-                        style={{
-                          minWidth: column.initialWidth,
-                          maxWidth: !column.grow ? column.initialWidth : undefined,
-                        }}
-                        className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                        title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-                      >
-                        {cellRenderer?.[column.id]?.(entry) || (
-                          <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  {!!currentColumnsRight.length && (
-                    <div className="sticky right-0 flex flex-row border-l">
-                      {currentColumnsRight.map((column) => {
-                        return (
-                          <div
-                            key={column.id.toString()}
-                            style={{
-                              minWidth: column.initialWidth,
-                              maxWidth: !column.grow ? column.initialWidth : undefined,
-                            }}
-                            className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                            title={(entry[column.id] as string) || ''}
-                          >
-                            {cellRenderer?.[column.id]?.(entry) || (
-                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  <div
-                    style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                    className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
-                  ></div>
-                </div>
-              );
-            })}
-          </>
-        )}
+        <DndProvider backend={HTML5Backend}>
+          {data.map((entry, i) => {
+            return (
+              <Row<DataType>
+                key={i}
+                index={i}
+                entry={entry}
+                allowReorder={allowReorder}
+                onDragRow={onDragRow}
+                onDropRow={onDropRow}
+                currentColumnsCenter={currentColumnsCenter}
+                currentColumnsLeft={currentColumnsLeft}
+                currentColumnsRight={currentColumnsRight}
+                cellRenderer={cellRenderer}
+                header={header}
+                onRowClick={onRowClick}
+                onRowDoubleClick={onRowDoubleClick}
+                rowClasses={rowClasses}
+                rowLeftWrapperClasses={rowLeftWrapperClasses}
+                rowCenterWrapperClasses={rowCenterWrapperClasses}
+                rowRightWrapperClasses={rowRightWrapperClasses}
+                detailsRow={detailsRow}
+              />
+            );
+          })}
+        </DndProvider>
+
         {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
       </div>
       {pagination && xToY && data.length > 0 && (
@@ -551,6 +483,8 @@ function Row<DataType>({
   rowLeftWrapperClasses,
   rowCenterWrapperClasses,
   rowRightWrapperClasses,
+  allowReorder,
+  detailsRow,
 }: {
   index: number;
   entry: DataType;
@@ -567,11 +501,15 @@ function Row<DataType>({
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
   rowRightWrapperClasses: string;
+  allowReorder?: boolean;
+  detailsRow?: (data: DataType) => JSX.Element;
 }) {
   const dragRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
 
-  if (!Object.prototype.hasOwnProperty.call(entry, 'index')) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  if (allowReorder && !Object.prototype.hasOwnProperty.call(entry, 'index')) {
     throw new Error('Entry must have index property');
   }
 
@@ -583,7 +521,7 @@ function Row<DataType>({
       };
     },
     hover(item: DragItem, monitor) {
-      if (!previewRef.current) {
+      if (!allowReorder || !previewRef.current) {
         return;
       }
       const dragIndex = item.index;
@@ -650,80 +588,99 @@ function Row<DataType>({
     }),
   });
 
-  preview(drop(previewRef));
-  drag(dragRef);
+  if (allowReorder) {
+    preview(drop(previewRef));
+    drag(dragRef);
+  }
   return (
-    <div
-      className={rowClasses}
-      onClick={() => onRowClick(entry)}
-      onDoubleClick={() => onRowDoubleClick(entry)}
-      ref={previewRef}
-      style={{ opacity }}
-      data-handler-id={handlerId}
-    >
-      {!!currentColumnsLeft.length && (
-        <div className="sticky left-0 flex flex-row border-r">
-          {currentColumnsLeft.map((column) => {
-            return (
-              <div
-                key={column.id.toString()}
-                style={{
-                  minWidth: column.initialWidth,
-                  maxWidth: !column.grow ? column.initialWidth : undefined,
-                }}
-                className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                title={(entry[column.id] as string) || ''}
-              >
-                {(dragRef && cellRenderer?.[column.id]?.({ ...entry, dragRef })) || (
-                  <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-      {currentColumnsCenter.map((column) => {
-        return (
-          <div
-            key={column.id.toString()}
-            style={{
-              minWidth: column.initialWidth,
-              maxWidth: !column.grow ? column.initialWidth : undefined,
-            }}
-            className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-            title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-          >
-            {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
-              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-            )}
-          </div>
-        );
-      })}
-      {!!currentColumnsRight.length && (
-        <div className="sticky right-0 flex flex-row border-l">
-          {currentColumnsRight.map((column) => {
-            return (
-              <div
-                key={column.id.toString()}
-                style={{
-                  minWidth: column.initialWidth,
-                  maxWidth: !column.grow ? column.initialWidth : undefined,
-                }}
-                className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                title={(entry[column.id] as string) || ''}
-              >
-                {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
-                  <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+    <div className="flex flex-col">
       <div
-        style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-        className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
-      ></div>
+        className={rowClasses}
+        onClick={() => onRowClick(entry)}
+        onDoubleClick={() => onRowDoubleClick(entry)}
+        ref={previewRef}
+        style={{ opacity }}
+        data-handler-id={handlerId}
+      >
+        {(detailsRow || !!currentColumnsLeft.length) && (
+          <div className="sticky left-0 flex flex-row border-r">
+            {detailsRow && (
+              <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
+                <button
+                  className="w-8 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setDetailsOpen(!detailsOpen);
+                  }}
+                >
+                  <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+            {currentColumnsLeft.map((column) => {
+              return (
+                <div
+                  key={column.id.toString()}
+                  style={{
+                    minWidth: column.initialWidth,
+                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                  }}
+                  className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                  title={(entry[column.id] as string) || ''}
+                >
+                  {(dragRef && cellRenderer?.[column.id]?.({ ...entry, dragRef })) || (
+                    <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {currentColumnsCenter.map((column) => {
+          return (
+            <div
+              key={column.id.toString()}
+              style={{
+                minWidth: column.initialWidth,
+                maxWidth: !column.grow ? column.initialWidth : undefined,
+              }}
+              className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+              title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
+            >
+              {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+                <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+              )}
+            </div>
+          );
+        })}
+        {!!currentColumnsRight.length && (
+          <div className="sticky right-0 flex flex-row border-l">
+            {currentColumnsRight.map((column) => {
+              return (
+                <div
+                  key={column.id.toString()}
+                  style={{
+                    minWidth: column.initialWidth,
+                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                  }}
+                  className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                  title={(entry[column.id] as string) || ''}
+                >
+                  {cellRenderer?.[column.id]?.({ ...entry, dragRef }) || (
+                    <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+        <div
+          style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+          className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
+        ></div>
+      </div>
+      {detailsRow && detailsOpen && <div className="ml-12">{detailsRow(entry)}</div>}
     </div>
   );
 }
