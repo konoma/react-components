@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 
 import Icon from './icon.tsx';
 import LoadingIndicator from './loadingIndicator.tsx';
@@ -48,6 +48,7 @@ export default function Button({
   iconLeftName,
   iconRightPath,
   iconRightName,
+  name,
   onClick,
 }: {
   classesBase?: string;
@@ -74,6 +75,7 @@ export default function Button({
   iconLeftName?: string;
   iconRightPath?: string;
   iconRightName?: string;
+  name?: string;
   onClick?: (e: MouseEvent) => Promise<void> | void;
 }) {
   const classes = [classesBase, className];
@@ -101,7 +103,7 @@ export default function Button({
       break;
   }
   return (
-    <button onClick={async (e) => await onClick?.(e)} className={classes.join(' ')} disabled={disabled} type={type}>
+    <button name={name} onClick={async (e) => await onClick?.(e)} className={classes.join(' ')} disabled={disabled} type={type}>
       {(iconLeftPath || iconLeftName) && <Icon className={iconLeftClasses} name={iconLeftName} path={iconLeftPath} />}
       {label && <span>{label}</span>}
       {(iconRightPath || iconRightName) && <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} />}
