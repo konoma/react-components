@@ -44,6 +44,7 @@ export default function Textarea<DataType>({
   value,
   disabled,
   defaultValue,
+  dataTestId,
   maxLengthLabel,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the textarea */
   onInput = () => {
@@ -115,6 +116,7 @@ export default function Textarea<DataType>({
           <textarea
             maxLength={maxLength || undefined}
             ref={textarea}
+            data-testid={dataTestId}
             value={text}
             disabled={disabled}
             defaultValue={defaultValue?.toString()}

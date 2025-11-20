@@ -39,6 +39,7 @@ export default function Checkbox<DataType>({
   className = '',
   name,
   error,
+  dataTestId,
   ...props
 }: FormFieldProps<DataType>) {
   const ref = useRef<HTMLInputElement>(null);
@@ -59,6 +60,7 @@ export default function Checkbox<DataType>({
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           checked={!!value}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
           {...props}

@@ -47,6 +47,7 @@ export default function Input<DataType>({
   defaultValue,
   placeholder,
   className = '',
+  dataTestId,
   onIconRightClick = () => {
     return;
   },
@@ -102,6 +103,7 @@ export default function Input<DataType>({
             unmask={true}
             ref={ref}
             step={step}
+            data-testid={dataTestId}
             inputRef={inputRef}
             placeholder={placeholder}
             value={value?.toString()}
@@ -124,6 +126,7 @@ export default function Input<DataType>({
             {...props}
             ref={ref}
             placeholder={placeholder}
+            data-testid={dataTestId}
             value={value?.toString()}
             defaultValue={defaultValue?.toString()}
             onInput={(e) => {

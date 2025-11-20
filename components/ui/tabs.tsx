@@ -27,6 +27,7 @@ export default function Tabs<DataType>({
   showCounts = true,
   tabs,
   active,
+  dataTestId = '',
   onClick,
 }: {
   wrapperClasses?: string;
@@ -40,6 +41,7 @@ export default function Tabs<DataType>({
   showCounts?: boolean;
   tabs: Tab<DataType>[];
   active: DataType;
+  dataTestId?: string;
   onClick: (tab: DataType) => void;
 }) {
   function equalTabs<DataType>(tab1: DataType, tab2: DataType) {
@@ -52,6 +54,7 @@ export default function Tabs<DataType>({
     <div className={wrapperClasses}>
       {tabs.map((tab, i) => (
         <div
+          data-testid={dataTestId + i}
           key={i}
           onClick={() => {
             onClick(tab.id);

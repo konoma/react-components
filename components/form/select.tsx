@@ -60,6 +60,7 @@ export default function Select<DataType>({
   customValueLabel = 'Eigenen Wert hinzufügen',
   menuPortalTarget,
   isMulti,
+  dataTestId,
   onInput = () => {
     return;
   },
@@ -118,6 +119,7 @@ export default function Select<DataType>({
               borderRadius: undefined,
             }),
           }}
+          data-testid={dataTestId}
           isSearchable={searchable}
           menuPlacement={menuPlacement}
           isDisabled={disabled}

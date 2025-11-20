@@ -79,6 +79,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagesize = 10,
   xToY,
   isInfinite = true,
+  name = '',
   onDragRow = () => {
     return;
   },
@@ -151,6 +152,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   xToY?: string;
   isInfinite?: boolean;
   pagesize?: number;
+  name?: string;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -191,7 +193,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   }
 
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} data-testid={name + '-table'}>
       <div
         style={{
           gridTemplateRows: `repeat(${data.length + 1}, auto)`,
@@ -204,15 +206,17 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
       >
         {/* Header */}
         <div
+          data-testid={name + '-table-header'}
           ref={header}
           key={locale}
           className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header"
         >
           {!!currentColumnsLeft.length && (
-            <div className="sticky left-0 flex flex-row z-1">
+            <div className="sticky left-0 flex flex-row z-1" data-testid={name + '-table-header-left'}>
               {currentColumnsLeft.map((column) => (
                 <div
                   key={column.id.toString()}
+                  data-testid={`${name}-table-header-left-${column.id.toString()}`}
                   style={{
                     minWidth: column.initialWidth,
                     maxWidth: !column.grow ? column.initialWidth : undefined,
@@ -266,6 +270,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                             <Input
                               defaultValue={filters[column.filterKey]?.join(', ')}
+                              dataTestId={`${name}-table-header-left-filter-${column.id.toString()}`}
                               key={filters[column.filterKey]?.join(', ')}
                               onKeyDown={async (e: React.KeyboardEvent<HTMLElement>) => {
                                 if (e.key === 'Enter' && column.filterKey) {
@@ -314,6 +319,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 minWidth: column.initialWidth,
                 maxWidth: !column.grow ? column.initialWidth : undefined,
               }}
+              data-testid={`${name}-table-header-center-${column.id.toString()}`}
               className={[
                 headerClasses,
                 hasFilters ? 'h-24' : 'h-12',
@@ -363,6 +369,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                         <Input
                           defaultValue={filters[column.filterKey]?.join(', ')}
+                          dataTestId={`${name}-table-header-center-filter-${column.id.toString()}`}
                           key={filters[column.filterKey]?.join(', ')}
                           onKeyDown={async (e: React.KeyboardEvent) => {
                             if (e.key === 'Enter' && column.filterKey) {
@@ -411,6 +418,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: !column.grow ? column.initialWidth : undefined,
                   }}
+                  data-testid={`${name}-table-header-right-${column.id.toString()}`}
                   className="flex h-full flex-row items-start justify-end truncate bg-krc-table-header px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
@@ -427,6 +435,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 <Row<DataType>
                   key={i}
                   index={i}
+                  name={name}
                   entry={entry}
                   onDragRow={onDragRow}
                   onDropRow={onDropRow}
@@ -449,7 +458,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           <>
             {data.map((entry, i) => {
               return (
-                <div key={i} className={rowClasses} onClick={() => onRowClick(entry)} onDoubleClick={() => onRowDoubleClick(entry)}>
+                <div
+                  data-testid={`${name}-table-row`}
+                  key={i}
+                  data-foo="bar"
+                  className={rowClasses}
+                  onClick={() => onRowClick(entry)}
+                  onDoubleClick={() => onRowDoubleClick(entry)}
+                >
                   {!!currentColumnsLeft.length && (
                     <div className="sticky left-0 flex flex-row border-r">
                       {currentColumnsLeft.map((column) => {
@@ -464,7 +480,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
-                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                              <div data-testid={`${name}-table-row-left-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                {(entry[column.id] as string) || '-'}
+                              </div>
                             )}
                           </div>
                         );
@@ -483,7 +501,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                         title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
                       >
                         {cellRenderer?.[column.id]?.(entry) || (
-                          <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                          <div data-testid={`${name}-table-row-center-${column.id.toString()}}`} className="h-14 truncate p-4 text-sm">
+                            {(entry[column.id] as string) || '-'}
+                          </div>
                         )}
                       </div>
                     );
@@ -502,7 +522,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             title={(entry[column.id] as string) || ''}
                           >
                             {cellRenderer?.[column.id]?.(entry) || (
-                              <div className="h-14 truncate p-4 text-sm">{(entry[column.id] as string) || '-'}</div>
+                              <div data-testid={`${name}-table-row-right-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                {(entry[column.id] as string) || '-'}
+                              </div>
                             )}
                           </div>
                         );
@@ -518,12 +540,17 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
             })}
           </>
         )}
-        {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
+        {data.length === 0 && (
+          <div data-testid={name + '-table-no-data'} className={noDataClasses}>
+            {noEntryLabel}
+          </div>
+        )}
       </div>
       {pagination && xToY && data.length > 0 && (
         <Pagination
           showButtons={!isInfinite}
           xToY={xToY}
+          dataTestId={`${name}-table-pagination`}
           currentTotal={totalRows}
           currentLoaded={data.length}
           currentStart={currentStart}
@@ -558,6 +585,7 @@ function Row<DataType>({
   rowLeftWrapperClasses,
   rowCenterWrapperClasses,
   rowRightWrapperClasses,
+  name,
 }: {
   index: number;
   entry: DataType;
@@ -574,6 +602,7 @@ function Row<DataType>({
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
   rowRightWrapperClasses: string;
+  name: string;
 }) {
   const dragRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -667,6 +696,7 @@ function Row<DataType>({
       ref={previewRef}
       style={{ opacity }}
       data-handler-id={handlerId}
+      data-testid={`${name}-table-row`}
     >
       {!!currentColumnsLeft.length && (
         <div className="sticky left-0 flex flex-row border-r">

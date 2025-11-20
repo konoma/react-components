@@ -17,6 +17,7 @@ export default function Modal({
   headerContent,
   footerContent,
   title,
+  dataTestId,
   footerActions,
   hasCloseIcon,
   onClose,
@@ -33,6 +34,7 @@ export default function Modal({
   children: React.ReactNode;
   headerContent?: React.ReactNode;
   footerContent?: React.ReactNode;
+  dataTestId?: string;
   title?: string;
   footerActions?: (React.ComponentProps<typeof Button> & {
     position: 'left' | 'right';
@@ -43,7 +45,7 @@ export default function Modal({
   return (
     <>
       {createPortal(
-        <div className={backdropClasses} onMouseDown={onClose} role="presentation">
+        <div className={backdropClasses} onMouseDown={onClose} role="presentation" data-testid={dataTestId}>
           <div
             role="presentation"
             className={contentClasses}

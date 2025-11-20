@@ -30,11 +30,9 @@ export default function Pagination({
   controlClasses = baseClasses.controlClasses,
   xToY,
   currentPage,
-  currentStart,
-  currentEnd,
-  currentTotal,
   totalPages,
   showButtons,
+  dataTestId,
   onFirstPage = () => {
     return;
   },
@@ -47,7 +45,7 @@ export default function Pagination({
   onLastPage = () => {
     return;
   },
-  toPage = (page: number) => {
+  toPage = () => {
     return;
   },
 }: {
@@ -65,6 +63,7 @@ export default function Pagination({
   controlClasses?: string;
   xToY: string;
   showButtons: boolean;
+  dataTestId?: string;
   onFirstPage?: () => void;
   onPreviousPage?: () => void;
   onNextPage?: () => void;
@@ -98,17 +97,20 @@ export default function Pagination({
           <div className={controlClasses}>
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
+              dataTestId={dataTestId ? dataTestId + '-first-page' : undefined}
               name="lucide:chevron-first"
               onClick={() => (previousPageActive ? onFirstPage() : undefined)}
             />
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
+              dataTestId={dataTestId ? dataTestId + '-previous-page' : undefined}
               name="lucide:chevron-left"
               onClick={() => (previousPageActive ? onPreviousPage() : undefined)}
             />
             <div className="w-16">
               <Input
                 centered
+                dataTestId={dataTestId ? dataTestId + '-page-input' : undefined}
                 value={pageInternal}
                 onChange={(v) => setPageInternal(+v)}
                 onKeyDown={(e) => onKeyDown(e as React.KeyboardEvent<HTMLInputElement>)}
@@ -116,11 +118,13 @@ export default function Pagination({
             </div>
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
+              dataTestId={dataTestId ? dataTestId + '-next-page' : undefined}
               name="lucide:chevron-right"
               onClick={() => (nextPageActive ? onNextPage() : undefined)}
             />
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
+              dataTestId={dataTestId ? dataTestId + '-last-page' : undefined}
               name="lucide:chevron-last"
               onClick={() => (nextPageActive ? onLastPage() : undefined)}
             />

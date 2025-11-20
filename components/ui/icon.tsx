@@ -5,19 +5,21 @@ import type { HTMLProps, SVGProps } from 'react';
 export default function Icon({
   path,
   name,
+  dataTestId,
   ...props
 }: (HTMLProps<HTMLElement> | SVGProps<SVGSVGElement>) & {
   // use this for icons included in iconify
   name?: string;
   // use this for custom icons
   path?: string;
+  dataTestId?: string;
 }) {
   return path ? (
-    <svg {...(props as SVGProps<SVGSVGElement>)}>
+    <svg {...(props as SVGProps<SVGSVGElement>)} data-testid={dataTestId}>
       <use href={path} />
     </svg>
   ) : name ? (
-    <IconifyIcon icon={name} height="none" width="none" {...(props as HTMLProps<IconifyIconHTMLElement>)} />
+    <IconifyIcon data-testid={dataTestId} icon={name} height="none" width="none" {...(props as HTMLProps<IconifyIconHTMLElement>)} />
   ) : (
     <></>
   );

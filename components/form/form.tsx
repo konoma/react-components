@@ -17,6 +17,7 @@ export default function Form<DataType>({
   validators,
   data,
   formRef,
+  dataTestId,
   onValidation = () => {
     return;
   },
@@ -26,6 +27,7 @@ export default function Form<DataType>({
   children: ReactNode;
   className?: string;
   data: DataType;
+  dataTestId?: string;
   validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>;
   onValidation?: (errors: Record<keyof DataType, string[]>) => void;
   onSubmit: () => Promise<void>;
@@ -82,7 +84,7 @@ export default function Form<DataType>({
     onValidation(errors as Record<keyof DataType, string[]>);
   }
   return (
-    <form ref={formRef} onSubmit={submit} className={className}>
+    <form ref={formRef} data-testid={dataTestId} onSubmit={submit} className={className}>
       <ErrorContext.Provider value={{ errors, setErrors: updateErrors }}>{children}</ErrorContext.Provider>
     </form>
   );

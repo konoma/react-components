@@ -59,6 +59,7 @@ export default function PhoneInput<DataType>({
   name,
   value,
   defaultValue,
+  dataTestId,
   className = '',
   onChange = () => {
     return;
@@ -149,6 +150,7 @@ export default function PhoneInput<DataType>({
             mask={masks[countryCode.label]}
             radix="."
             unmask={true}
+            data-testid={dataTestId}
             ref={ref}
             id={name as string}
             placeholder={placeholders[countryCode.label]}

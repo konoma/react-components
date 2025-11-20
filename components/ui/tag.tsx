@@ -17,6 +17,7 @@ export default function Tag({
   iconLeftName,
   iconRightPath,
   iconRightName,
+  dataTestId,
   title,
   onClick = () => {
     return;
@@ -37,12 +38,13 @@ export default function Tag({
   iconRightPath?: string;
   iconRightName?: string;
   title: string;
+  dataTestId?: string;
   onClick?: () => void;
   onClickIconLeft?: () => void;
   onClickIconRight?: () => void;
 }) {
   return (
-    <div className={wrapperClasses} onClick={onClick}>
+    <div className={wrapperClasses} onClick={onClick} data-testid={dataTestId}>
       {(iconLeftPath || iconLeftName) && (
         <Icon name={iconLeftName} path={iconLeftPath} className={iconLeftClasses} onClick={onClickIconLeft} />
       )}

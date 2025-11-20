@@ -73,6 +73,7 @@ export interface Classes {
 }
 
 export interface FormFieldProps<DataType> extends Classes {
+  dataTestId?: string;
   allowCustomValues?: boolean;
   customValueLabel?: string;
   arrangement?: 'horizontal' | 'vertical';

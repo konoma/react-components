@@ -49,6 +49,7 @@ export default function Button({
   iconRightPath,
   iconRightName,
   name,
+  dataTestId,
   onClick,
 }: {
   classesBase?: string;
@@ -76,6 +77,7 @@ export default function Button({
   iconRightPath?: string;
   iconRightName?: string;
   name?: string;
+  dataTestId?: string;
   onClick?: (e: MouseEvent) => Promise<void> | void;
 }) {
   const classes = [classesBase, className];
@@ -103,7 +105,14 @@ export default function Button({
       break;
   }
   return (
-    <button name={name} onClick={async (e) => await onClick?.(e)} className={classes.join(' ')} disabled={disabled} type={type}>
+    <button
+      data-testid={dataTestId}
+      name={name}
+      onClick={async (e) => await onClick?.(e)}
+      className={classes.join(' ')}
+      disabled={disabled}
+      type={type}
+    >
       {(iconLeftPath || iconLeftName) && <Icon className={iconLeftClasses} name={iconLeftName} path={iconLeftPath} />}
       {label && <span>{label}</span>}
       {(iconRightPath || iconRightName) && <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} />}

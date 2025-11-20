@@ -25,6 +25,7 @@ export default function TagList<DataType>({
   error,
   required,
   values,
+  dataTestId,
   addTagTitle = '',
   onChange = () => {
     return;
@@ -49,11 +50,18 @@ export default function TagList<DataType>({
 
       <div className={classesFull.join(' ')}>
         {values?.map((value, i) => (
-          <Tag key={i} title={value.toString()} onClick={() => onChange(value)} iconRightName="heroicons:x-mark-16-solid" />
+          <Tag
+            key={i}
+            title={value.toString()}
+            onClick={() => onChange(value)}
+            data-testid={dataTestId}
+            iconRightName="heroicons:x-mark-16-solid"
+          />
         ))}
         <Tag
           title={addTagTitle}
           iconLeftName="heroicons:plus-16-solid"
+          data-testid={dataTestId}
           wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-krc-tag-list-add border border-secondary-300 px-3 py-1 bg-white"
           onClick={() => onChange('')}
         />
