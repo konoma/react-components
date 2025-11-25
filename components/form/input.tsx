@@ -5,22 +5,24 @@ import Icon from '../ui/icon.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
-  classes:
-    'w-full h-10 rounded-krc-input px-3 py-2 outline-hidden placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none not-disabled:bg-white disabled:bg-secondary-50',
+  controlClasses:
+    'w-full h-10 rounded-krc-input px-3 py-2 outline-hidden placeholder:text-secondary-500 placeholder:text-sm text-secondary-900 text-sm disabled:pointer-events-none not-disabled:bg-white disabled:bg-secondary-50 disabled:text-secondary-400',
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   iconLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-secondary-300',
   iconRightClasses: 'h-5 w-5',
-  wrapperRightClasses: 'absolute bottom-0 right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm',
-  errorClasses: 'text-sm text-error-500',
+  wrapperRightClasses: 'absolute right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm h-10',
+  errorClasses: 'text-sm text-error-500 -mt-4',
   classesError: 'ring-error-500 ring-2',
-  classesNeutral: 'border-secondary-300 border focus:ring-2 hover:border-secondary-400 focus:ring-primary-900',
+  classesNeutral:
+    'border-secondary-300 border focus:not-disabled:ring-2 hover:not-disabled:border-secondary-400 focus:not-disabled:ring-primary-900',
   additionalClassesIconLeft: 'pl-10',
   additionalClassesIconRight: 'pr-12',
+  classes: 'relative h-14',
 };
 
 export default function Input<DataType>({
-  classes = baseClasses.classes,
+  controlClasses = baseClasses.controlClasses,
   wrapperClasses = baseClasses.wrapperClasses,
   labelClasses = baseClasses.labelClasses,
   iconLeftClasses = baseClasses.iconLeftClasses,
@@ -28,6 +30,7 @@ export default function Input<DataType>({
   errorClasses = baseClasses.errorClasses,
   classesError = baseClasses.classesError,
   classesNeutral = baseClasses.classesNeutral,
+  classes = baseClasses.classes,
   additionalClassesIconLeft = baseClasses.additionalClassesIconLeft,
   additionalClassesIconRight = baseClasses.additionalClassesIconRight,
   wrapperRightClasses = baseClasses.wrapperRightClasses,
@@ -68,7 +71,7 @@ export default function Input<DataType>({
   },
   ...props
 }: FormFieldProps<DataType>) {
-  const classesFull = [classes];
+  const classesFull = [controlClasses];
   if (iconLeftPath || iconLeftName) {
     classesFull.push(additionalClassesIconLeft);
   }
@@ -95,7 +98,7 @@ export default function Input<DataType>({
         </span>
       )}
 
-      <div className="relative">
+      <div className={classes}>
         {mask ? (
           <IMaskInput
             mask={mask}
@@ -113,7 +116,9 @@ export default function Input<DataType>({
               onChange(e.currentTarget.value);
             }}
             onClick={(e: React.MouseEvent) => {
-              ref.current?.showPicker?.();
+              if (e.isTrusted) {
+                ref.current?.showPicker?.();
+              }
               onClick(e);
             }}
             onBlur={onBlur}
@@ -127,13 +132,15 @@ export default function Input<DataType>({
             ref={ref}
             placeholder={placeholder}
             data-testid={dataTestId}
-            value={value?.toString()}
-            defaultValue={defaultValue?.toString()}
+            value={value?.toString() || ''}
+            defaultValue={defaultValue?.toString() || ''}
             onInput={(e) => {
               onChange(e.currentTarget.value);
             }}
             onClick={(e) => {
-              ref.current?.showPicker();
+              if (e.isTrusted) {
+                ref.current?.showPicker?.();
+              }
               onClick(e);
             }}
             step={step}

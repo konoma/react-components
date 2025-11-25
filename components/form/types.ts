@@ -1,4 +1,4 @@
-import type { ChangeEvent, HTMLInputTypeAttribute, MouseEvent, ReactNode } from 'react';
+import type { ChangeEvent, HTMLAttributes, HTMLInputTypeAttribute, MouseEvent, ReactNode } from 'react';
 
 type LabelPosition = 'top' | 'bottom' | 'left' | 'right';
 
@@ -76,6 +76,9 @@ export interface FormFieldProps<DataType> extends Classes {
   dataTestId?: string;
   allowCustomValues?: boolean;
   customValueLabel?: string;
+  autoComplete?: string;
+  id?: string;
+  inputMode?: HTMLAttributes<HTMLElement>['inputMode'];
   arrangement?: 'horizontal' | 'vertical';
   centered?: boolean;
   autoFocus?: boolean;
