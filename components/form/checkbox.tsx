@@ -81,6 +81,7 @@ export default function Checkbox<DataType>({
           name={name as string}
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
         />
@@ -100,6 +101,7 @@ export default function Checkbox<DataType>({
           value={0}
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
         />
