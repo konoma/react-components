@@ -27,6 +27,10 @@ export default function TagList<DataType>({
   values,
   dataTestId,
   addTagTitle = '',
+  deleteIconName,
+  deleteIconPath,
+  addIconName,
+  addIconPath,
   onChange = () => {
     return;
   },
@@ -55,12 +59,14 @@ export default function TagList<DataType>({
             title={value.toString()}
             onClick={() => onChange(value)}
             data-testid={dataTestId}
-            iconRightName="heroicons:x-mark-16-solid"
+            iconRightName={deleteIconName || 'heroicons:x-mark-16-solid'}
+            iconRightPath={deleteIconPath}
           />
         ))}
         <Tag
           title={addTagTitle}
-          iconLeftName="heroicons:plus-16-solid"
+          iconLeftName={addIconName || 'heroicons:plus-16-solid'}
+          iconLeftPath={addIconPath}
           data-testid={dataTestId}
           wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-krc-tag-list-add border border-secondary-300 px-3 py-1 bg-white"
           onClick={() => onChange('')}

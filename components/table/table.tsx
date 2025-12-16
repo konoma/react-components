@@ -92,6 +92,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingAscIconPath,
   sortingDescIconName,
   sortingDescIconPath,
+  removeFilterIconName,
+  removeFilterIconPath,
   onDragRow = () => {
     return;
   },
@@ -177,6 +179,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingAscIconPath?: string;
   sortingDescIconName?: string;
   sortingDescIconPath?: string;
+  removeFilterIconName?: string;
+  removeFilterIconPath?: string;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -426,7 +430,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           }}
                           isClearable
                           className="h-10"
-                          iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
+                          iconRightName={filters[column.filterKey] ? removeFilterIconName || 'heroicons:x-mark' : ''}
+                          iconRightPath={filters[column.filterKey] ? removeFilterIconPath : ''}
                         />
                       )}
                     </>

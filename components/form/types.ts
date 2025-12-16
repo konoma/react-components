@@ -77,6 +77,10 @@ export interface Icons {
   indeterminateIconName?: string;
   checkedIconPath?: string;
   checkedIconName?: string;
+  deleteIconName?: string;
+  deleteIconPath?: string;
+  addIconName?: string;
+  addIconPath?: string;
 }
 
 export interface FormFieldProps<DataType> extends Classes, Icons {
