@@ -33,6 +33,14 @@ export default function Pagination({
   totalPages,
   showButtons,
   dataTestId,
+  firstPageIconName,
+  firstPageIconPath,
+  previousPageIconName,
+  previousPageIconPath,
+  nextPageIconName,
+  nextPageIconPath,
+  lastPageIconName,
+  lastPageIconPath,
   onFirstPage = () => {
     return;
   },
@@ -63,6 +71,14 @@ export default function Pagination({
   controlClasses?: string;
   xToY: string;
   showButtons: boolean;
+  firstPageIconName?: string;
+  firstPageIconPath?: string;
+  previousPageIconName?: string;
+  previousPageIconPath?: string;
+  nextPageIconName?: string;
+  nextPageIconPath?: string;
+  lastPageIconName?: string;
+  lastPageIconPath?: string;
   dataTestId?: string;
   onFirstPage?: () => void;
   onPreviousPage?: () => void;
@@ -98,13 +114,15 @@ export default function Pagination({
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
               dataTestId={dataTestId ? dataTestId + '-first-page' : undefined}
-              name="lucide:chevron-first"
+              name={firstPageIconName || 'lucide:chevron-first'}
+              path={firstPageIconPath}
               onClick={() => (previousPageActive ? onFirstPage() : undefined)}
             />
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
               dataTestId={dataTestId ? dataTestId + '-previous-page' : undefined}
-              name="lucide:chevron-left"
+              name={previousPageIconName || 'lucide:chevron-left'}
+              path={previousPageIconPath}
               onClick={() => (previousPageActive ? onPreviousPage() : undefined)}
             />
             <div className="w-16">
@@ -119,13 +137,15 @@ export default function Pagination({
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
               dataTestId={dataTestId ? dataTestId + '-next-page' : undefined}
-              name="lucide:chevron-right"
+              name={nextPageIconName || 'lucide:chevron-right'}
+              path={nextPageIconPath}
               onClick={() => (nextPageActive ? onNextPage() : undefined)}
             />
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
               dataTestId={dataTestId ? dataTestId + '-last-page' : undefined}
-              name="lucide:chevron-last"
+              name={lastPageIconName || 'lucide:chevron-last'}
+              path={lastPageIconPath}
               onClick={() => (nextPageActive ? onLastPage() : undefined)}
             />
           </div>

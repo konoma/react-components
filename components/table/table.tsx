@@ -80,6 +80,18 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   xToY,
   isInfinite = true,
   name = '',
+  firstPageIconName,
+  firstPageIconPath,
+  previousPageIconName,
+  previousPageIconPath,
+  nextPageIconName,
+  nextPageIconPath,
+  lastPageIconName,
+  lastPageIconPath,
+  sortingAscIconName,
+  sortingAscIconPath,
+  sortingDescIconName,
+  sortingDescIconPath,
   onDragRow = () => {
     return;
   },
@@ -153,6 +165,18 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   isInfinite?: boolean;
   pagesize?: number;
   name?: string;
+  firstPageIconName?: string;
+  firstPageIconPath?: string;
+  previousPageIconName?: string;
+  previousPageIconPath?: string;
+  nextPageIconName?: string;
+  nextPageIconPath?: string;
+  lastPageIconName?: string;
+  lastPageIconPath?: string;
+  sortingAscIconName?: string;
+  sortingAscIconPath?: string;
+  sortingDescIconName?: string;
+  sortingDescIconPath?: string;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -247,11 +271,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           name={
                             column.sorting
                               ? {
-                                  '+': 'heroicons:chevron-down-16-solid',
-                                  '-': 'heroicons:chevron-up-16-solid',
+                                  '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
+                                  '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                                 }[column.sorting]
-                              : 'heroicons:chevron-up-down-16-solid'
+                              : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
                           }
+                          path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
                         />
                       </div>
                     )}
@@ -346,11 +371,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       name={
                         column.sorting
                           ? {
-                              '+': 'heroicons:chevron-down-16-solid',
-                              '-': 'heroicons:chevron-up-16-solid',
+                              '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
+                              '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                             }[column.sorting]
-                          : 'heroicons:chevron-up-down-16-solid'
+                          : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
                       }
+                      path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
                     />
                   </div>
                 )}
@@ -556,6 +582,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           currentStart={currentStart}
           currentEnd={currentEnd}
           currentPage={currentPage}
+          firstPageIconName={firstPageIconName}
+          firstPageIconPath={firstPageIconPath}
+          previousPageIconName={previousPageIconName}
+          previousPageIconPath={previousPageIconPath}
+          nextPageIconName={nextPageIconName}
+          nextPageIconPath={nextPageIconPath}
+          lastPageIconName={lastPageIconName}
+          lastPageIconPath={lastPageIconPath}
           totalPages={totalPages}
           onFirstPage={onFirstPage}
           onPreviousPage={onPreviousPage}

@@ -14,6 +14,9 @@ export default function Icon({
   path?: string;
   dataTestId?: string;
 }) {
+  if (process.env.NEXT_PUBLIC_PREVENT_EXTERNAL_RESOURCES === 'true' && !path && name) {
+    throw new Error('External resources are disabled, cannot use iconify icons');
+  }
   return path ? (
     <svg {...(props as SVGProps<SVGSVGElement>)} data-testid={dataTestId}>
       <use href={path} />

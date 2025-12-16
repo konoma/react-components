@@ -72,11 +72,18 @@ export interface Classes {
   valueContainerClasses?: string;
 }
 
-export interface FormFieldProps<DataType> extends Classes {
-  dataTestId?: string;
+export interface Icons {
+  indeterminateIconPath?: string;
+  indeterminateIconName?: string;
+  checkedIconPath?: string;
+  checkedIconName?: string;
+}
+
+export interface FormFieldProps<DataType> extends Classes, Icons {
   allowCustomValues?: boolean;
   customValueLabel?: string;
   autoComplete?: string;
+  dataTestId?: string;
   id?: string;
   inputMode?: HTMLAttributes<HTMLElement>['inputMode'];
   arrangement?: 'horizontal' | 'vertical';

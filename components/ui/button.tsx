@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 
 import Icon from './icon.tsx';
 import LoadingIndicator from './loadingIndicator.tsx';

@@ -14,7 +14,17 @@ import { useState } from 'react';
 
 import Icon from '../ui/icon.tsx';
 
-export default function TableActions({ children, classes = 'h-14 p-4' }: { children: React.ReactNode; classes?: string }) {
+export default function TableActions({
+  children,
+  classes = 'h-14 p-4',
+  showActionsIconName,
+  showActionsIconPath,
+}: {
+  children: React.ReactNode;
+  classes?: string;
+  showActionsIconName?: string;
+  showActionsIconPath?: string;
+}) {
   const [actionsVisible, setActionsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open: actionsVisible,
@@ -32,7 +42,7 @@ export default function TableActions({ children, classes = 'h-14 p-4' }: { child
     <div className={classes}>
       <div ref={refs.setReference} {...getReferenceProps()} className="cursor-pointer">
         <div>
-          <Icon name="heroicons:ellipsis-vertical-16-solid" className="h-5 w-5" />
+          <Icon name={showActionsIconName || 'heroicons:ellipsis-vertical-16-solid'} path={showActionsIconPath} className="h-5 w-5" />
         </div>
       </div>
       {actionsVisible && (

@@ -25,8 +25,11 @@ export default function Checkbox<DataType>({
   iconClassesFilled = baseClasses.iconClassesFilled,
   value,
   defaultValue,
+  indeterminateIconPath,
+  indeterminateIconName,
+  checkedIconPath,
+  checkedIconName,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the input */
-
   onInput = () => {
     return;
   },
@@ -66,7 +69,11 @@ export default function Checkbox<DataType>({
           {...props}
         />
         <div className={classesFilled}>
-          <Icon name={indeterminate ? 'heroicons:minus' : 'heroicons:check-16-solid'} className={iconClassesFilled} />
+          <Icon
+            name={indeterminate ? indeterminateIconName || 'heroicons:minus' : checkedIconName || 'heroicons:check-16-solid'}
+            path={indeterminate ? indeterminateIconPath : checkedIconPath}
+            className={iconClassesFilled}
+          />
         </div>
         <span className={labelClassesFilled}>{label}</span>
       </label>
