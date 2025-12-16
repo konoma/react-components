@@ -7,6 +7,10 @@ on:
         description: 'The version to release (will be used as the tag name)'
         required: true
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
