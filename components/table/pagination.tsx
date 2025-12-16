@@ -35,6 +35,14 @@ export default function Pagination({
   currentTotal,
   totalPages,
   showButtons,
+  firstPageIconName,
+  firstPageIconPath,
+  previousPageIconName,
+  previousPageIconPath,
+  nextPageIconName,
+  nextPageIconPath,
+  lastPageIconName,
+  lastPageIconPath,
   onFirstPage = () => {
     return;
   },
@@ -65,6 +73,14 @@ export default function Pagination({
   controlClasses?: string;
   xToY: string;
   showButtons: boolean;
+  firstPageIconName?: string;
+  firstPageIconPath?: string;
+  previousPageIconName?: string;
+  previousPageIconPath?: string;
+  nextPageIconName?: string;
+  nextPageIconPath?: string;
+  lastPageIconName?: string;
+  lastPageIconPath?: string;
   onFirstPage?: () => void;
   onPreviousPage?: () => void;
   onNextPage?: () => void;
@@ -98,12 +114,14 @@ export default function Pagination({
           <div className={controlClasses}>
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
-              name="lucide:chevron-first"
+              name={firstPageIconName || 'lucide:chevron-first'}
+              path={firstPageIconPath}
               onClick={() => (previousPageActive ? onFirstPage() : undefined)}
             />
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
-              name="lucide:chevron-left"
+              name={previousPageIconName || 'lucide:chevron-left'}
+              path={previousPageIconPath}
               onClick={() => (previousPageActive ? onPreviousPage() : undefined)}
             />
             <div className="w-16">
@@ -116,12 +134,14 @@ export default function Pagination({
             </div>
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
-              name="lucide:chevron-right"
+              name={nextPageIconName || 'lucide:chevron-right'}
+              path={nextPageIconPath}
               onClick={() => (nextPageActive ? onNextPage() : undefined)}
             />
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
-              name="lucide:chevron-last"
+              name={lastPageIconName || 'lucide:chevron-last'}
+              path={lastPageIconPath}
               onClick={() => (nextPageActive ? onLastPage() : undefined)}
             />
           </div>

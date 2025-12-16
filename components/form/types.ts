@@ -72,7 +72,14 @@ export interface Classes {
   valueContainerClasses?: string;
 }
 
-export interface FormFieldProps<DataType> extends Classes {
+export interface Icons {
+  indeterminateIconPath?: string;
+  indeterminateIconName?: string;
+  checkedIconPath?: string;
+  checkedIconName?: string;
+}
+
+export interface FormFieldProps<DataType> extends Classes, Icons {
   allowCustomValues?: boolean;
   customValueLabel?: string;
   arrangement?: 'horizontal' | 'vertical';

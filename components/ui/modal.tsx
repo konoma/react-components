@@ -19,6 +19,8 @@ export default function Modal({
   title,
   footerActions,
   hasCloseIcon,
+  closeIconName,
+  closeIconPath,
   onClose,
 }: {
   backdropClasses?: string;
@@ -38,6 +40,8 @@ export default function Modal({
     position: 'left' | 'right';
   })[];
   hasCloseIcon?: boolean;
+  closeIconName?: string;
+  closeIconPath?: string;
   onClose: () => void;
 }) {
   return (
@@ -55,7 +59,7 @@ export default function Modal({
             {hasCloseIcon && (
               <div className={closeWrapperClasses}>
                 <button onClick={onClose}>
-                  <Icon name="heroicons:x-mark-16-solid" className={iconClasses} />
+                  <Icon name={closeIconName || 'heroicons:x-mark-16-solid'} path={closeIconPath} className={iconClasses} />
                 </button>
               </div>
             )}
