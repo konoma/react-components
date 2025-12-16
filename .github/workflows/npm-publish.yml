@@ -9,6 +9,7 @@ on:
 
 permissions:
   id-token: write  # Required for OIDC
+  contents: write  # To push version changes
 
 jobs:
   release:
