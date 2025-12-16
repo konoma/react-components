@@ -42,8 +42,6 @@ jobs:
       - name: Publish
         shell: bash
         run: yarn npm publish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.npm_token }}
 
       - name: Generate tag
         uses: actions/create-release@v1
