@@ -21,11 +21,14 @@ export default function TagList<DataType>({
   errorClasses = baseClasses.errorClasses,
   classesError = baseClasses.classesError,
   classesNeutral = baseClasses.classesNeutral,
+  disabled,
   label,
   error,
   required,
   values,
   addTagTitle = '',
+  allowDelete = true,
+  allowNew = true,
   onChange = () => {
     return;
   },
@@ -49,14 +52,21 @@ export default function TagList<DataType>({
 
       <div className={classesFull.join(' ')}>
         {values?.map((value, i) => (
-          <Tag key={i} title={value.toString()} onClick={() => onChange(value)} iconRightName="heroicons:x-mark-16-solid" />
+          <Tag
+            key={i}
+            title={value.toString()}
+            onClick={() => onChange(value)}
+            iconRightName={!disabled && allowDelete ? 'heroicons:x-mark-16-solid' : undefined}
+          />
         ))}
-        <Tag
-          title={addTagTitle}
-          iconLeftName="heroicons:plus-16-solid"
-          wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-krc-tag-list-add border border-secondary-300 px-3 py-1 bg-white"
-          onClick={() => onChange('')}
-        />
+        {!disabled && allowNew && (
+          <Tag
+            title={addTagTitle}
+            iconLeftName="heroicons:plus-16-solid"
+            wrapperClasses="flex flex-row h-6 cursor-pointer items-center justify-center gap-1 rounded-krc-tag-list-add border border-secondary-300 px-3 py-1 bg-white"
+            onClick={() => onChange('')}
+          />
+        )}
       </div>
       {error &&
         error.length > 0 &&
