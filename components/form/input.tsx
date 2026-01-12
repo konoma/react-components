@@ -132,7 +132,8 @@ export default function Input<DataType>({
             ref={ref}
             placeholder={placeholder}
             data-testid={dataTestId}
-            value={value?.toString() !== undefined ? value?.toString() : ''}
+            // We do not want to use a fallback to an empty string here, as it would always overwrite the defaultValue
+            value={value?.toString()}
             defaultValue={defaultValue?.toString() !== undefined ? defaultValue?.toString() : ''}
             onInput={(e) => {
               onChange(e.currentTarget.value);
