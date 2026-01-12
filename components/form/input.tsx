@@ -133,7 +133,7 @@ export default function Input<DataType>({
             placeholder={placeholder}
             data-testid={dataTestId}
             value={value?.toString() !== undefined ? value?.toString() : ''}
-            defaultValue={defaultValue?.toString() !== undefined ? value?.toString() : ''}
+            defaultValue={defaultValue?.toString() !== undefined ? defaultValue?.toString() : ''}
             onInput={(e) => {
               onChange(e.currentTarget.value);
             }}
