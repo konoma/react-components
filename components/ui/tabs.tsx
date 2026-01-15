@@ -67,7 +67,7 @@ export default function Tabs<DataType>({
               {tab.count}
             </div>
           )}
-          {tab.id === active && <div className={activeMarkerClass}></div>}
+          {equalTabs(tab.id, active) && <div className={activeMarkerClass}></div>}
         </div>
       ))}
     </div>
