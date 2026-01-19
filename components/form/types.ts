@@ -1,4 +1,4 @@
-import type { ChangeEvent, HTMLInputTypeAttribute, JSX, MouseEvent } from 'react';
+import type { ChangeEvent, HTMLAttributes, HTMLInputTypeAttribute, MouseEvent, ReactNode } from 'react';
 
 type LabelPosition = 'top' | 'bottom' | 'left' | 'right';
 
@@ -72,9 +72,24 @@ export interface Classes {
   valueContainerClasses?: string;
 }
 
-export interface FormFieldProps<DataType> extends Classes {
+export interface Icons {
+  indeterminateIconPath?: string;
+  indeterminateIconName?: string;
+  checkedIconPath?: string;
+  checkedIconName?: string;
+  deleteIconName?: string;
+  deleteIconPath?: string;
+  addIconName?: string;
+  addIconPath?: string;
+}
+
+export interface FormFieldProps<DataType> extends Classes, Icons {
   allowCustomValues?: boolean;
   customValueLabel?: string;
+  autoComplete?: string;
+  dataTestId?: string;
+  id?: string;
+  inputMode?: HTMLAttributes<HTMLElement>['inputMode'];
   arrangement?: 'horizontal' | 'vertical';
   centered?: boolean;
   autoFocus?: boolean;
@@ -90,7 +105,7 @@ export interface FormFieldProps<DataType> extends Classes {
   indeterminate?: boolean;
   isClearable?: boolean;
   replacements?: Record<string, string>;
-  label?: string | JSX.Element;
+  label?: ReactNode;
   labelPosition?: LabelPosition;
   maxLength?: number;
   maxLengthLabel?: string;
@@ -118,6 +133,8 @@ export interface FormFieldProps<DataType> extends Classes {
   isMulti?: boolean;
   /** [select only] Default placement of the menu in relation to the control. 'auto' will flip when there isn't enough space below the control. */
   menuPlacement?: 'auto' | 'top' | 'bottom';
+  allowNew?: boolean;
+  allowDelete?: boolean;
   valueTransformer?: (value: FormValue) => FormValue;
   /** Used to place the dropdown element of a Select */
   menuPortalTarget?: HTMLElement;

@@ -24,6 +24,7 @@ export default function CheckboxList<DataType>({
   required,
   labelPosition = 'top',
   values = [],
+  dataTestId = '',
   onChange = () => {
     return;
   },
@@ -38,6 +39,7 @@ export default function CheckboxList<DataType>({
           return (
             <Checkbox
               key={i}
+              dataTestId={dataTestId + i}
               name={name as string}
               label={option.label.toString()}
               error={error}

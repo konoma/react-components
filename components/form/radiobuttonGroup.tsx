@@ -28,6 +28,7 @@ export default function RadioButtonGroup<DataType>({
   value,
   label,
   name,
+  dataTestId = '',
   arrangement = 'horizontal',
   onChange = () => {
     return;
@@ -46,6 +47,7 @@ export default function RadioButtonGroup<DataType>({
               <input
                 className="appearance-none"
                 type="radio"
+                data-testid={dataTestId + i}
                 name={name as string}
                 value={option.value.toString()}
                 checked={value?.toString() === option.value.toString()}

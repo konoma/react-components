@@ -17,8 +17,11 @@ export default function Modal({
   headerContent,
   footerContent,
   title,
+  dataTestId,
   footerActions,
   hasCloseIcon,
+  closeIconName,
+  closeIconPath,
   onClose,
 }: {
   backdropClasses?: string;
@@ -33,17 +36,20 @@ export default function Modal({
   children: React.ReactNode;
   headerContent?: React.ReactNode;
   footerContent?: React.ReactNode;
+  dataTestId?: string;
   title?: string;
   footerActions?: (React.ComponentProps<typeof Button> & {
     position: 'left' | 'right';
   })[];
   hasCloseIcon?: boolean;
+  closeIconName?: string;
+  closeIconPath?: string;
   onClose: () => void;
 }) {
   return (
     <>
       {createPortal(
-        <div className={backdropClasses} onMouseDown={onClose} role="presentation">
+        <div className={backdropClasses} onMouseDown={onClose} role="presentation" data-testid={dataTestId}>
           <div
             role="presentation"
             className={contentClasses}
@@ -55,7 +61,7 @@ export default function Modal({
             {hasCloseIcon && (
               <div className={closeWrapperClasses}>
                 <button onClick={onClose}>
-                  <Icon name="heroicons:x-mark-16-solid" className={iconClasses} />
+                  <Icon name={closeIconName || 'heroicons:x-mark-16-solid'} path={closeIconPath} className={iconClasses} />
                 </button>
               </div>
             )}

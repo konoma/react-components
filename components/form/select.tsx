@@ -1,14 +1,15 @@
-import { useId } from 'react';
+import { useContext, useId } from 'react';
 import ReactSelect from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { i18nContext } from '../wrapper.tsx';
 import type { Classes, FormFieldProps, FormValue, Option } from './types.ts';
 
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
 
 const baseClasses: { [key in keyof Classes]: string } = {
   classes: 'rounded-krc-select h-10 py-0 border shadow-none',
-  errorClasses: 'text-sm text-error-500',
+  errorClasses: 'text-sm text-error-500 -mt-4',
   labelClasses: 'text-sm font-medium text-secondary-900',
   labelWrapperClasses: 'group flex flex-col gap-1',
   classesNeutral: 'border-secondary-300 group-hover:border-secondary-400',
@@ -43,7 +44,7 @@ export default function Select<DataType>({
   indicatorClasses = baseClasses.indicatorClasses,
   valueContainerClasses = baseClasses.valueContainerClasses,
   options = [],
-  placeholder = 'Bitte auswählen',
+  placeholder,
   className,
   required,
   error,
@@ -59,6 +60,7 @@ export default function Select<DataType>({
   customValueLabel = 'Eigenen Wert hinzufügen',
   menuPortalTarget,
   isMulti,
+  dataTestId,
   onInput = () => {
     return;
   },
@@ -70,6 +72,8 @@ export default function Select<DataType>({
   },
   ...props
 }: FormFieldProps<DataType>) {
+  const { locale } = useContext(i18nContext);
+
   const classesFull = [classes, className];
   const optionsInternal = options
     .filter((o) => !!o.value && o.value !== CUSTOM_ENTRY_VALUE)
@@ -105,7 +109,7 @@ export default function Select<DataType>({
           </span>
         )}
         <Component<FormValue, boolean>
-          key={key}
+          key={key + locale}
           instanceId={useId()}
           classNamePrefix="select"
           className={wrapperClasses}
@@ -115,6 +119,9 @@ export default function Select<DataType>({
               borderRadius: undefined,
             }),
           }}
+          // React Select currently does not support data-testid prop natively (see https://github.com/jedwatson/react-select/issues/6018)
+          data-testid={dataTestId}
+          id={dataTestId}
           isSearchable={searchable}
           menuPlacement={menuPlacement}
           isDisabled={disabled}

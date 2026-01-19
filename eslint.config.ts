@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { includeIgnoreFile } from '@eslint/compat';
 import eslint from '@eslint/js';
+import type { ESLint } from 'eslint';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactPlugin from 'eslint-plugin-react';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -66,4 +67,4 @@ export default [
       },
     },
   },
-];
+] as ESLint.ConfigData[];

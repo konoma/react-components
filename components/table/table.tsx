@@ -1,18 +1,19 @@
 import type { Identifier } from 'dnd-core';
-import type { JSX } from 'react';
-import { useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Input from '../form/input.tsx';
 import Icon from '../ui/icon.tsx';
+import { i18nContext } from '../wrapper.tsx';
 import type { PaginationClasses } from './pagination.tsx';
 import Pagination from './pagination.tsx';
 
 export interface TableColumn<DataType> {
   id: keyof DataType;
-  title: string | JSX.Element;
+  title: ReactNode;
   initialWidth?: string | number;
   hidden?: boolean;
   sorting?: '+' | '-' | undefined;
@@ -25,7 +26,7 @@ export interface TableColumn<DataType> {
   allowResize?: boolean;
   filterable?: boolean;
   grow?: boolean;
-  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => JSX.Element;
+  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => ReactNode;
 }
 
 interface DragItem {
@@ -79,6 +80,21 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagesize = 10,
   xToY,
   isInfinite = true,
+  name = '',
+  firstPageIconName,
+  firstPageIconPath,
+  previousPageIconName,
+  previousPageIconPath,
+  nextPageIconName,
+  nextPageIconPath,
+  lastPageIconName,
+  lastPageIconPath,
+  sortingAscIconName,
+  sortingAscIconPath,
+  sortingDescIconName,
+  sortingDescIconPath,
+  removeFilterIconName,
+  removeFilterIconPath,
   onDragRow = () => {
     return;
   },
@@ -134,12 +150,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   columnsCenter: TableColumn<DataType>[];
   columnsRight?: TableColumn<DataType>[];
   columnsLeft?: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => JSX.Element };
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => ReactNode };
   filterComponents?: {
     [key in keyof DataType]?: (
       filters: Record<string, string[]>,
       setFilters: (filters: Record<string, string[]>) => Promise<void>
-    ) => JSX.Element;
+    ) => ReactNode;
   };
   filters?: Record<string, string[]>;
   showFilters?: boolean;
@@ -147,11 +163,26 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagination?: boolean;
   totalRows: number;
   noEntryLabel?: string;
-  detailsRow?: (data: DataType) => JSX.Element;
+  detailsRow?: (data: DataType) => ReactNode;
   allowReorder?: boolean;
   xToY?: string;
   isInfinite?: boolean;
   pagesize?: number;
+  name?: string;
+  firstPageIconName?: string;
+  firstPageIconPath?: string;
+  previousPageIconName?: string;
+  previousPageIconPath?: string;
+  nextPageIconName?: string;
+  nextPageIconPath?: string;
+  lastPageIconName?: string;
+  lastPageIconPath?: string;
+  sortingAscIconName?: string;
+  sortingAscIconPath?: string;
+  sortingDescIconName?: string;
+  sortingDescIconPath?: string;
+  removeFilterIconName?: string;
+  removeFilterIconPath?: string;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -168,6 +199,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
   onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
 }) {
+  const { locale } = useContext(i18nContext);
+
   const hasFilters = !!(
     showFilters &&
     (columnsCenter.some((column) => column.filterable) ||
@@ -190,7 +223,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   }
 
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} data-testid={name + '-table'}>
       <div
         style={{
           gridTemplateRows: `repeat(${data.length + 1}, auto)`,
@@ -202,13 +235,19 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         onScroll={onScroll}
       >
         {/* Header */}
-        <div ref={header} className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header">
+        <div
+          ref={header}
+          data-testid={name + '-table-header'}
+          key={locale}
+          className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header"
+        >
           {(detailsRow || !!currentColumnsLeft.length) && (
-            <div className="sticky left-0 flex flex-row z-1">
+            <div className="sticky left-0 flex flex-row z-1" data-testid={name + '-table-header-left'}>
               {detailsRow && <div className={[headerClasses, 'w-12', hasFilters ? 'h-24' : 'h-12'].join(' ')}></div>}
               {currentColumnsLeft.map((column) => (
                 <div
                   key={column.id.toString()}
+                  data-testid={`${name}-table-header-left-${column.id.toString()}`}
                   style={{
                     minWidth: column.initialWidth,
                     maxWidth: !column.grow ? column.initialWidth : undefined,
@@ -239,11 +278,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           name={
                             column.sorting
                               ? {
-                                  '+': 'heroicons:chevron-down-16-solid',
-                                  '-': 'heroicons:chevron-up-16-solid',
+                                  '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
+                                  '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                                 }[column.sorting]
-                              : 'heroicons:chevron-up-down-16-solid'
+                              : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
                           }
+                          path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
                         />
                       </div>
                     )}
@@ -262,6 +302,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                             <Input
                               defaultValue={filters[column.filterKey]?.join(', ')}
+                              dataTestId={`${name}-table-header-left-filter-${column.id.toString()}`}
                               key={filters[column.filterKey]?.join(', ')}
                               onKeyDown={async (e: React.KeyboardEvent<HTMLElement>) => {
                                 if (e.key === 'Enter' && column.filterKey) {
@@ -310,6 +351,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 minWidth: column.initialWidth,
                 maxWidth: !column.grow ? column.initialWidth : undefined,
               }}
+              data-testid={`${name}-table-header-center-${column.id.toString()}`}
               className={[
                 headerClasses,
                 hasFilters ? 'h-24' : 'h-12',
@@ -336,11 +378,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       name={
                         column.sorting
                           ? {
-                              '+': 'heroicons:chevron-down-16-solid',
-                              '-': 'heroicons:chevron-up-16-solid',
+                              '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
+                              '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                             }[column.sorting]
-                          : 'heroicons:chevron-up-down-16-solid'
+                          : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
                       }
+                      path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
                     />
                   </div>
                 )}
@@ -359,6 +402,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       {column.filterComponent?.(filters, updateFilters) || filterComponents?.[column.id]?.(filters, updateFilters) || (
                         <Input
                           defaultValue={filters[column.filterKey]?.join(', ')}
+                          dataTestId={`${name}-table-header-center-filter-${column.id.toString()}`}
                           key={filters[column.filterKey]?.join(', ')}
                           onKeyDown={async (e: React.KeyboardEvent) => {
                             if (e.key === 'Enter' && column.filterKey) {
@@ -389,7 +433,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                           }}
                           isClearable
                           className="h-10"
-                          iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
+                          iconRightName={filters[column.filterKey] ? removeFilterIconName || 'heroicons:x-mark' : ''}
+                          iconRightPath={filters[column.filterKey] ? removeFilterIconPath : ''}
                         />
                       )}
                     </>
@@ -407,6 +452,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     minWidth: column.initialWidth,
                     maxWidth: !column.grow ? column.initialWidth : undefined,
                   }}
+                  data-testid={`${name}-table-header-right-${column.id.toString()}`}
                   className="flex h-full flex-row items-start justify-end truncate bg-krc-table-header px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
                 >
                   {column.title}
@@ -416,44 +462,144 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           )}
         </div>
         {/* Body */}
-        <DndProvider backend={HTML5Backend}>
-          {data.map((entry, i) => {
-            return (
-              <Row<DataType>
-                key={i}
-                index={i}
-                entry={entry}
-                allowReorder={allowReorder}
-                onDragRow={onDragRow}
-                onDropRow={onDropRow}
-                currentColumnsCenter={currentColumnsCenter}
-                currentColumnsLeft={currentColumnsLeft}
-                currentColumnsRight={currentColumnsRight}
-                cellRenderer={cellRenderer}
-                header={header}
-                onRowClick={onRowClick}
-                onRowDoubleClick={onRowDoubleClick}
-                rowClasses={rowClasses}
-                rowLeftWrapperClasses={rowLeftWrapperClasses}
-                rowCenterWrapperClasses={rowCenterWrapperClasses}
-                rowRightWrapperClasses={rowRightWrapperClasses}
-                detailsRow={detailsRow}
-              />
-            );
-          })}
-        </DndProvider>
-
-        {data.length === 0 && <div className={noDataClasses}>{noEntryLabel}</div>}
+        {allowReorder ? (
+          <DndProvider backend={HTML5Backend} debugMode>
+            {data.map((entry, i) => {
+              return (
+                <Row<DataType>
+                  key={i}
+                  index={i}
+                  name={name}
+                  entry={entry}
+                  allowReorder={allowReorder}
+                  onDragRow={onDragRow}
+                  onDropRow={onDropRow}
+                  currentColumnsCenter={currentColumnsCenter}
+                  currentColumnsLeft={currentColumnsLeft}
+                  currentColumnsRight={currentColumnsRight}
+                  cellRenderer={cellRenderer}
+                  header={header}
+                  onRowClick={onRowClick}
+                  onRowDoubleClick={onRowDoubleClick}
+                  rowClasses={rowClasses}
+                  rowLeftWrapperClasses={rowLeftWrapperClasses}
+                  rowCenterWrapperClasses={rowCenterWrapperClasses}
+                  rowRightWrapperClasses={rowRightWrapperClasses}
+                  detailsRow={detailsRow}
+                />
+              );
+            })}
+          </DndProvider>
+        ) : (
+          <>
+            {data.map((entry, i) => {
+              return (
+                <div
+                  data-testid={`${name}-table-row`}
+                  key={i}
+                  data-foo="bar"
+                  className={rowClasses}
+                  onClick={() => onRowClick(entry)}
+                  onDoubleClick={() => onRowDoubleClick(entry)}
+                >
+                  {!!currentColumnsLeft.length && (
+                    <div className="sticky left-0 flex flex-row border-r">
+                      {currentColumnsLeft.map((column) => {
+                        return (
+                          <div
+                            key={column.id.toString()}
+                            style={{
+                              minWidth: column.initialWidth,
+                              maxWidth: !column.grow ? column.initialWidth : undefined,
+                            }}
+                            className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                            title={(entry[column.id] as string) || ''}
+                          >
+                            {cellRenderer?.[column.id]?.(entry) || (
+                              <div data-testid={`${name}-table-row-left-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                {(entry[column.id] as string) || '-'}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {currentColumnsCenter.map((column) => {
+                    return (
+                      <div
+                        key={column.id.toString()}
+                        style={{
+                          minWidth: column.initialWidth,
+                          maxWidth: !column.grow ? column.initialWidth : undefined,
+                        }}
+                        className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                        title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
+                      >
+                        {cellRenderer?.[column.id]?.(entry) || (
+                          <div data-testid={`${name}-table-row-center-${column.id.toString()}}`} className="h-14 truncate p-4 text-sm">
+                            {(entry[column.id] as string) || '-'}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {!!currentColumnsRight.length && (
+                    <div className="sticky right-0 flex flex-row border-l">
+                      {currentColumnsRight.map((column) => {
+                        return (
+                          <div
+                            key={column.id.toString()}
+                            style={{
+                              minWidth: column.initialWidth,
+                              maxWidth: !column.grow ? column.initialWidth : undefined,
+                            }}
+                            className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                            title={(entry[column.id] as string) || ''}
+                          >
+                            {cellRenderer?.[column.id]?.(entry) || (
+                              <div data-testid={`${name}-table-row-right-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                {(entry[column.id] as string) || '-'}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div
+                    style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+                    className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
+                  ></div>
+                </div>
+              );
+            })}
+          </>
+        )}
+        {data.length === 0 && (
+          <div data-testid={name + '-table-no-data'} className={noDataClasses}>
+            {noEntryLabel}
+          </div>
+        )}
       </div>
       {pagination && xToY && data.length > 0 && (
         <Pagination
           showButtons={!isInfinite}
           xToY={xToY}
+          dataTestId={`${name}-table-pagination`}
           currentTotal={totalRows}
           currentLoaded={data.length}
           currentStart={currentStart}
           currentEnd={currentEnd}
           currentPage={currentPage}
+          firstPageIconName={firstPageIconName}
+          firstPageIconPath={firstPageIconPath}
+          previousPageIconName={previousPageIconName}
+          previousPageIconPath={previousPageIconPath}
+          nextPageIconName={nextPageIconName}
+          nextPageIconPath={nextPageIconPath}
+          lastPageIconName={lastPageIconName}
+          lastPageIconPath={lastPageIconPath}
           totalPages={totalPages}
           onFirstPage={onFirstPage}
           onPreviousPage={onPreviousPage}
@@ -485,6 +631,7 @@ function Row<DataType>({
   rowRightWrapperClasses,
   allowReorder,
   detailsRow,
+  name,
 }: {
   index: number;
   entry: DataType;
@@ -495,14 +642,15 @@ function Row<DataType>({
   currentColumnsLeft: TableColumn<DataType>[];
   currentColumnsCenter: TableColumn<DataType>[];
   currentColumnsRight: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => JSX.Element };
-  header: React.MutableRefObject<HTMLDivElement | null>;
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => ReactNode };
+  header: React.RefObject<HTMLDivElement | null>;
   rowClasses: string;
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
   rowRightWrapperClasses: string;
   allowReorder?: boolean;
-  detailsRow?: (data: DataType) => JSX.Element;
+  detailsRow?: (data: DataType) => ReactNode;
+  name: string;
 }) {
   const dragRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -601,6 +749,7 @@ function Row<DataType>({
         ref={previewRef}
         style={{ opacity }}
         data-handler-id={handlerId}
+        data-testid={`${name}-table-row`}
       >
         {(detailsRow || !!currentColumnsLeft.length) && (
           <div className="sticky left-0 flex flex-row border-r">

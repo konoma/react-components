@@ -25,8 +25,11 @@ export default function Checkbox<DataType>({
   iconClassesFilled = baseClasses.iconClassesFilled,
   value,
   defaultValue,
+  indeterminateIconPath,
+  indeterminateIconName,
+  checkedIconPath,
+  checkedIconName,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the input */
-
   onInput = () => {
     return;
   },
@@ -39,6 +42,7 @@ export default function Checkbox<DataType>({
   className = '',
   name,
   error,
+  dataTestId,
   ...props
 }: FormFieldProps<DataType>) {
   const ref = useRef<HTMLInputElement>(null);
@@ -59,12 +63,17 @@ export default function Checkbox<DataType>({
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           checked={!!value}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
           {...props}
         />
         <div className={classesFilled}>
-          <Icon name={indeterminate ? 'heroicons:minus' : 'heroicons:check-16-solid'} className={iconClassesFilled} />
+          <Icon
+            name={indeterminate ? indeterminateIconName || 'heroicons:minus' : checkedIconName || 'heroicons:check-16-solid'}
+            path={indeterminate ? indeterminateIconPath : checkedIconPath}
+            className={iconClassesFilled}
+          />
         </div>
         <span className={labelClassesFilled}>{label}</span>
       </label>
@@ -79,6 +88,7 @@ export default function Checkbox<DataType>({
           name={name as string}
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
         />
@@ -98,6 +108,7 @@ export default function Checkbox<DataType>({
           value={0}
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
+          data-testid={dataTestId}
           onChange={(e) => onChange(e.target.checked, e)}
           disabled={disabled}
         />

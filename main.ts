@@ -25,6 +25,7 @@ import LoadingIndicator from './components/ui/loadingIndicator.tsx';
 import Modal from './components/ui/modal.tsx';
 import Tabs from './components/ui/tabs.tsx';
 import Tag from './components/ui/tag.tsx';
+import ComponentsWrapper from './components/wrapper.tsx';
 
 export {
   Button,
@@ -33,6 +34,7 @@ export {
   Classes,
   ColumnChooser,
   ColumnChooserEntry,
+  ComponentsWrapper,
   ErrorContext,
   FilterContext,
   Form,
