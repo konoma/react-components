@@ -1,6 +1,6 @@
 import type { Identifier } from 'dnd-core';
 import type { ReactNode } from 'react';
-import { useContext, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -26,7 +26,11 @@ export interface TableColumn<DataType> {
   allowResize?: boolean;
   filterable?: boolean;
   grow?: boolean;
-  filterComponent?: (filters: Record<string, string[]>, setFilters: (filters: Record<string, string[]>) => Promise<void>) => ReactNode;
+  lastFilter?: boolean;
+  filterComponent?: (
+    filters: Record<string, string[]>,
+    setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>
+  ) => ReactNode;
 }
 
 interface DragItem {
@@ -94,6 +98,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingDescIconPath,
   removeFilterIconName,
   removeFilterIconPath,
+  triggeredFilter,
+  setTriggeredFilter,
   onDragRow = () => {
     return;
   },
@@ -153,7 +159,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   filterComponents?: {
     [key in keyof DataType]?: (
       filters: Record<string, string[]>,
-      setFilters: (filters: Record<string, string[]>) => Promise<void>
+      setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>
     ) => ReactNode;
   };
   filters?: Record<string, string[]>;
@@ -181,6 +187,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingDescIconPath?: string;
   removeFilterIconName?: string;
   removeFilterIconPath?: string;
+  triggeredFilter?: string;
+  setTriggeredFilter?: (filterId: string) => void;
   onDragRow?: (dragIndex: number, hoverIndex: number) => void;
   onDropRow?: (dragIndex: number, hoverIndex: number) => void;
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
@@ -216,7 +224,27 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   const currentColumnsCenter = useMemo(() => columnsCenter?.filter((column) => !column?.hidden) || [], [columnsCenter]);
   const currentColumnsRight = useMemo(() => columnsRight?.filter((column) => !column?.hidden) || [], [columnsRight]);
 
-  async function updateFilters(newFilters: Record<string, string[]>) {
+  useEffect(() => {
+    // scroll triggered column into view
+    if (!triggeredFilter) {
+      return;
+    }
+    const columnIndex =
+      currentColumnsLeft.findIndex((col) => col.filterKey === triggeredFilter) >= 0
+        ? currentColumnsLeft.findIndex((col) => col.filterKey === triggeredFilter)
+        : currentColumnsCenter.findIndex((col) => col.filterKey === triggeredFilter) >= 0
+          ? currentColumnsLeft.length + currentColumnsCenter.findIndex((col) => col.filterKey === triggeredFilter)
+          : currentColumnsLeft.length +
+            currentColumnsCenter.length +
+            currentColumnsRight.findIndex((col) => col.filterKey === triggeredFilter);
+    const columnElement = header.current?.children.item(columnIndex) as HTMLDivElement | null;
+    if (columnElement) {
+      columnElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, []);
+
+  async function updateFilters(newFilters: Record<string, string[]>, triggeringFilterId: string) {
+    setTriggeredFilter?.(triggeringFilterId);
     await onUpdateFilters(newFilters);
   }
 
@@ -306,12 +334,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                   const key = column.filterKey;
                                   const value = (e.currentTarget as HTMLInputElement).value;
                                   if (e) {
-                                    await updateFilters({ ...filters, [key]: [value] });
+                                    await updateFilters({ ...filters, [key]: [value] }, key);
                                   } else {
                                     const newFilters = { ...filters };
                                     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                     delete newFilters[key];
-                                    await updateFilters(newFilters);
+                                    await updateFilters(newFilters, '');
                                   }
                                 }
                               }}
@@ -325,7 +353,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                   const newFilters = { ...filters };
                                   // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                   delete newFilters[key];
-                                  await updateFilters(newFilters);
+                                  await updateFilters(newFilters, '');
                                 }
                               }}
                               isClearable
@@ -406,12 +434,12 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               const key = column.filterKey;
                               const value = (e.currentTarget as HTMLInputElement).value;
                               if (e) {
-                                await updateFilters({ ...filters, [key]: [value] });
+                                await updateFilters({ ...filters, [key]: [value] }, key);
                               } else {
                                 const newFilters = { ...filters };
                                 // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                 delete newFilters[key];
-                                await updateFilters(newFilters);
+                                await updateFilters(newFilters, '');
                               }
                             }
                           }}
@@ -425,7 +453,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               const newFilters = { ...filters };
                               // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                               delete newFilters[key];
-                              await updateFilters(newFilters);
+                              await updateFilters(newFilters, '');
                             }
                           }}
                           isClearable
