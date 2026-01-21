@@ -16,7 +16,7 @@ import ColumnChooser from './components/table/columnChooser.tsx';
 import ColumnChooserEntry from './components/table/columnChooserEntry.tsx';
 import { FilterContext } from './components/table/FilterContext.ts';
 import Pagination from './components/table/pagination.tsx';
-import type { TableColumn } from './components/table/table.tsx';
+import type { TableColumn, TableColumnBase } from './components/table/table.tsx';
 import Table from './components/table/table.tsx';
 import TableActions, { TableActionEntry } from './components/table/tableActions.tsx';
 import Button from './components/ui/button.tsx';
@@ -55,6 +55,7 @@ export {
   TableActionEntry,
   TableActions,
   TableColumn,
+  TableColumnBase,
   Tabs,
   Tag,
   TagList,

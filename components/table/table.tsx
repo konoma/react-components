@@ -11,9 +11,13 @@ import { i18nContext } from '../wrapper.tsx';
 import type { PaginationClasses } from './pagination.tsx';
 import Pagination from './pagination.tsx';
 
-export interface TableColumn<DataType> {
-  id: keyof DataType;
+export interface TableColumnBase {
+  id: string | number | symbol;
   title: ReactNode;
+}
+
+export interface TableColumn<DataType> extends TableColumnBase {
+  id: keyof DataType;
   initialWidth?: string | number;
   hidden?: boolean;
   sorting?: '+' | '-' | undefined;
@@ -225,6 +229,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   const currentColumnsLeft = useMemo(() => columnsLeft?.filter((column) => !column?.hidden) || [], [columnsLeft]);
   const currentColumnsCenter = useMemo(() => columnsCenter?.filter((column) => !column?.hidden) || [], [columnsCenter]);
   const currentColumnsRight = useMemo(() => columnsRight?.filter((column) => !column?.hidden) || [], [columnsRight]);
+
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     // scroll triggered column into view
@@ -522,83 +528,99 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           <>
             {data.map((entry, i) => {
               return (
-                <div
-                  data-testid={`${name}-table-row`}
-                  key={i}
-                  data-foo="bar"
-                  className={rowClasses}
-                  onClick={() => onRowClick(entry)}
-                  onDoubleClick={() => onRowDoubleClick(entry)}
-                >
-                  {!!currentColumnsLeft.length && (
-                    <div className="sticky left-0 flex flex-row border-r">
-                      {currentColumnsLeft.map((column) => {
-                        return (
-                          <div
-                            key={column.id.toString()}
-                            style={{
-                              minWidth: column.initialWidth,
-                              maxWidth: !column.grow ? column.initialWidth : undefined,
-                            }}
-                            className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                            title={(entry[column.id] as string) || ''}
-                          >
-                            {cellRenderer?.[column.id]?.(entry) || (
-                              <div data-testid={`${name}-table-row-left-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
-                                {(entry[column.id] as string) || '-'}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {currentColumnsCenter.map((column) => {
-                    return (
-                      <div
-                        key={column.id.toString()}
-                        style={{
-                          minWidth: column.initialWidth,
-                          maxWidth: !column.grow ? column.initialWidth : undefined,
-                        }}
-                        className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                        title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-                      >
-                        {cellRenderer?.[column.id]?.(entry) || (
-                          <div data-testid={`${name}-table-row-center-${column.id.toString()}}`} className="h-14 truncate p-4 text-sm">
-                            {(entry[column.id] as string) || '-'}
+                <div className="flex flex-col" key={i}>
+                  <div
+                    data-testid={`${name}-table-row`}
+                    data-foo="bar"
+                    className={rowClasses}
+                    onClick={() => onRowClick(entry)}
+                    onDoubleClick={() => onRowDoubleClick(entry)}
+                  >
+                    {(detailsRow || !!currentColumnsLeft.length) && (
+                      <div className="sticky left-0 flex flex-row border-r">
+                        {detailsRow && (
+                          <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
+                            <button
+                              className="w-8 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setDetailsOpen(!detailsOpen);
+                              }}
+                            >
+                              <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                            </button>
                           </div>
                         )}
+                        {currentColumnsLeft.map((column) => {
+                          return (
+                            <div
+                              key={column.id.toString()}
+                              style={{
+                                minWidth: column.initialWidth,
+                                maxWidth: !column.grow ? column.initialWidth : undefined,
+                              }}
+                              className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                              title={(entry[column.id] as string) || ''}
+                            >
+                              {cellRenderer?.[column.id]?.(entry) || (
+                                <div data-testid={`${name}-table-row-left-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                  {(entry[column.id] as string) || '-'}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                  {!!currentColumnsRight.length && (
-                    <div className="sticky right-0 flex flex-row border-l">
-                      {currentColumnsRight.map((column) => {
-                        return (
-                          <div
-                            key={column.id.toString()}
-                            style={{
-                              minWidth: column.initialWidth,
-                              maxWidth: !column.grow ? column.initialWidth : undefined,
-                            }}
-                            className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                            title={(entry[column.id] as string) || ''}
-                          >
-                            {cellRenderer?.[column.id]?.(entry) || (
-                              <div data-testid={`${name}-table-row-right-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
-                                {(entry[column.id] as string) || '-'}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  <div
-                    style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                    className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
-                  ></div>
+                    )}
+                    {currentColumnsCenter.map((column) => {
+                      return (
+                        <div
+                          key={column.id.toString()}
+                          style={{
+                            minWidth: column.initialWidth,
+                            maxWidth: !column.grow ? column.initialWidth : undefined,
+                          }}
+                          className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                          title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
+                        >
+                          {cellRenderer?.[column.id]?.(entry) || (
+                            <div data-testid={`${name}-table-row-center-${column.id.toString()}}`} className="h-14 truncate p-4 text-sm">
+                              {(entry[column.id] as string) || '-'}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {!!currentColumnsRight.length && (
+                      <div className="sticky right-0 flex flex-row border-l">
+                        {currentColumnsRight.map((column) => {
+                          return (
+                            <div
+                              key={column.id.toString()}
+                              style={{
+                                minWidth: column.initialWidth,
+                                maxWidth: !column.grow ? column.initialWidth : undefined,
+                              }}
+                              className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
+                              title={(entry[column.id] as string) || ''}
+                            >
+                              {cellRenderer?.[column.id]?.(entry) || (
+                                <div data-testid={`${name}-table-row-right-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
+                                  {(entry[column.id] as string) || '-'}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <div
+                      style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
+                      className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
+                    ></div>
+                  </div>
+                  {detailsRow && detailsOpen && <div className="ml-12">{detailsRow(entry)}</div>}
                 </div>
               );
             })}
