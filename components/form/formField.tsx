@@ -42,6 +42,10 @@ export default function FormField<DataType>({
       value={value}
       defaultValue={defaultValue}
       onChange={(v: FormValue | FormValue[], e?: React.ChangeEvent) => {
+        if (typeof v === 'string') {
+          // replace non-breaking spaces with regular spaces
+          v = v.replace(/\u00A0/g, ' ');
+        }
         onChange(v, e);
       }}
       options={options}
