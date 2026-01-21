@@ -239,7 +239,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
             currentColumnsRight.findIndex((col) => col.filterKey === triggeredFilter);
     const columnElement = header.current?.children.item(columnIndex) as HTMLDivElement | null;
     if (columnElement) {
-      columnElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      columnElement.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
     }
   }, []);
 
