@@ -230,7 +230,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   const currentColumnsCenter = useMemo(() => columnsCenter?.filter((column) => !column?.hidden) || [], [columnsCenter]);
   const currentColumnsRight = useMemo(() => columnsRight?.filter((column) => !column?.hidden) || [], [columnsRight]);
 
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState<boolean[]>([]);
 
   useEffect(() => {
     // scroll triggered column into view
@@ -545,10 +545,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                setDetailsOpen(!detailsOpen);
+                                setDetailsOpen((prev) => {
+                                  const newDetailsOpen = [...prev];
+                                  newDetailsOpen[i] = !newDetailsOpen[i];
+                                  return newDetailsOpen;
+                                });
                               }}
                             >
-                              <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                              <Icon name={detailsOpen[i] ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
                             </button>
                           </div>
                         )}
@@ -620,7 +624,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
                     ></div>
                   </div>
-                  {detailsRow && detailsOpen && <div className="ml-12">{detailsRow(entry)}</div>}
+                  {detailsRow && detailsOpen[i] && <div className="ml-12">{detailsRow(entry)}</div>}
                 </div>
               );
             })}
