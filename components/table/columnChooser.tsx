@@ -59,7 +59,7 @@ export default function ColumnChooser<DataType>({
             <div className={headerClasses}>{columnsLabel}</div>
             <div className={columnsWrapperClasses}>
               {columns
-                .filter((c) => c.title)
+                .filter((c) => c.title && !c.hideFromChooser)
                 .map((col, i) => (
                   <ColumnChooserEntry
                     key={i}

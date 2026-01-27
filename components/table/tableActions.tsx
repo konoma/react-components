@@ -10,6 +10,7 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import Icon from '../ui/icon.tsx';
@@ -49,7 +50,7 @@ export default function TableActions({
         <FloatingPortal>
           <FloatingFocusManager context={context} modal={false}>
             <div
-              className="flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm"
+              className="flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm z-1"
               ref={refs.setFloating}
               style={floatingStyles}
               {...getFloatingProps()}
@@ -65,13 +66,13 @@ export default function TableActions({
 
 type TableActionVariant = 'error' | 'success' | 'warning' | 'default';
 export function TableActionEntry({
-  text,
+  content,
   errorClasses = 'cursor-pointer px-4 py-2 text-error-900 hover:bg-error-100',
   defaultClasses = 'cursor-pointer px-4 py-2 text-secondary-900 hover:bg-primary-100',
   variant = 'default',
   onClick,
 }: {
-  text: string;
+  content: string | ReactNode;
   errorClasses?: string;
   defaultClasses?: string;
   variant?: TableActionVariant;
@@ -81,13 +82,13 @@ export function TableActionEntry({
     case 'error':
       return (
         <span onClick={onClick} className={errorClasses}>
-          {text}
+          {content}
         </span>
       );
     default:
       return (
         <span onClick={onClick} className={defaultClasses}>
-          {text}
+          {content}
         </span>
       );
   }
