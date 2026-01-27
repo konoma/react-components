@@ -14,6 +14,7 @@ import Pagination from './pagination.tsx';
 export interface TableColumnBase {
   id: string | number | symbol;
   title: ReactNode;
+  hideFromChooser?: boolean;
 }
 
 export interface TableColumn<DataType> extends TableColumnBase {
@@ -478,7 +479,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
             </div>
           ))}
           {!!currentColumnsRight.length && (
-            <div className="sticky right-0 flex flex-row h-full items-center">
+            <div className="sticky -right-px flex flex-row h-full items-center">
               {currentColumnsRight.map((column) => (
                 <div
                   key={column.id.toString()}
@@ -597,7 +598,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       );
                     })}
                     {!!currentColumnsRight.length && (
-                      <div className="sticky right-0 flex flex-row border-l">
+                      <div className="sticky -right-px flex flex-row border-l">
                         {currentColumnsRight.map((column) => {
                           return (
                             <div
@@ -621,7 +622,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     )}
                     <div
                       style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                      className="absolute bottom-0 left-0 right-0 h-px bg-krc-table-header"
+                      className="absolute bottom-0 left-0 -right-px h-px bg-krc-table-header"
                     ></div>
                   </div>
                   {detailsRow && detailsOpen[i] && <div className="ml-12">{detailsRow(entry)}</div>}
@@ -858,7 +859,7 @@ function Row<DataType>({
           );
         })}
         {!!currentColumnsRight.length && (
-          <div className="sticky right-0 flex flex-row border-l">
+          <div className="sticky -right-px flex flex-row border-l">
             {currentColumnsRight.map((column) => {
               return (
                 <div
@@ -880,7 +881,7 @@ function Row<DataType>({
         )}
         <div
           style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-          className="absolute bottom-0 left-0 right-0 h-px bg-secondary-50"
+          className="absolute bottom-0 left-0 -right-px h-px bg-secondary-50"
         ></div>
       </div>
       {detailsRow && detailsOpen && <div className="ml-12">{detailsRow(entry)}</div>}
