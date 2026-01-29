@@ -94,7 +94,7 @@ export interface FormFieldProps<DataType> extends Classes, Icons {
   centered?: boolean;
   autoFocus?: boolean;
   childClasses?: { [key in keyof Classes]?: string };
-  defaultValue?: FormValue;
+  defaultValue?: FormValue | FormValue[];
   disabled?: boolean;
   error?: string[];
   forgotPWText?: string;
