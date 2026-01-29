@@ -93,7 +93,15 @@ export default function Select<DataType>({
   let defaultOption;
   let key;
   if (isMulti) {
-    defaultOption = defaultValue ? optionsInternal.filter((option) => option.value === defaultValue) : null;
+    defaultOption = defaultValue
+      ? optionsInternal.filter((option) => {
+          if (!Array.isArray(defaultValue)) {
+            return option.value === defaultValue;
+          } else {
+            return defaultValue.find((dv) => dv === option.value);
+          }
+        })
+      : null;
     key = defaultOption?.map((option) => option.value.toString()).join('-') || name?.toString();
   } else {
     defaultOption = defaultValue ? optionsInternal.find((option) => option.value === defaultValue) : null;
