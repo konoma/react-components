@@ -44,6 +44,7 @@ export default function Select<DataType>({
   indicatorClasses = baseClasses.indicatorClasses,
   valueContainerClasses = baseClasses.valueContainerClasses,
   options = [],
+  hiddenOptions = [],
   placeholder,
   className,
   required,
@@ -153,7 +154,7 @@ export default function Select<DataType>({
             input: () => controlClasses || '',
             indicatorSeparator: () => 'hidden',
             option: (state) => {
-              if ((state.data as Option).value === CUSTOM_ENTRY_VALUE) {
+              if ((state.data as Option).value === CUSTOM_ENTRY_VALUE || hiddenOptions.includes((state.data as Option).value)) {
                 return 'hidden';
               }
               if (state.isSelected) {
