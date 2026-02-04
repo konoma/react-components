@@ -171,7 +171,7 @@ export default function Select<DataType>({
             indicatorsContainer: () => (disabled ? 'hidden' : ''),
           }}
           isClearable={isClearable}
-          placeholder={placeholder}
+          placeholder={placeholder || ' '}
           isMulti={isMulti}
           options={optionsInternal}
           closeMenuOnSelect={!isMulti}
