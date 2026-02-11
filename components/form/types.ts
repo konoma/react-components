@@ -94,7 +94,7 @@ export interface FormFieldProps<DataType> extends Classes, Icons {
   centered?: boolean;
   autoFocus?: boolean;
   childClasses?: { [key in keyof Classes]?: string };
-  defaultValue?: FormValue;
+  defaultValue?: FormValue | FormValue[];
   disabled?: boolean;
   error?: string[];
   forgotPWText?: string;
@@ -111,6 +111,8 @@ export interface FormFieldProps<DataType> extends Classes, Icons {
   maxLengthLabel?: string;
   name?: keyof DataType;
   options?: Option[];
+  // sublist of options that should be hidden from the dropdown
+  hiddenOptions?: FormValue[];
   placeholder?: string;
   required?: boolean;
   resizeIconPath?: string;

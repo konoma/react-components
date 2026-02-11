@@ -44,6 +44,7 @@ export default function Select<DataType>({
   indicatorClasses = baseClasses.indicatorClasses,
   valueContainerClasses = baseClasses.valueContainerClasses,
   options = [],
+  hiddenOptions = [],
   placeholder,
   className,
   required,
@@ -93,7 +94,15 @@ export default function Select<DataType>({
   let defaultOption;
   let key;
   if (isMulti) {
-    defaultOption = defaultValue ? optionsInternal.filter((option) => option.value === defaultValue) : null;
+    defaultOption = defaultValue
+      ? optionsInternal.filter((option) => {
+          if (!Array.isArray(defaultValue)) {
+            return option.value === defaultValue;
+          } else {
+            return defaultValue.find((dv) => dv === option.value);
+          }
+        })
+      : null;
     key = defaultOption?.map((option) => option.value.toString()).join('-') || name?.toString();
   } else {
     defaultOption = defaultValue ? optionsInternal.find((option) => option.value === defaultValue) : null;
@@ -145,7 +154,7 @@ export default function Select<DataType>({
             input: () => controlClasses || '',
             indicatorSeparator: () => 'hidden',
             option: (state) => {
-              if ((state.data as Option).value === CUSTOM_ENTRY_VALUE) {
+              if ((state.data as Option).value === CUSTOM_ENTRY_VALUE || hiddenOptions.includes((state.data as Option).value)) {
                 return 'hidden';
               }
               if (state.isSelected) {
@@ -162,7 +171,7 @@ export default function Select<DataType>({
             indicatorsContainer: () => (disabled ? 'hidden' : ''),
           }}
           isClearable={isClearable}
-          placeholder={placeholder}
+          placeholder={placeholder || ' '}
           isMulti={isMulti}
           options={optionsInternal}
           closeMenuOnSelect={!isMulti}
