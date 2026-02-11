@@ -1,7 +1,7 @@
 {
   "name": "@konoma-development/react-components",
   "packageManager": "yarn@4.12.0",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "publishConfig": {
     "access": "public"
   },
