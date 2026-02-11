@@ -13,8 +13,8 @@ export interface PaginationClasses {
 }
 
 const baseClasses: PaginationClasses = {
-  activeIconClasses: 'w-8 h-8 p-2 cursor-pointer rounded-full bg-white',
-  inactiveIconClasses: 'w-8 h-8 p-2 cursor-not-allowed text-secondary-500',
+  activeIconClasses: 'w-8 h-8 p-1 cursor-pointer rounded-full bg-white',
+  inactiveIconClasses: 'w-8 h-8 p-1 cursor-not-allowed text-secondary-500',
   wrapperClasses: 'flex flex-row justify-between p-4',
   resultsClasses: 'flex flex-row gap-1 text-sm',
   resultsTextClasses: 'font-medium',
@@ -125,7 +125,7 @@ export default function Pagination({
               path={previousPageIconPath}
               onClick={() => (previousPageActive ? onPreviousPage() : undefined)}
             />
-            <div className="w-16">
+            <div className="w-16 h-10">
               <Input
                 centered
                 dataTestId={dataTestId ? dataTestId + '-page-input' : undefined}
