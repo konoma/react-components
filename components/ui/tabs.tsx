@@ -4,7 +4,7 @@ const baseClasses = {
   tabInactiveClasses: 'text-secondary-600',
   countActiveClasses: 'bg-info-300',
   countInactiveClasses: 'bg-secondary-200',
-  tabBaseClasses: 'h-12 px-1 text-sm font-semibold text-primary-900 cursor-pointer flex flex-row gap-2 items-center relative',
+  tabBaseClasses: 'h-12 px-1 text-sm font-medium text-primary-900 cursor-pointer flex flex-row gap-2 items-center relative',
   countBaseClasses: 'rounded-full px-3',
   activeMarkerClasses: 'absolute -bottom-0.5 left-0 h-0.5 w-full bg-primary-600',
 };
