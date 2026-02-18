@@ -6,7 +6,7 @@ export type FormValue = string | number | boolean | Option;
 
 export interface Option {
   value: FormValue;
-  label: string | number;
+  label: string | number | ReactNode;
 }
 
 /** Classes for the form components. Not all classes have effects in all components. Properties that start with 'class-' apply to the component in general, other properties apply to specific parts of the component */

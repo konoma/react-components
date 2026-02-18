@@ -41,7 +41,7 @@ export default function CheckboxList<DataType>({
               key={i}
               dataTestId={dataTestId + i}
               name={name as string}
-              label={option.label.toString()}
+              label={option.label?.toString()}
               error={error}
               {...childClasses}
               value={values.includes(option.value)}
