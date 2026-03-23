@@ -3,7 +3,7 @@ import path from 'node:path';
 import tailwindcss from '@tailwindcss/postcss';
 import react from '@vitejs/plugin-react';
 import type { UserConfigExport } from 'vite';
-import { defineConfig } from 'vite';
+import { defineConfig, esmExternalRequirePlugin } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 
@@ -19,6 +19,9 @@ const app = async (): Promise<UserConfigExport> => {
         insertTypesEntry: true,
       }),
       cssInjectedByJsPlugin(),
+      esmExternalRequirePlugin({
+        external: ['react', /^node:/],
+      }),
     ],
     css: {
       postcss: {
@@ -26,17 +29,17 @@ const app = async (): Promise<UserConfigExport> => {
       },
     },
     build: {
-      minify: false,
       lib: {
         entry: path.resolve(__dirname, 'main.ts'),
         name: formattedName,
         formats: ['es'],
         fileName: `@konoma-development/react-components`,
       },
-      rollupOptions: {
+      rolldownOptions: {
         // external: [...Object.keys(peerDependencies)],
-        external: ['react', 'react/jsx-runtime', '@emotion/react', '@emotion/styled'],
+        external: ['react/jsx-runtime', '@emotion/react', '@emotion/styled'],
         output: {
+          minify: false,
           globals: {
             react: 'React',
             'react/jsx-runtime': 'react/jsx-runtime',
