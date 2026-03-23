@@ -2,7 +2,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { includeIgnoreFile } from '@eslint/compat';
-import eslint from '@eslint/js';
 import type { ESLint } from 'eslint';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactPlugin from 'eslint-plugin-react';
@@ -16,7 +15,6 @@ const gitignorePath = path.resolve(__dirname, '.gitignore');
 
 export default [
   includeIgnoreFile(gitignorePath),
-  eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
   reactPlugin.configs.flat.recommended,
@@ -63,7 +61,7 @@ export default [
     },
     settings: {
       react: {
-        version: 'detect',
+        version: '19',
       },
     },
   },

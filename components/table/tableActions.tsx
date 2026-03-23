@@ -18,11 +18,13 @@ import Icon from '../ui/icon.tsx';
 export default function TableActions({
   children,
   classes = 'h-14 p-4',
+  floatingWrapperClasses = 'flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm z-1',
   showActionsIconName,
   showActionsIconPath,
 }: {
   children: React.ReactNode;
   classes?: string;
+  floatingWrapperClasses?: string;
   showActionsIconName?: string;
   showActionsIconPath?: string;
 }) {
@@ -49,12 +51,7 @@ export default function TableActions({
       {actionsVisible && (
         <FloatingPortal>
           <FloatingFocusManager context={context} modal={false}>
-            <div
-              className="flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm z-1"
-              ref={refs.setFloating}
-              style={floatingStyles}
-              {...getFloatingProps()}
-            >
+            <div className={floatingWrapperClasses} ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
               {children}
             </div>
           </FloatingFocusManager>
