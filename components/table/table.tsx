@@ -56,9 +56,13 @@ const baseClasses = {
   columnsRightClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-krc-table last:rounded-tr-krc-table',
   noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full text-sm',
   rowClasses: 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100 h-fit',
+  subRowClasses: 'group relative flex flex-row justify-between bg-base-200 last:rounded-b-krc-table hover:bg-primary-100 h-fit',
   rowLeftWrapperClasses: 'bg-white group-hover:bg-primary-100 h-fit',
   rowCenterWrapperClasses: 'bg-white first:grow group-hover:bg-primary-100 h-fit',
   rowRightWrapperClasses: 'bg-white group-hover:bg-primary-100 h-fit',
+  subRowLeftWrapperClasses: 'bg-base-200 group-hover:bg-primary-100 h-fit',
+  subRowCenterWrapperClasses: 'bg-base-200 first:grow group-hover:bg-primary-100 h-fit',
+  subRowRightWrapperClasses: 'bg-base-200 group-hover:bg-primary-100 h-fit',
 };
 
 export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement>; index?: number }>({
@@ -69,6 +73,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   rowLeftWrapperClasses = baseClasses.rowLeftWrapperClasses,
   rowCenterWrapperClasses = baseClasses.rowCenterWrapperClasses,
   rowRightWrapperClasses = baseClasses.rowRightWrapperClasses,
+  subRowClasses = baseClasses.subRowClasses,
+  subRowLeftWrapperClasses = baseClasses.subRowLeftWrapperClasses,
+  subRowCenterWrapperClasses = baseClasses.subRowCenterWrapperClasses,
+  subRowRightWrapperClasses = baseClasses.subRowRightWrapperClasses,
   headerClasses = baseClasses.headerClasses,
   paginationClasses,
   filterComponents,
@@ -149,6 +157,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   rowLeftWrapperClasses?: string;
   rowCenterWrapperClasses?: string;
   rowRightWrapperClasses?: string;
+  subRowClasses?: string;
+  subRowLeftWrapperClasses?: string;
+  subRowCenterWrapperClasses?: string;
+  subRowRightWrapperClasses?: string;
   columnsWrapperClasses?: string;
   columnsLeftClasses?: string;
   columnsCenterClasses?: string;
@@ -174,7 +186,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   pagination?: boolean;
   totalRows: number;
   noEntryLabel?: string;
-  detailsRow?: (data: DataType) => ReactNode;
+  detailsRow?: (data: DataType) => ReactNode | DataType[];
   allowReorder?: boolean;
   xToY?: string;
   isInfinite?: boolean;
@@ -501,142 +513,39 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           )}
         </div>
         {/* Body */}
-        {allowReorder ? (
-          <DndProvider backend={HTML5Backend} debugMode>
-            {data.map((entry, i) => {
-              return (
-                <Row<DataType>
-                  key={i}
-                  index={i}
-                  name={name}
-                  entry={entry}
-                  allowReorder={allowReorder}
-                  onDragRow={onDragRow}
-                  onDropRow={onDropRow}
-                  currentColumnsCenter={currentColumnsCenter}
-                  currentColumnsLeft={currentColumnsLeft}
-                  currentColumnsRight={currentColumnsRight}
-                  cellRenderer={cellRenderer}
-                  header={header}
-                  onRowClick={onRowClick}
-                  onRowDoubleClick={onRowDoubleClick}
-                  rowClasses={rowClasses}
-                  rowLeftWrapperClasses={rowLeftWrapperClasses}
-                  rowCenterWrapperClasses={rowCenterWrapperClasses}
-                  rowRightWrapperClasses={rowRightWrapperClasses}
-                  detailsRow={detailsRow}
-                />
-              );
-            })}
-          </DndProvider>
-        ) : (
-          <>
-            {data.map((entry, i) => {
-              return (
-                <div className="flex flex-col" key={i}>
-                  <div
-                    data-testid={`${name}-table-row`}
-                    data-foo="bar"
-                    className={rowClasses}
-                    onClick={() => onRowClick(entry)}
-                    onDoubleClick={() => onRowDoubleClick(entry)}
-                  >
-                    {(detailsRow || !!currentColumnsLeft.length) && (
-                      <div className="sticky left-0 flex flex-row border-r">
-                        {detailsRow && (
-                          <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
-                            {detailsRow(entry) && (
-                              <button
-                                className="w-8 cursor-pointer"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  e.preventDefault();
-                                  setDetailsOpen((prev) => {
-                                    const newDetailsOpen = [...prev];
-                                    newDetailsOpen[i] = !newDetailsOpen[i];
-                                    return newDetailsOpen;
-                                  });
-                                }}
-                              >
-                                <Icon name={detailsOpen[i] ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
-                              </button>
-                            )}
-                          </div>
-                        )}
-                        {currentColumnsLeft.map((column) => {
-                          return (
-                            <div
-                              key={column.id.toString()}
-                              style={{
-                                minWidth: column.initialWidth,
-                                maxWidth: !column.grow ? column.initialWidth : undefined,
-                              }}
-                              className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                              title={(entry[column.id] as string) || ''}
-                            >
-                              {cellRenderer?.[column.id]?.(entry) || (
-                                <div data-testid={`${name}-table-row-left-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
-                                  {(entry[column.id] as string) || '-'}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {currentColumnsCenter.map((column) => {
-                      return (
-                        <div
-                          key={column.id.toString()}
-                          style={{
-                            minWidth: column.initialWidth,
-                            maxWidth: !column.grow ? column.initialWidth : undefined,
-                          }}
-                          className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                          title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
-                        >
-                          {cellRenderer?.[column.id]?.(entry) || (
-                            <div data-testid={`${name}-table-row-center-${column.id.toString()}}`} className="h-14 truncate p-4 text-sm">
-                              {(entry[column.id] as string) || '-'}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                    {!!currentColumnsRight.length && (
-                      <div className="sticky -right-px flex flex-row border-l">
-                        {currentColumnsRight.map((column) => {
-                          return (
-                            <div
-                              key={column.id.toString()}
-                              style={{
-                                minWidth: column.initialWidth,
-                                maxWidth: !column.grow ? column.initialWidth : undefined,
-                              }}
-                              className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
-                              title={(entry[column.id] as string) || ''}
-                            >
-                              {cellRenderer?.[column.id]?.(entry) || (
-                                <div data-testid={`${name}-table-row-right-${column.id.toString()}`} className="h-14 truncate p-4 text-sm">
-                                  {(entry[column.id] as string) || '-'}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    <div
-                      style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-                      className="absolute bottom-0 left-0 -right-px h-px bg-krc-table-header"
-                    ></div>
-                  </div>
-                  {detailsRow && detailsOpen[i] && <div className="ml-12">{detailsRow(entry)}</div>}
-                </div>
-              );
-            })}
-          </>
-        )}
+
+        <DndProvider backend={HTML5Backend} debugMode>
+          {data.map((entry, i) => {
+            return (
+              <Row<DataType>
+                key={i}
+                index={i}
+                name={name}
+                entry={entry}
+                allowReorder={allowReorder}
+                onDragRow={onDragRow}
+                onDropRow={onDropRow}
+                currentColumnsCenter={currentColumnsCenter}
+                currentColumnsLeft={currentColumnsLeft}
+                currentColumnsRight={currentColumnsRight}
+                cellRenderer={cellRenderer}
+                header={header}
+                onRowClick={onRowClick}
+                onRowDoubleClick={onRowDoubleClick}
+                rowClasses={rowClasses}
+                rowLeftWrapperClasses={rowLeftWrapperClasses}
+                rowCenterWrapperClasses={rowCenterWrapperClasses}
+                rowRightWrapperClasses={rowRightWrapperClasses}
+                subRowClasses={subRowClasses}
+                subRowLeftWrapperClasses={subRowLeftWrapperClasses}
+                subRowCenterWrapperClasses={subRowCenterWrapperClasses}
+                subRowRightWrapperClasses={subRowRightWrapperClasses}
+                detailsRow={detailsRow}
+              />
+            );
+          })}
+        </DndProvider>
+
         {data.length === 0 && (
           <div data-testid={name + '-table-no-data'} className={noDataClasses}>
             {noEntryLabel}
@@ -690,6 +599,10 @@ function Row<DataType>({
   rowLeftWrapperClasses,
   rowCenterWrapperClasses,
   rowRightWrapperClasses,
+  subRowClasses,
+  subRowLeftWrapperClasses,
+  subRowCenterWrapperClasses,
+  subRowRightWrapperClasses,
   allowReorder,
   detailsRow,
   name,
@@ -709,8 +622,12 @@ function Row<DataType>({
   rowLeftWrapperClasses: string;
   rowCenterWrapperClasses: string;
   rowRightWrapperClasses: string;
+  subRowClasses?: string;
+  subRowLeftWrapperClasses?: string;
+  subRowCenterWrapperClasses?: string;
+  subRowRightWrapperClasses?: string;
   allowReorder?: boolean;
-  detailsRow?: (data: DataType) => ReactNode;
+  detailsRow?: (data: DataType) => ReactNode | DataType[];
   name: string;
 }) {
   const dragRef = useRef<HTMLDivElement | null>(null);
@@ -892,7 +809,36 @@ function Row<DataType>({
           className="absolute bottom-0 left-0 -right-px h-px bg-secondary-50"
         ></div>
       </div>
-      {detailsRow && detailsOpen && <div className="ml-12">{detailsRow(entry)}</div>}
+      {detailsRow &&
+        detailsOpen &&
+        (Array.isArray(detailsRow(entry)) ? (
+          (detailsRow(entry) as DataType[])?.map((e, i) => (
+            <div className="group" key={i}>
+              <Row<DataType>
+                index={i}
+                name={name}
+                entry={e}
+                allowReorder={allowReorder}
+                onDragRow={onDragRow}
+                onDropRow={onDropRow}
+                currentColumnsCenter={currentColumnsCenter}
+                currentColumnsLeft={currentColumnsLeft}
+                currentColumnsRight={currentColumnsRight}
+                cellRenderer={cellRenderer}
+                header={header}
+                onRowClick={onRowClick}
+                onRowDoubleClick={onRowDoubleClick}
+                rowClasses={subRowClasses || rowClasses}
+                rowLeftWrapperClasses={subRowLeftWrapperClasses || rowLeftWrapperClasses}
+                rowCenterWrapperClasses={subRowCenterWrapperClasses || rowCenterWrapperClasses}
+                rowRightWrapperClasses={subRowRightWrapperClasses || rowRightWrapperClasses}
+                detailsRow={() => undefined}
+              />
+            </div>
+          ))
+        ) : (
+          <div className="ml-12">{detailsRow(entry) as ReactNode}</div>
+        ))}
     </div>
   );
 }
