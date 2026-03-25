@@ -545,20 +545,22 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       <div className="sticky left-0 flex flex-row border-r">
                         {detailsRow && (
                           <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
-                            <button
-                              className="w-8 cursor-pointer"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                setDetailsOpen((prev) => {
-                                  const newDetailsOpen = [...prev];
-                                  newDetailsOpen[i] = !newDetailsOpen[i];
-                                  return newDetailsOpen;
-                                });
-                              }}
-                            >
-                              <Icon name={detailsOpen[i] ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
-                            </button>
+                            {detailsRow(entry) && (
+                              <button
+                                className="w-8 cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  setDetailsOpen((prev) => {
+                                    const newDetailsOpen = [...prev];
+                                    newDetailsOpen[i] = !newDetailsOpen[i];
+                                    return newDetailsOpen;
+                                  });
+                                }}
+                              >
+                                <Icon name={detailsOpen[i] ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                              </button>
+                            )}
                           </div>
                         )}
                         {currentColumnsLeft.map((column) => {
@@ -814,16 +816,18 @@ function Row<DataType>({
           <div className="sticky left-0 flex flex-row border-r">
             {detailsRow && (
               <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
-                <button
-                  className="w-8 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setDetailsOpen(!detailsOpen);
-                  }}
-                >
-                  <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
-                </button>
+                {detailsRow?.(entry) && (
+                  <button
+                    className="w-8 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setDetailsOpen(!detailsOpen);
+                    }}
+                  >
+                    <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                  </button>
+                )}
               </div>
             )}
             {currentColumnsLeft.map((column) => {
