@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { IMaskInput } from 'react-imask';
 
 import Icon from '../ui/icon.tsx';
@@ -49,6 +49,7 @@ export default function Input<DataType>({
   mask,
   defaultValue,
   placeholder,
+  autoFocus,
   className = '',
   dataTestId,
   onIconRightClick = () => {
@@ -87,6 +88,14 @@ export default function Input<DataType>({
     classesFull.push(classesNeutral);
   }
   classesFull.push(className);
+
+  useEffect(() => {
+    if (autoFocus) {
+      setTimeout(() => {
+        ref.current?.focus();
+      }, 100);
+    }
+  });
 
   const ref = useRef<HTMLInputElement>(null);
   const inputRef = useRef(null);
