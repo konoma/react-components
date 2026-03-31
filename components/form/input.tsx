@@ -95,7 +95,7 @@ export default function Input<DataType>({
         ref.current?.focus();
       }, 100);
     }
-  });
+  }, [autoFocus]);
 
   const ref = useRef<HTMLInputElement>(null);
   const inputRef = useRef(null);
