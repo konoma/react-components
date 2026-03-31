@@ -381,7 +381,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                 }
                               }}
                               isClearable
-                              className="h-10"
+                              classes="h-10 relative"
                               iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
                             />
                           )}
@@ -483,7 +483,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             }
                           }}
                           isClearable
-                          className="h-10"
+                          classes="h-10 relative"
                           iconRightName={filters[column.filterKey] ? removeFilterIconName || 'heroicons:x-mark' : ''}
                           iconRightPath={filters[column.filterKey] ? removeFilterIconPath : ''}
                         />
