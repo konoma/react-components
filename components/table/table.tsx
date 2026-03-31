@@ -514,37 +514,71 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         </div>
         {/* Body */}
 
-        <DndProvider backend={HTML5Backend} debugMode>
-          {data.map((entry, i) => {
-            return (
-              <Row<DataType>
-                key={i}
-                index={i}
-                name={name}
-                entry={entry}
-                allowReorder={allowReorder}
-                onDragRow={onDragRow}
-                onDropRow={onDropRow}
-                currentColumnsCenter={currentColumnsCenter}
-                currentColumnsLeft={currentColumnsLeft}
-                currentColumnsRight={currentColumnsRight}
-                cellRenderer={cellRenderer}
-                header={header}
-                onRowClick={onRowClick}
-                onRowDoubleClick={onRowDoubleClick}
-                rowClasses={rowClasses}
-                rowLeftWrapperClasses={rowLeftWrapperClasses}
-                rowCenterWrapperClasses={rowCenterWrapperClasses}
-                rowRightWrapperClasses={rowRightWrapperClasses}
-                subRowClasses={subRowClasses}
-                subRowLeftWrapperClasses={subRowLeftWrapperClasses}
-                subRowCenterWrapperClasses={subRowCenterWrapperClasses}
-                subRowRightWrapperClasses={subRowRightWrapperClasses}
-                detailsRow={detailsRow}
-              />
-            );
-          })}
-        </DndProvider>
+        {allowReorder ? (
+          <DndProvider backend={HTML5Backend} debugMode>
+            {data.map((entry, i) => {
+              return (
+                <Row<DataType>
+                  key={i}
+                  index={i}
+                  name={name}
+                  entry={entry}
+                  allowReorder={allowReorder}
+                  onDragRow={onDragRow}
+                  onDropRow={onDropRow}
+                  currentColumnsCenter={currentColumnsCenter}
+                  currentColumnsLeft={currentColumnsLeft}
+                  currentColumnsRight={currentColumnsRight}
+                  cellRenderer={cellRenderer}
+                  header={header}
+                  onRowClick={onRowClick}
+                  onRowDoubleClick={onRowDoubleClick}
+                  rowClasses={rowClasses}
+                  rowLeftWrapperClasses={rowLeftWrapperClasses}
+                  rowCenterWrapperClasses={rowCenterWrapperClasses}
+                  rowRightWrapperClasses={rowRightWrapperClasses}
+                  subRowClasses={subRowClasses}
+                  subRowLeftWrapperClasses={subRowLeftWrapperClasses}
+                  subRowCenterWrapperClasses={subRowCenterWrapperClasses}
+                  subRowRightWrapperClasses={subRowRightWrapperClasses}
+                  detailsRow={detailsRow}
+                />
+              );
+            })}
+          </DndProvider>
+        ) : (
+          <>
+            {data.map((entry, i) => {
+              return (
+                <Row<DataType>
+                  key={i}
+                  index={i}
+                  name={name}
+                  entry={entry}
+                  allowReorder={allowReorder}
+                  onDragRow={onDragRow}
+                  onDropRow={onDropRow}
+                  currentColumnsCenter={currentColumnsCenter}
+                  currentColumnsLeft={currentColumnsLeft}
+                  currentColumnsRight={currentColumnsRight}
+                  cellRenderer={cellRenderer}
+                  header={header}
+                  onRowClick={onRowClick}
+                  onRowDoubleClick={onRowDoubleClick}
+                  rowClasses={rowClasses}
+                  rowLeftWrapperClasses={rowLeftWrapperClasses}
+                  rowCenterWrapperClasses={rowCenterWrapperClasses}
+                  rowRightWrapperClasses={rowRightWrapperClasses}
+                  subRowClasses={subRowClasses}
+                  subRowLeftWrapperClasses={subRowLeftWrapperClasses}
+                  subRowCenterWrapperClasses={subRowCenterWrapperClasses}
+                  subRowRightWrapperClasses={subRowRightWrapperClasses}
+                  detailsRow={detailsRow}
+                />
+              );
+            })}
+          </>
+        )}
 
         {data.length === 0 && (
           <div data-testid={name + '-table-no-data'} className={noDataClasses}>
@@ -639,83 +673,90 @@ function Row<DataType>({
     throw new Error('Entry must have index property');
   }
 
-  const [{ handlerId }, drop] = useDrop<DragItem, undefined, { handlerId: Identifier | null }>({
-    accept: 'row',
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
-    hover(item: DragItem, monitor) {
-      if (!allowReorder || !previewRef.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
+  const [{ handlerId }, drop] = allowReorder
+    ? useDrop<DragItem, undefined, { handlerId: Identifier | null }>({
+        accept: 'row',
+        collect(monitor) {
+          return {
+            handlerId: monitor.getHandlerId(),
+          };
+        },
+        hover(item: DragItem, monitor) {
+          if (!allowReorder || !previewRef.current) {
+            return;
+          }
+          const dragIndex = item.index;
+          const hoverIndex = index;
 
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+          // Don't replace items with themselves
+          if (dragIndex === hoverIndex) {
+            return;
+          }
 
-      // Determine rectangle on screen
-      const hoverBoundingRect = previewRef.current?.getBoundingClientRect();
+          // Determine rectangle on screen
+          const hoverBoundingRect = previewRef.current?.getBoundingClientRect();
 
-      // Get vertical middle
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+          // Get vertical middle
+          const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
+          // Determine mouse position
+          const clientOffset = monitor.getClientOffset();
 
-      // Get pixels to the top
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+          // Get pixels to the top
+          const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
 
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
+          // Only perform the move when the mouse has crossed half of the items height
+          // When dragging downwards, only move when the cursor is below 50%
+          // When dragging upwards, only move when the cursor is above 50%
 
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
+          // Dragging downwards
+          if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+            return;
+          }
 
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
+          // Dragging upwards
+          if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+            return;
+          }
 
-      // Time to actually perform the action
-      onDragRow(dragIndex, hoverIndex);
+          // Time to actually perform the action
+          onDragRow(dragIndex, hoverIndex);
 
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex;
-    },
-  });
+          // Note: we're mutating the monitor item here!
+          // Generally it's better to avoid mutations,
+          // but it's good here for the sake of performance
+          // to avoid expensive index searches.
+          item.index = hoverIndex;
+        },
+      })
+    : [{ handlerId: null }, () => undefined];
 
-  const [{ opacity }, drag, preview] = useDrag({
-    type: 'row',
-    end: (item, monitor) => {
-      if (!monitor.didDrop()) {
-        return;
-      }
-      const dropResult = monitor.getDropResult<DragItem>();
-      if (dropResult) {
-        onDropRow(item.index, dropResult.index);
-      }
-    },
-    item: () => {
-      return { id: (entry as DataType & { index: number }).index, index };
-    },
-    collect: (monitor: { isDragging: () => boolean }) => ({
-      opacity: monitor.isDragging() ? 0.4 : 1,
-    }),
-  });
+  const [{ opacity }, drag, preview] = allowReorder
+    ? useDrag({
+        type: 'row',
+        end: (item, monitor) => {
+          if (!monitor.didDrop()) {
+            return;
+          }
+          const dropResult = monitor.getDropResult<DragItem>();
+          if (dropResult) {
+            onDropRow(item.index, dropResult.index);
+          }
+        },
+        item: () => {
+          return { id: (entry as DataType & { index: number }).index, index };
+        },
+        collect: (monitor: { isDragging: () => boolean }) => ({
+          opacity: monitor.isDragging() ? 0.4 : 1,
+        }),
+      })
+    : [{ opacity: 1 }, () => undefined, () => undefined];
 
   if (allowReorder) {
-    preview(drop(previewRef));
+    const dropResult = drop(previewRef);
+    if (dropResult) {
+      preview(dropResult);
+    }
     drag(dragRef);
   }
   return (
