@@ -285,10 +285,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           ref={headerRef}
           data-testid={`${name}-table-header`}
           key={locale}
-          className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header"
+          className="rounded-t-krc-table bg-krc-table-header sticky top-0 z-1 flex flex-row items-center justify-between"
         >
           {(detailsRow || !!currentColumnsLeft.length) && (
-            <div className="sticky left-0 flex flex-row z-1" data-testid={`${name}-table-header-left`}>
+            <div className="sticky left-0 z-1 flex flex-row" data-testid={`${name}-table-header-left`}>
               {detailsRow && <div className={[headerClasses, 'w-12', hasFilters ? 'h-24' : 'h-12'].join(' ')}></div>}
               {currentColumnsLeft.map(column => (
                 <div
@@ -315,7 +315,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     column.grow ? 'grow' : '',
                   ].join(' ')}
                 >
-                  <div className="flex flex-row items-center gap-2 w-full justify-between truncate">
+                  <div className="flex w-full flex-row items-center justify-between gap-2 truncate">
                     <span className="truncate" title={typeof column.title === 'string' ? column.title : undefined}>
                       {column.title}
                     </span>
@@ -339,7 +339,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   {/* Filter */}
                   {hasFilters && (
                     <div
-                      className="bg-krc-table-header w-full text-xs font-medium text-secondary-500 min-h-10"
+                      className="bg-krc-table-header text-secondary-500 min-h-10 w-full text-xs font-medium"
                       key={Object.keys(filters).join('-')}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -415,7 +415,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 );
               }}
             >
-              <div className="flex flex-row items-center gap-2 w-full justify-between truncate">
+              <div className="flex w-full flex-row items-center justify-between gap-2 truncate">
                 <span className="truncate" title={typeof column.title === 'string' ? column.title : undefined}>
                   {column.title}
                 </span>
@@ -439,7 +439,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               {/* Filter */}
               {hasFilters && (
                 <div
-                  className="bg-krc-table-header text-xs font-medium w-full text-secondary-500 min-h-10"
+                  className="bg-krc-table-header text-secondary-500 min-h-10 w-full text-xs font-medium"
                   key={Object.keys(filters).join('-')}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -490,7 +490,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
             </div>
           ))}
           {!!currentColumnsRight.length && (
-            <div className="sticky -right-px flex flex-row h-full items-center">
+            <div className="sticky -right-px flex h-full flex-row items-center">
               {currentColumnsRight.map(column => (
                 <div
                   key={column.id.toString()}
@@ -499,7 +499,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                     maxWidth: !column.grow ? column.initialWidth : undefined,
                   }}
                   data-testid={`${name}-table-header-right-${column.id.toString()}`}
-                  className="flex h-full flex-row items-start justify-end truncate bg-krc-table-header px-4 py-3 text-xs font-medium last:rounded-tr-krc-table"
+                  className="bg-krc-table-header last:rounded-tr-krc-table flex h-full flex-row items-start justify-end truncate px-4 py-3 text-xs font-medium"
                 >
                   {column.title}
                 </div>
@@ -846,7 +846,7 @@ function Row<DataType>({
         )}
         <div
           style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
-          className="absolute bottom-0 left-0 -right-px h-px bg-secondary-50"
+          className="bg-secondary-50 absolute -right-px bottom-0 left-0 h-px"
         >
         </div>
       </div>
