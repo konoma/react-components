@@ -1,18 +1,41 @@
 {
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never",
-    "source.addMissingImports.ts": "always",
+    "source.addMissingImports.ts": "explicit"
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
   "editor.indentSize": 2,
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true,
-    "**/node_modules": true
-  },
-  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "yaml",
+    "toml",
+    "xml",
+    "gql",
+    "graphql",
+    "astro",
+    "svelte",
+    "css",
+    "less",
+    "scss",
+    "pcss",
+    "postcss",
+    "dockerfile",
+    "dockercompose",
+    "github-actions-workflow"
+  ]
 }

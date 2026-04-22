@@ -5,150 +5,150 @@ type LabelPosition = 'top' | 'bottom' | 'left' | 'right';
 export type FormValue = string | number | boolean | Option;
 
 export interface Option {
-  value: FormValue;
-  label: string | number | ReactNode;
+  value: FormValue
+  label: string | number | ReactNode
 }
 
 /** Classes for the form components. Not all classes have effects in all components. Properties that start with 'class-' apply to the component in general, other properties apply to specific parts of the component */
 export interface Classes {
   /** Never has a default value and can be used to assign arbitrary additional classes. The exact node that receives these classes differs from component to component */
-  className?: string;
+  className?: string
   /** Base classes, usually assigned to the control */
-  classes?: string;
+  classes?: string
   /** Base classes, assigned directly to the control. Might be needed in case of more complex nesting */
-  controlClasses?: string;
+  controlClasses?: string
   /** Used for components that have specific styling when in neutral state */
-  classesNeutral?: string;
+  classesNeutral?: string
   /** Used for components that have specific styling when empty */
-  classesEmpty?: string;
-  classesDisabled?: string;
+  classesEmpty?: string
+  classesDisabled?: string
   /** Used for components that have specific styling when in error */
-  classesError?: string;
+  classesError?: string
   /** Used for components that have specific styling when filled */
-  classesFilled?: string;
+  classesFilled?: string
   /** Used for the label in components that have specific styling when empty */
-  labelClassesEmpty?: string;
+  labelClassesEmpty?: string
   /** Used for the label in components that have specific styling when in error */
-  labelClassesError?: string;
+  labelClassesError?: string
   /** Used for the label in components that have specific styling when filled */
-  labelClassesFilled?: string;
+  labelClassesFilled?: string
   /** General classes for the label */
-  labelClasses?: string;
+  labelClasses?: string
   /** Needed in case of nested label */
-  labelWrapperClasses?: string;
+  labelWrapperClasses?: string
   /** Used for the icon in components that have specific styling when filled */
-  iconClassesFilled?: string;
+  iconClassesFilled?: string
   /** General classes for the wrapper */
-  wrapperClasses?: string;
+  wrapperClasses?: string
   /** General classes for the icon on the left */
-  iconLeftClasses?: string;
+  iconLeftClasses?: string
   /** General classes for the icon on the right */
-  iconRightClasses?: string;
+  iconRightClasses?: string
   /** General classes for the error message */
-  errorClasses?: string;
+  errorClasses?: string
   /** Additional classes for the control when an icon is present on the left */
-  additionalClassesIconLeft?: string;
+  additionalClassesIconLeft?: string
   /** Additional classes for the control when an icon is present on the right */
-  additionalClassesIconRight?: string;
+  additionalClassesIconRight?: string
   /** General classes for hints placed within the component */
-  hintClasses?: string;
+  hintClasses?: string
   /** General classes for the resize element */
-  resizeClasses?: string;
+  resizeClasses?: string
   /** General classes for the icon within the resize element */
-  resizeIconClasses?: string;
+  resizeIconClasses?: string
   /** Classes to be applied to all values for components with multiple possible values */
-  optionClasses?: string;
+  optionClasses?: string
   /** Classes to be applied to the wrapper for elements on the left side */
-  wrapperLeftClasses?: string;
+  wrapperLeftClasses?: string
   /** Classes to be applied to the wrapper for elements on the right side */
-  wrapperRightClasses?: string;
+  wrapperRightClasses?: string
   // Properties for classes specific to the select component since it is effectively an Omnibox that is more complex than the other form components
-  focusClasses?: string;
-  optionFocusedClasses?: string;
-  optionSelectedClasses?: string;
-  valueClasses?: string;
-  placeholderClasses?: string;
-  indicatorClasses?: string;
-  valueContainerClasses?: string;
+  focusClasses?: string
+  optionFocusedClasses?: string
+  optionSelectedClasses?: string
+  valueClasses?: string
+  placeholderClasses?: string
+  indicatorClasses?: string
+  valueContainerClasses?: string
 }
 
 export interface Icons {
-  indeterminateIconPath?: string;
-  indeterminateIconName?: string;
-  checkedIconPath?: string;
-  checkedIconName?: string;
-  deleteIconName?: string;
-  deleteIconPath?: string;
-  addIconName?: string;
-  addIconPath?: string;
+  indeterminateIconPath?: string
+  indeterminateIconName?: string
+  checkedIconPath?: string
+  checkedIconName?: string
+  deleteIconName?: string
+  deleteIconPath?: string
+  addIconName?: string
+  addIconPath?: string
 }
 
 export interface FormFieldProps<DataType> extends Classes, Icons {
-  allowCustomValues?: boolean;
-  customValueLabel?: string;
-  autoComplete?: string;
-  dataTestId?: string;
-  id?: string;
-  inputMode?: HTMLAttributes<HTMLElement>['inputMode'];
-  arrangement?: 'horizontal' | 'vertical';
-  centered?: boolean;
-  autoFocus?: boolean;
-  childClasses?: { [key in keyof Classes]?: string };
-  defaultValue?: FormValue | FormValue[];
-  disabled?: boolean;
-  error?: string[];
-  forgotPWText?: string;
-  iconLeftPath?: string;
-  iconLeftName?: string;
-  iconRightPath?: string;
-  iconRightName?: string;
-  indeterminate?: boolean;
-  isClearable?: boolean;
-  replacements?: Record<string, string>;
-  label?: ReactNode;
-  labelPosition?: LabelPosition;
-  maxLength?: number;
-  maxLengthLabel?: string;
-  name?: keyof DataType;
-  options?: Option[];
+  allowCustomValues?: boolean
+  customValueLabel?: string
+  autoComplete?: string
+  dataTestId?: string
+  id?: string
+  inputMode?: HTMLAttributes<HTMLElement>['inputMode']
+  arrangement?: 'horizontal' | 'vertical'
+  centered?: boolean
+  autoFocus?: boolean
+  childClasses?: { [key in keyof Classes]?: string }
+  defaultValue?: FormValue | FormValue[]
+  disabled?: boolean
+  error?: string[]
+  forgotPWText?: string
+  iconLeftPath?: string
+  iconLeftName?: string
+  iconRightPath?: string
+  iconRightName?: string
+  indeterminate?: boolean
+  isClearable?: boolean
+  replacements?: Record<string, string>
+  label?: ReactNode
+  labelPosition?: LabelPosition
+  maxLength?: number
+  maxLengthLabel?: string
+  name?: keyof DataType
+  options?: Option[]
   // sublist of options that should be hidden from the dropdown
-  hiddenOptions?: FormValue[];
-  placeholder?: string;
-  required?: boolean;
-  resizeIconPath?: string;
-  resizeIconName?: string;
-  addTagTitle?: string;
-  searchable?: boolean;
-  textRight?: string;
-  type?: HTMLInputTypeAttribute;
-  step?: React.InputHTMLAttributes<HTMLInputElement>['step'];
-  initialHeight?: number;
-  mask?: Mask | Mask[];
-  min?: number;
-  max?: number;
+  hiddenOptions?: FormValue[]
+  placeholder?: string
+  required?: boolean
+  resizeIconPath?: string
+  resizeIconName?: string
+  addTagTitle?: string
+  searchable?: boolean
+  textRight?: string
+  type?: HTMLInputTypeAttribute
+  step?: React.InputHTMLAttributes<HTMLInputElement>['step']
+  initialHeight?: number
+  mask?: Mask | Mask[]
+  min?: number
+  max?: number
   /** Used for components that bind to one value */
-  value?: FormValue;
+  value?: FormValue
   /** Used for components that bind to multiple values */
-  values?: FormValue[];
+  values?: FormValue[]
   /** Used for selects that have no visible selected value */
-  noValue?: boolean;
-  isMulti?: boolean;
+  noValue?: boolean
+  isMulti?: boolean
   /** [select only] Default placement of the menu in relation to the control. 'auto' will flip when there isn't enough space below the control. */
-  menuPlacement?: 'auto' | 'top' | 'bottom';
-  allowNew?: boolean;
-  allowDelete?: boolean;
-  valueTransformer?: (value: FormValue) => FormValue;
+  menuPlacement?: 'auto' | 'top' | 'bottom'
+  allowNew?: boolean
+  allowDelete?: boolean
+  valueTransformer?: (value: FormValue) => FormValue
   /** Used to place the dropdown element of a Select */
-  menuPortalTarget?: HTMLElement;
-  forgotPWAction?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
-  onChange?: (value: FormValue | FormValue[], event?: ChangeEvent) => void;
-  onInput?: (value: FormValue, event?: InputEvent) => void;
-  onClick?: (e: MouseEvent) => void;
-  onIconRightClick?: (e: MouseEvent) => void;
-  onIconLeftClick?: () => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  menuPortalTarget?: HTMLElement
+  forgotPWAction?: (event: React.MouseEvent<HTMLButtonElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLElement>) => void
+  onChange?: (value: FormValue | FormValue[], event?: ChangeEvent) => void
+  onInput?: (value: FormValue, event?: InputEvent) => void
+  onClick?: (e: MouseEvent) => void
+  onIconRightClick?: (e: MouseEvent) => void
+  onIconLeftClick?: () => void
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void
 }
 
 export const positionClasses: Record<LabelPosition, string> = {
@@ -158,4 +158,4 @@ export const positionClasses: Record<LabelPosition, string> = {
   right: 'flex-row-reverse',
 };
 
-export type Mask = string | RegExp | { mask: Mask; definitions?: Record<string, RegExp> };
+export type Mask = string | RegExp | { mask: Mask, definitions?: Record<string, RegExp> };

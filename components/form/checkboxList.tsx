@@ -1,5 +1,5 @@
-import Checkbox from './checkbox.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
+import Checkbox from './checkbox.tsx';
 import { positionClasses } from './types.ts';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -26,19 +26,21 @@ export default function CheckboxList<DataType>({
   values = [],
   dataTestId = '',
   onChange = () => {
-    return;
+
   },
 }: FormFieldProps<DataType>) {
   return (
     <div className={[wrapperClasses, positionClasses[labelPosition]].join(' ')}>
       <span className={labelClasses}>
-        {label} {required && '*'}
+        {label}
+        {' '}
+        {required && '*'}
       </span>
       <div className={[classes, error?.length && { classesError }].join(' ')}>
         {options.map((option, i) => {
           return (
             <Checkbox
-              key={i}
+              key={option.value.toString()}
               dataTestId={dataTestId + i}
               name={name as string}
               label={option.label?.toString()}

@@ -14,7 +14,7 @@ export function email(message: string) {
     if (!value) {
       return '';
     }
-    if (typeof value !== 'string' || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+    if (typeof value !== 'string' || !/^[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(value)) {
       return message;
     }
     return '';

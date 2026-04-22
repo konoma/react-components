@@ -1,19 +1,20 @@
-import path from 'node:path';
-
-import tailwindcss from '@tailwindcss/postcss';
-import react from '@vitejs/plugin-react';
 import type { UserConfigExport } from 'vite';
+
+import path from 'node:path';
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react';
 import { defineConfig, esmExternalRequirePlugin } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 
 import packageJson from './package.json' with { type: 'json' };
 
-const app = async (): Promise<UserConfigExport> => {
+async function app(): Promise<UserConfigExport> {
   const formattedName = packageJson.name.match(/[^/]+$/)?.[0] ?? packageJson.name;
 
   return defineConfig({
     plugins: [
+      tailwindcss(),
       react(),
       dts({
         insertTypesEntry: true,
@@ -23,11 +24,6 @@ const app = async (): Promise<UserConfigExport> => {
         external: ['react', /^node:/],
       }),
     ],
-    css: {
-      postcss: {
-        plugins: [tailwindcss()],
-      },
-    },
     build: {
       lib: {
         entry: path.resolve(__dirname, 'main.ts'),
@@ -41,10 +37,10 @@ const app = async (): Promise<UserConfigExport> => {
         output: {
           minify: false,
           globals: {
-            react: 'React',
+            'react': 'React',
             'react/jsx-runtime': 'react/jsx-runtime',
             'react-dom': 'ReactDOM',
-            tailwindcss: 'tailwindcss',
+            'tailwindcss': 'tailwindcss',
           },
         },
       },
@@ -52,6 +48,6 @@ const app = async (): Promise<UserConfigExport> => {
       sourcemap: true,
     },
   });
-};
+}
 // https://vitejs.dev/config/
 export default app;

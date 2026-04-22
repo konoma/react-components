@@ -24,27 +24,27 @@ export default function Modal({
   closeIconPath,
   onClose,
 }: {
-  backdropClasses?: string;
-  contentClasses?: string;
-  headerWrapperClasses?: string;
-  footerWrapperClasses?: string;
-  footerLeftClasses?: string;
-  footerRightClasses?: string;
-  titleClasses?: string;
-  closeWrapperClasses?: string;
-  iconClasses?: string;
-  children: React.ReactNode;
-  headerContent?: React.ReactNode;
-  footerContent?: React.ReactNode;
-  dataTestId?: string;
-  title?: string;
+  backdropClasses?: string
+  contentClasses?: string
+  headerWrapperClasses?: string
+  footerWrapperClasses?: string
+  footerLeftClasses?: string
+  footerRightClasses?: string
+  titleClasses?: string
+  closeWrapperClasses?: string
+  iconClasses?: string
+  children: React.ReactNode
+  headerContent?: React.ReactNode
+  footerContent?: React.ReactNode
+  dataTestId?: string
+  title?: string
   footerActions?: (React.ComponentProps<typeof Button> & {
-    position: 'left' | 'right';
-  })[];
-  hasCloseIcon?: boolean;
-  closeIconName?: string;
-  closeIconPath?: string;
-  onClose: () => void;
+    position: 'left' | 'right'
+  })[]
+  hasCloseIcon?: boolean
+  closeIconName?: string
+  closeIconPath?: string
+  onClose: () => void
 }) {
   return (
     <>
@@ -65,22 +65,24 @@ export default function Modal({
                 </button>
               </div>
             )}
-            {headerContent ||
-              (title ? (
-                <div className={headerWrapperClasses}>
-                  <span className={titleClasses}>{title}</span>
-                </div>
-              ) : null)}
+            {headerContent
+              || (title
+                ? (
+                    <div className={headerWrapperClasses}>
+                      <span className={titleClasses}>{title}</span>
+                    </div>
+                  )
+                : null)}
             <div className="grow">{children}</div>
-            {footerContent ||
-              (footerActions && (
+            {footerContent
+              || (footerActions && (
                 <>
                   <div className={footerWrapperClasses}>
                     <div className={footerLeftClasses}>
                       {footerActions
                         .filter(({ position }) => position === 'left')
-                        .map(({ label, variant, onClick }, i) => (
-                          <div key={i}>
+                        .map(({ label, variant, onClick }) => (
+                          <div key={label + variant}>
                             <Button variant={variant ?? 'primary'} onClick={onClick} label={label} />
                           </div>
                         ))}
@@ -88,8 +90,8 @@ export default function Modal({
                     <div className={footerRightClasses}>
                       {footerActions
                         .filter(({ position }) => position === 'right')
-                        .map(({ variant, ...buttonProps }, i) => (
-                          <div key={i}>
+                        .map(({ variant, label, ...buttonProps }) => (
+                          <div key={label + variant}>
                             <Button variant={variant ?? 'secondary'} {...buttonProps} />
                           </div>
                         ))}
@@ -99,7 +101,7 @@ export default function Modal({
               ))}
           </div>
         </div>,
-        document.body
+        document.body,
       )}
     </>
   );

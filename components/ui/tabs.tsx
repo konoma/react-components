@@ -10,9 +10,9 @@ const baseClasses = {
 };
 
 interface Tab<DataType> {
-  id: DataType;
-  label: string;
-  count: number;
+  id: DataType
+  label: string
+  count: number
 }
 
 export default function Tabs<DataType>({
@@ -30,19 +30,19 @@ export default function Tabs<DataType>({
   dataTestId = '',
   onClick,
 }: {
-  wrapperClasses?: string;
-  tabActiveClasses?: string;
-  tabInactiveClasses?: string;
-  countActiveClasses?: string;
-  countInactiveClasses?: string;
-  tabBaseClasses?: string;
-  countBaseClasses?: string;
-  activeMarkerClass?: string;
-  showCounts?: boolean;
-  tabs: Tab<DataType>[];
-  active: DataType;
-  dataTestId?: string;
-  onClick: (tab: DataType) => void;
+  wrapperClasses?: string
+  tabActiveClasses?: string
+  tabInactiveClasses?: string
+  countActiveClasses?: string
+  countInactiveClasses?: string
+  tabBaseClasses?: string
+  countBaseClasses?: string
+  activeMarkerClass?: string
+  showCounts?: boolean
+  tabs: Tab<DataType>[]
+  active: DataType
+  dataTestId?: string
+  onClick: (tab: DataType) => void
 }) {
   function equalTabs<DataType>(tab1: DataType, tab2: DataType) {
     if (Array.isArray(tab1) && Array.isArray(tab2)) {
@@ -55,7 +55,7 @@ export default function Tabs<DataType>({
       {tabs.map((tab, i) => (
         <div
           data-testid={dataTestId + i}
-          key={i}
+          key={(tab.id + tab.label) || i}
           onClick={() => {
             onClick(tab.id);
           }}

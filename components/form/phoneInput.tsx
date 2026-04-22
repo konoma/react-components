@@ -1,9 +1,9 @@
-import type React from 'react';
-import { useCallback, useRef, useState } from 'react';
-import { IMaskInput } from 'react-imask';
-
-import Select from './select.tsx';
+import type * as React from 'react';
 import type { Classes, FormFieldProps, FormValue } from './types.ts';
+import { useCallback, useRef, useState } from 'react';
+
+import { IMaskInput } from 'react-imask';
+import Select from './select.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes:
@@ -18,8 +18,8 @@ const baseClasses: { [key in keyof Classes]?: string } = {
 };
 
 interface CountryCode {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 const countryCodes: CountryCode[] = [
@@ -62,16 +62,16 @@ export default function PhoneInput<DataType>({
   dataTestId,
   className = '',
   onChange = () => {
-    return;
+
   },
   onClick = () => {
-    return;
+
   },
   onKeyDown = () => {
-    return;
+
   },
   onBlur = () => {
-    return;
+
   },
   ...props
 }: FormFieldProps<DataType>) {
@@ -114,12 +114,12 @@ export default function PhoneInput<DataType>({
   const onChangeInternal = useCallback(
     (newValue = internalValue, newCountryCode = countryCode) => {
       if (!newValue.startsWith(' ')) {
-        onChange(newCountryCode.value + ' ' + newValue);
+        onChange(`${newCountryCode.value} ${newValue}`);
       } else {
         onChange(newCountryCode.value + newValue);
       }
     },
-    [countryCode, internalValue, onChange]
+    [countryCode, internalValue, onChange],
   );
 
   const ref = useRef<HTMLInputElement>(null);
@@ -127,7 +127,9 @@ export default function PhoneInput<DataType>({
     <label className={wrapperClasses} htmlFor={name as string}>
       {label && (
         <span className={labelClasses}>
-          {label} {required && '*'}
+          {label}
+          {' '}
+          {required && '*'}
         </span>
       )}
       <div className="flex flex-row">
@@ -171,10 +173,10 @@ export default function PhoneInput<DataType>({
           <div className={wrapperLeftClasses}>{countryCode.value}</div>
         </div>
       </div>
-      {error &&
-        error.length > 0 &&
-        error.map((e, i) => (
-          <span key={i} className={errorClasses}>
+      {error
+        && error.length > 0
+        && error.map(e => (
+          <span key={e} className={errorClasses}>
             {e}
           </span>
         ))}

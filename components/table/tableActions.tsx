@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
   autoUpdate,
   flip,
@@ -10,7 +11,6 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import Icon from '../ui/icon.tsx';
@@ -22,11 +22,11 @@ export default function TableActions({
   showActionsIconName,
   showActionsIconPath,
 }: {
-  children: React.ReactNode;
-  classes?: string;
-  floatingWrapperClasses?: string;
-  showActionsIconName?: string;
-  showActionsIconPath?: string;
+  children: React.ReactNode
+  classes?: string
+  floatingWrapperClasses?: string
+  showActionsIconName?: string
+  showActionsIconPath?: string
 }) {
   const [actionsVisible, setActionsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
@@ -69,11 +69,11 @@ export function TableActionEntry({
   variant = 'default',
   onClick,
 }: {
-  content: string | ReactNode;
-  errorClasses?: string;
-  defaultClasses?: string;
-  variant?: TableActionVariant;
-  onClick: () => void;
+  content: string | ReactNode
+  errorClasses?: string
+  defaultClasses?: string
+  variant?: TableActionVariant
+  onClick: () => void
 }) {
   switch (variant) {
     case 'error':

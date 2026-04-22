@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-
-import Icon from '../ui/icon.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
+
+import { useEffect, useRef } from 'react';
+import Icon from '../ui/icon.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classesFilled:
@@ -30,11 +30,12 @@ export default function Checkbox<DataType>({
   checkedIconPath,
   checkedIconName,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the input */
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onInput = () => {
-    return;
+
   },
   onChange = () => {
-    return;
+
   },
   label,
   indeterminate,
@@ -64,7 +65,7 @@ export default function Checkbox<DataType>({
           defaultChecked={!!defaultValue}
           checked={!!value}
           data-testid={dataTestId}
-          onChange={(e) => onChange(e.target.checked, e)}
+          onChange={e => onChange(e.target.checked, e)}
           disabled={disabled}
           {...props}
         />
@@ -89,7 +90,7 @@ export default function Checkbox<DataType>({
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           data-testid={dataTestId}
-          onChange={(e) => onChange(e.target.checked, e)}
+          onChange={e => onChange(e.target.checked, e)}
           disabled={disabled}
         />
         <div className={classesError}></div>
@@ -109,7 +110,7 @@ export default function Checkbox<DataType>({
           className="h-0 w-0 appearance-none"
           defaultChecked={!!defaultValue}
           data-testid={dataTestId}
-          onChange={(e) => onChange(e.target.checked, e)}
+          onChange={e => onChange(e.target.checked, e)}
           disabled={disabled}
         />
         <div className={classesEmpty}></div>

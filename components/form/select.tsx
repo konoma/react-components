@@ -1,9 +1,9 @@
-import { useContext, useId } from 'react';
-import ReactSelect from 'react-select';
-import CreatableSelect from 'react-select/creatable';
-
-import { i18nContext } from '../wrapper.tsx';
 import type { Classes, FormFieldProps, FormValue, Option } from './types.ts';
+import { use, useId } from 'react';
+import ReactSelect from 'react-select';
+
+import CreatableSelect from 'react-select/creatable';
+import { I18nContext } from '../I18nContext.ts';
 
 const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
 
@@ -63,28 +63,28 @@ export default function Select<DataType>({
   isMulti,
   dataTestId,
   onInput = () => {
-    return;
+
   },
   onKeyDown = () => {
-    return;
+
   },
   onChange = () => {
-    return;
+
   },
   ...props
 }: FormFieldProps<DataType>) {
-  const { locale } = useContext(i18nContext);
+  const { locale } = use(I18nContext);
 
   const classesFull = [classes, className];
   const optionsInternal = options
-    .filter((o) => !!o.value && o.value !== CUSTOM_ENTRY_VALUE)
+    .filter(o => !!o.value && o.value !== CUSTOM_ENTRY_VALUE)
     .concat(
       !allowCustomValues
         ? []
         : [
             { value: '', label: customValueLabel },
             { value: CUSTOM_ENTRY_VALUE, label: '' },
-          ]
+          ],
     );
   if (error && error.length > 0) {
     classesFull.push(classesError);
@@ -99,13 +99,13 @@ export default function Select<DataType>({
           if (!Array.isArray(defaultValue)) {
             return option.value === defaultValue;
           } else {
-            return defaultValue.find((dv) => dv === option.value);
+            return defaultValue.find(dv => dv === option.value);
           }
         })
       : null;
-    key = defaultOption?.map((option) => option.value.toString()).join('-') || name?.toString();
+    key = defaultOption?.map(option => option.value.toString()).join('-') || name?.toString();
   } else {
-    defaultOption = defaultValue ? optionsInternal.find((option) => option.value === defaultValue) : null;
+    defaultOption = defaultValue ? optionsInternal.find(option => option.value === defaultValue) : null;
     key = defaultOption?.value.toString() || name?.toString();
   }
   const Component = allowCustomValues ? CreatableSelect : ReactSelect;
@@ -114,7 +114,9 @@ export default function Select<DataType>({
       <label className={labelWrapperClasses}>
         {label && (
           <span className={labelClasses}>
-            {label} {required && '*'}
+            {label}
+            {' '}
+            {required && '*'}
           </span>
         )}
         <Component<FormValue, boolean>
@@ -123,7 +125,7 @@ export default function Select<DataType>({
           classNamePrefix="select"
           className={wrapperClasses}
           styles={{
-            control: (base) => ({
+            control: base => ({
               ...base,
               borderRadius: undefined,
             }),
@@ -176,9 +178,9 @@ export default function Select<DataType>({
           options={optionsInternal}
           closeMenuOnSelect={!isMulti}
           menuPortalTarget={menuPortalTarget}
-          formatCreateLabel={(inputValue) => `${inputValue}`}
+          formatCreateLabel={inputValue => `${inputValue}`}
           noOptionsMessage={() => ''}
-          onInputChange={(v) => onInput(v)}
+          onInputChange={v => onInput(v)}
           onKeyDown={onKeyDown}
           defaultValue={defaultOption}
           onCreateOption={(option) => {
@@ -195,7 +197,6 @@ export default function Select<DataType>({
             }
             if (isMulti) {
               onChange(option as FormValue[]);
-              return;
             } else {
               const properOption = option as Option;
               const cleanOption = {
@@ -209,10 +210,10 @@ export default function Select<DataType>({
           {...props}
         />
       </label>
-      {error &&
-        error.length > 0 &&
-        error.map((e, i) => (
-          <span key={i} className={errorClasses}>
+      {error
+        && error.length > 0
+        && error.map(e => (
+          <span key={e} className={errorClasses}>
             {e}
           </span>
         ))}

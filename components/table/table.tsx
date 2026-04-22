@@ -1,47 +1,47 @@
 import type { Identifier } from 'dnd-core';
 import type { ReactNode } from 'react';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-
-import Input from '../form/input.tsx';
-import Icon from '../ui/icon.tsx';
-import { i18nContext } from '../wrapper.tsx';
 import type { PaginationClasses } from './pagination.tsx';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import Input from '../form/input.tsx';
+import { I18nContext } from '../I18nContext.ts';
+import Icon from '../ui/icon.tsx';
 import Pagination from './pagination.tsx';
 
 export interface TableColumnBase {
-  id: string | number | symbol;
-  title: ReactNode;
-  hideFromChooser?: boolean;
+  id: string | number | symbol
+  title: ReactNode
+  hideFromChooser?: boolean
 }
 
 export interface TableColumn<DataType> extends TableColumnBase {
-  id: keyof DataType;
-  initialWidth?: string | number;
-  hidden?: boolean;
-  sorting?: '+' | '-' | undefined;
+  id: keyof DataType
+  initialWidth?: string | number
+  hidden?: boolean
+  sorting?: '+' | '-' | undefined
   // Mutually exclusive with onClick
-  sortKey?: string;
-  filterKey?: string;
-  filterType?: 'filter' | 'fieldSearch';
+  sortKey?: string
+  filterKey?: string
+  filterType?: 'filter' | 'fieldSearch'
   // Mutually exclusive with sorting
-  onClick?: () => void;
-  allowResize?: boolean;
-  filterable?: boolean;
-  grow?: boolean;
-  lastFilter?: boolean;
+  onClick?: () => void
+  allowResize?: boolean
+  filterable?: boolean
+  grow?: boolean
+  lastFilter?: boolean
   filterComponent?: (
     filters: Record<string, string[]>,
-    setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>
-  ) => ReactNode;
+    setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>,
+  ) => ReactNode
 }
 
 interface DragItem {
-  index: number;
-  id: string;
-  type: string;
+  index: number
+  id: string
+  type: string
 }
 
 const baseClasses = {
@@ -65,7 +65,7 @@ const baseClasses = {
   subRowRightWrapperClasses: 'bg-base-200 group-hover:bg-primary-100 h-fit',
 };
 
-export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement>; index?: number }>({
+export default function Table<DataType extends { dragRef?: React.RefObject<HTMLDivElement>, index?: number }>({
   noDataClasses = baseClasses.noDataClasses,
   wrapperClasses = baseClasses.wrapperClasses,
   tableClasses = baseClasses.tableClasses,
@@ -115,153 +115,152 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   triggeredFilter,
   setTriggeredFilter,
   onDragRow = () => {
-    return;
+
   },
   onDropRow = () => {
-    return;
+
   },
   onRowClick = () => {
-    return;
+
   },
   onRowDoubleClick = () => {
-    return;
+
   },
   onScroll = () => {
-    return;
+
   },
   onUpdateFilters = async () => {
-    return;
+
   },
   onSort = () => {
-    return;
+
   },
   onFirstPage = () => {
-    return;
+
   },
   onPreviousPage = () => {
-    return;
+
   },
   onNextPage = () => {
-    return;
+
   },
   onLastPage = () => {
-    return;
+
   },
-  toPage = (page: number) => {
-    return;
+  toPage = () => {
+
   },
 }: {
-  wrapperClasses?: string;
-  tableClasses?: string;
-  rowClasses?: string;
-  rowLeftWrapperClasses?: string;
-  rowCenterWrapperClasses?: string;
-  rowRightWrapperClasses?: string;
-  subRowClasses?: string;
-  subRowLeftWrapperClasses?: string;
-  subRowCenterWrapperClasses?: string;
-  subRowRightWrapperClasses?: string;
-  columnsWrapperClasses?: string;
-  columnsLeftClasses?: string;
-  columnsCenterClasses?: string;
-  columnsRightClasses?: string;
-  headerClasses?: string;
-  noDataClasses?: string;
-  currentPage?: number;
-  totalPagesProp?: number;
-  paginationClasses?: PaginationClasses;
-  columnsCenter: TableColumn<DataType>[];
-  columnsRight?: TableColumn<DataType>[];
-  columnsLeft?: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => ReactNode };
+  wrapperClasses?: string
+  tableClasses?: string
+  rowClasses?: string
+  rowLeftWrapperClasses?: string
+  rowCenterWrapperClasses?: string
+  rowRightWrapperClasses?: string
+  subRowClasses?: string
+  subRowLeftWrapperClasses?: string
+  subRowCenterWrapperClasses?: string
+  subRowRightWrapperClasses?: string
+  columnsWrapperClasses?: string
+  columnsLeftClasses?: string
+  columnsCenterClasses?: string
+  columnsRightClasses?: string
+  headerClasses?: string
+  noDataClasses?: string
+  currentPage?: number
+  totalPagesProp?: number
+  paginationClasses?: PaginationClasses
+  columnsCenter: TableColumn<DataType>[]
+  columnsRight?: TableColumn<DataType>[]
+  columnsLeft?: TableColumn<DataType>[]
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef?: React.RefObject<HTMLDivElement> }) => ReactNode }
   filterComponents?: {
     [key in keyof DataType]?: (
       filters: Record<string, string[]>,
-      setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>
+      setFilters: (filters: Record<string, string[]>, triggeringFilterId: string) => Promise<void>,
     ) => ReactNode;
-  };
-  filters?: Record<string, string[]>;
-  showFilters?: boolean;
-  data: DataType[];
-  pagination?: boolean;
-  totalRows: number;
-  noEntryLabel?: string;
-  detailsRow?: (data: DataType) => ReactNode | DataType[];
-  allowReorder?: boolean;
-  xToY?: string;
-  isInfinite?: boolean;
-  pagesize?: number;
-  name?: string;
-  firstPageIconName?: string;
-  firstPageIconPath?: string;
-  previousPageIconName?: string;
-  previousPageIconPath?: string;
-  nextPageIconName?: string;
-  nextPageIconPath?: string;
-  lastPageIconName?: string;
-  lastPageIconPath?: string;
-  sortingAscIconName?: string;
-  sortingAscIconPath?: string;
-  sortingDescIconName?: string;
-  sortingDescIconPath?: string;
-  removeFilterIconName?: string;
-  removeFilterIconPath?: string;
-  triggeredFilter?: string;
-  setTriggeredFilter?: (filterId: string) => void;
-  onDragRow?: (dragIndex: number, hoverIndex: number) => void;
-  onDropRow?: (dragIndex: number, hoverIndex: number) => void;
-  onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
-  onFirstPage?: () => void;
-  onPreviousPage?: () => void;
-  onNextPage?: () => void;
-  onLastPage?: () => void;
-  toPage?: (page: number) => void;
-  onRowClick?: (data: DataType) => void;
-  onRowDoubleClick?: (data: DataType) => void;
-  onSort?: (column: TableColumn<DataType>) => void;
-  onUpdateFilters?: (filters: Record<string, string[]>) => Promise<void>;
-  onUpdateColumnsLeft?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
-  onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
-  onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void;
+  }
+  filters?: Record<string, string[]>
+  showFilters?: boolean
+  data: DataType[]
+  pagination?: boolean
+  totalRows: number
+  noEntryLabel?: string
+  detailsRow?: (data: DataType) => ReactNode | DataType[]
+  allowReorder?: boolean
+  xToY?: string
+  isInfinite?: boolean
+  pagesize?: number
+  name?: string
+  firstPageIconName?: string
+  firstPageIconPath?: string
+  previousPageIconName?: string
+  previousPageIconPath?: string
+  nextPageIconName?: string
+  nextPageIconPath?: string
+  lastPageIconName?: string
+  lastPageIconPath?: string
+  sortingAscIconName?: string
+  sortingAscIconPath?: string
+  sortingDescIconName?: string
+  sortingDescIconPath?: string
+  removeFilterIconName?: string
+  removeFilterIconPath?: string
+  triggeredFilter?: string
+  setTriggeredFilter?: (filterId: string) => void
+  onDragRow?: (dragIndex: number, hoverIndex: number) => void
+  onDropRow?: (dragIndex: number, hoverIndex: number) => void
+  onScroll?: (event: React.UIEvent<HTMLDivElement>) => void
+  onFirstPage?: () => void
+  onPreviousPage?: () => void
+  onNextPage?: () => void
+  onLastPage?: () => void
+  toPage?: (page: number) => void
+  onRowClick?: (data: DataType) => void
+  onRowDoubleClick?: (data: DataType) => void
+  onSort?: (column: TableColumn<DataType>) => void
+  onUpdateFilters?: (filters: Record<string, string[]>) => Promise<void>
+  onUpdateColumnsLeft?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
+  onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
+  onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
 }) {
-  const { locale } = useContext(i18nContext);
+  const { locale } = use(I18nContext);
 
   const hasFilters = !!(
-    showFilters &&
-    (columnsCenter.some((column) => column.filterable) ||
-      columnsLeft?.some((column) => column.filterable) ||
-      columnsRight?.some((column) => column.filterable))
+    showFilters
+    && (columnsCenter.some(column => column.filterable)
+      || columnsLeft?.some(column => column.filterable)
+      || columnsRight?.some(column => column.filterable))
   );
 
   const totalPages = totalPagesProp || Math.ceil(totalRows / pagesize);
   const currentStart = (currentPage - 1) * pagesize;
   const currentEnd = currentPage * pagesize;
 
-  const header = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
-  const currentColumnsLeft = useMemo(() => columnsLeft?.filter((column) => !column?.hidden) || [], [columnsLeft]);
-  const currentColumnsCenter = useMemo(() => columnsCenter?.filter((column) => !column?.hidden) || [], [columnsCenter]);
-  const currentColumnsRight = useMemo(() => columnsRight?.filter((column) => !column?.hidden) || [], [columnsRight]);
-
-  const [detailsOpen, setDetailsOpen] = useState<boolean[]>([]);
+  const currentColumnsLeft = useMemo(() => columnsLeft?.filter(column => !column?.hidden) || [], [columnsLeft]);
+  const currentColumnsCenter = useMemo(() => columnsCenter?.filter(column => !column?.hidden) || [], [columnsCenter]);
+  const currentColumnsRight = useMemo(() => columnsRight?.filter(column => !column?.hidden) || [], [columnsRight]);
 
   useEffect(() => {
     // scroll triggered column into view
     if (!triggeredFilter) {
       return;
     }
-    const columnIndex =
-      currentColumnsLeft.findIndex((col) => col.filterKey === triggeredFilter) >= 0
-        ? currentColumnsLeft.findIndex((col) => col.filterKey === triggeredFilter)
-        : currentColumnsCenter.findIndex((col) => col.filterKey === triggeredFilter) >= 0
-          ? currentColumnsLeft.length + currentColumnsCenter.findIndex((col) => col.filterKey === triggeredFilter)
-          : currentColumnsLeft.length +
-            currentColumnsCenter.length +
-            currentColumnsRight.findIndex((col) => col.filterKey === triggeredFilter);
-    const columnElement = header.current?.children.item(columnIndex) as HTMLDivElement | null;
+    const columnIndex
+      = currentColumnsLeft.findIndex(col => col.filterKey === triggeredFilter) >= 0
+        ? currentColumnsLeft.findIndex(col => col.filterKey === triggeredFilter)
+        : currentColumnsCenter.findIndex(col => col.filterKey === triggeredFilter) >= 0
+          ? currentColumnsLeft.length + currentColumnsCenter.findIndex(col => col.filterKey === triggeredFilter)
+          : currentColumnsLeft.length
+            + currentColumnsCenter.length
+            + currentColumnsRight.findIndex(col => col.filterKey === triggeredFilter);
+    const columnElement = headerRef.current?.children.item(columnIndex) as HTMLDivElement | null;
     if (columnElement) {
       columnElement.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
     }
+  // eslint-disable-next-line react/exhaustive-deps
   }, []);
 
   async function updateFilters(newFilters: Record<string, string[]>, triggeringFilterId: string) {
@@ -270,7 +269,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   }
 
   return (
-    <div className={wrapperClasses} data-testid={name + '-table'}>
+    <div className={wrapperClasses} data-testid={`${name}-table`}>
       <div
         style={{
           gridTemplateRows: `repeat(${data.length + 1}, auto)`,
@@ -283,15 +282,15 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
       >
         {/* Header */}
         <div
-          ref={header}
-          data-testid={name + '-table-header'}
+          ref={headerRef}
+          data-testid={`${name}-table-header`}
           key={locale}
           className="sticky top-0 z-1 flex flex-row items-center justify-between rounded-t-krc-table bg-krc-table-header"
         >
           {(detailsRow || !!currentColumnsLeft.length) && (
-            <div className="sticky left-0 flex flex-row z-1" data-testid={name + '-table-header-left'}>
+            <div className="sticky left-0 flex flex-row z-1" data-testid={`${name}-table-header-left`}>
               {detailsRow && <div className={[headerClasses, 'w-12', hasFilters ? 'h-24' : 'h-12'].join(' ')}></div>}
-              {currentColumnsLeft.map((column) => (
+              {currentColumnsLeft.map(column => (
                 <div
                   key={column.id.toString()}
                   data-testid={`${name}-table-header-left-${column.id.toString()}`}
@@ -301,11 +300,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   }}
                   onClick={() => {
                     return (
-                      column.sortKey &&
-                      onSort(
+                      column.sortKey
+                      && onSort(
                         Object.assign({}, column, {
                           sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
-                        })
+                        }),
                       )
                     );
                   }}
@@ -361,7 +360,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                     await updateFilters({ ...filters, [key]: [value] }, key);
                                   } else {
                                     const newFilters = { ...filters };
-                                    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                     delete newFilters[key];
                                     await updateFilters(newFilters, '');
                                   }
@@ -375,7 +373,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                 const key = column.filterKey;
                                 if (key) {
                                   const newFilters = { ...filters };
-                                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                   delete newFilters[key];
                                   await updateFilters(newFilters, '');
                                 }
@@ -393,7 +390,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               ))}
             </div>
           )}
-          {currentColumnsCenter.map((column) => (
+          {currentColumnsCenter.map(column => (
             <div
               key={column.id.toString()}
               style={{
@@ -409,11 +406,11 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               ].join(' ')}
               onClick={() => {
                 return (
-                  column.sortKey &&
-                  onSort(
+                  column.sortKey
+                  && onSort(
                     Object.assign({}, column, {
                       sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
-                    })
+                    }),
                   )
                 );
               }}
@@ -463,7 +460,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                 await updateFilters({ ...filters, [key]: [value] }, key);
                               } else {
                                 const newFilters = { ...filters };
-                                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                                 delete newFilters[key];
                                 await updateFilters(newFilters, '');
                               }
@@ -477,7 +473,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                             const key = column.filterKey;
                             if (key) {
                               const newFilters = { ...filters };
-                              // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                               delete newFilters[key];
                               await updateFilters(newFilters, '');
                             }
@@ -496,7 +491,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
           ))}
           {!!currentColumnsRight.length && (
             <div className="sticky -right-px flex flex-row h-full items-center">
-              {currentColumnsRight.map((column) => (
+              {currentColumnsRight.map(column => (
                 <div
                   key={column.id.toString()}
                   style={{
@@ -514,74 +509,76 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
         </div>
         {/* Body */}
 
-        {allowReorder ? (
-          <DndProvider backend={HTML5Backend} debugMode>
-            {data.map((entry, i) => {
-              return (
-                <Row<DataType>
-                  key={i}
-                  index={i}
-                  name={name}
-                  entry={entry}
-                  allowReorder={allowReorder}
-                  onDragRow={onDragRow}
-                  onDropRow={onDropRow}
-                  currentColumnsCenter={currentColumnsCenter}
-                  currentColumnsLeft={currentColumnsLeft}
-                  currentColumnsRight={currentColumnsRight}
-                  cellRenderer={cellRenderer}
-                  header={header}
-                  onRowClick={onRowClick}
-                  onRowDoubleClick={onRowDoubleClick}
-                  rowClasses={rowClasses}
-                  rowLeftWrapperClasses={rowLeftWrapperClasses}
-                  rowCenterWrapperClasses={rowCenterWrapperClasses}
-                  rowRightWrapperClasses={rowRightWrapperClasses}
-                  subRowClasses={subRowClasses}
-                  subRowLeftWrapperClasses={subRowLeftWrapperClasses}
-                  subRowCenterWrapperClasses={subRowCenterWrapperClasses}
-                  subRowRightWrapperClasses={subRowRightWrapperClasses}
-                  detailsRow={detailsRow}
-                />
-              );
-            })}
-          </DndProvider>
-        ) : (
-          <>
-            {data.map((entry, i) => {
-              return (
-                <Row<DataType>
-                  key={i}
-                  index={i}
-                  name={name}
-                  entry={entry}
-                  allowReorder={allowReorder}
-                  onDragRow={onDragRow}
-                  onDropRow={onDropRow}
-                  currentColumnsCenter={currentColumnsCenter}
-                  currentColumnsLeft={currentColumnsLeft}
-                  currentColumnsRight={currentColumnsRight}
-                  cellRenderer={cellRenderer}
-                  header={header}
-                  onRowClick={onRowClick}
-                  onRowDoubleClick={onRowDoubleClick}
-                  rowClasses={rowClasses}
-                  rowLeftWrapperClasses={rowLeftWrapperClasses}
-                  rowCenterWrapperClasses={rowCenterWrapperClasses}
-                  rowRightWrapperClasses={rowRightWrapperClasses}
-                  subRowClasses={subRowClasses}
-                  subRowLeftWrapperClasses={subRowLeftWrapperClasses}
-                  subRowCenterWrapperClasses={subRowCenterWrapperClasses}
-                  subRowRightWrapperClasses={subRowRightWrapperClasses}
-                  detailsRow={detailsRow}
-                />
-              );
-            })}
-          </>
-        )}
+        {allowReorder
+          ? (
+              <DndProvider backend={HTML5Backend} debugMode>
+                {data.map((entry, i) => {
+                  return (
+                    <Row<DataType>
+                      key={entry.index ?? i}
+                      index={i}
+                      name={name}
+                      entry={entry}
+                      allowReorder={allowReorder}
+                      onDragRow={onDragRow}
+                      onDropRow={onDropRow}
+                      currentColumnsCenter={currentColumnsCenter}
+                      currentColumnsLeft={currentColumnsLeft}
+                      currentColumnsRight={currentColumnsRight}
+                      cellRenderer={cellRenderer}
+                      header={headerRef}
+                      onRowClick={onRowClick}
+                      onRowDoubleClick={onRowDoubleClick}
+                      rowClasses={rowClasses}
+                      rowLeftWrapperClasses={rowLeftWrapperClasses}
+                      rowCenterWrapperClasses={rowCenterWrapperClasses}
+                      rowRightWrapperClasses={rowRightWrapperClasses}
+                      subRowClasses={subRowClasses}
+                      subRowLeftWrapperClasses={subRowLeftWrapperClasses}
+                      subRowCenterWrapperClasses={subRowCenterWrapperClasses}
+                      subRowRightWrapperClasses={subRowRightWrapperClasses}
+                      detailsRow={detailsRow}
+                    />
+                  );
+                })}
+              </DndProvider>
+            )
+          : (
+              <>
+                {data.map((entry, i) => {
+                  return (
+                    <Row<DataType>
+                      key={entry.index ?? i}
+                      index={i}
+                      name={name}
+                      entry={entry}
+                      allowReorder={allowReorder}
+                      onDragRow={onDragRow}
+                      onDropRow={onDropRow}
+                      currentColumnsCenter={currentColumnsCenter}
+                      currentColumnsLeft={currentColumnsLeft}
+                      currentColumnsRight={currentColumnsRight}
+                      cellRenderer={cellRenderer}
+                      header={headerRef}
+                      onRowClick={onRowClick}
+                      onRowDoubleClick={onRowDoubleClick}
+                      rowClasses={rowClasses}
+                      rowLeftWrapperClasses={rowLeftWrapperClasses}
+                      rowCenterWrapperClasses={rowCenterWrapperClasses}
+                      rowRightWrapperClasses={rowRightWrapperClasses}
+                      subRowClasses={subRowClasses}
+                      subRowLeftWrapperClasses={subRowLeftWrapperClasses}
+                      subRowCenterWrapperClasses={subRowCenterWrapperClasses}
+                      subRowRightWrapperClasses={subRowRightWrapperClasses}
+                      detailsRow={detailsRow}
+                    />
+                  );
+                })}
+              </>
+            )}
 
         {data.length === 0 && (
-          <div data-testid={name + '-table-no-data'} className={noDataClasses}>
+          <div data-testid={`${name}-table-no-data`} className={noDataClasses}>
             {noEntryLabel}
           </div>
         )}
@@ -641,39 +638,40 @@ function Row<DataType>({
   detailsRow,
   name,
 }: {
-  index: number;
-  entry: DataType;
-  onDragRow: (dragIndex: number, hoverIndex: number) => void;
-  onDropRow: (dragIndex: number, hoverIndex: number) => void;
-  onRowClick: (data: DataType) => void;
-  onRowDoubleClick: (data: DataType) => void;
-  currentColumnsLeft: TableColumn<DataType>[];
-  currentColumnsCenter: TableColumn<DataType>[];
-  currentColumnsRight: TableColumn<DataType>[];
-  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => ReactNode };
-  header: React.RefObject<HTMLDivElement | null>;
-  rowClasses: string;
-  rowLeftWrapperClasses: string;
-  rowCenterWrapperClasses: string;
-  rowRightWrapperClasses: string;
-  subRowClasses?: string;
-  subRowLeftWrapperClasses?: string;
-  subRowCenterWrapperClasses?: string;
-  subRowRightWrapperClasses?: string;
-  allowReorder?: boolean;
-  detailsRow?: (data: DataType) => ReactNode | DataType[];
-  name: string;
+  index: number
+  entry: DataType
+  onDragRow: (dragIndex: number, hoverIndex: number) => void
+  onDropRow: (dragIndex: number, hoverIndex: number) => void
+  onRowClick: (data: DataType) => void
+  onRowDoubleClick: (data: DataType) => void
+  currentColumnsLeft: TableColumn<DataType>[]
+  currentColumnsCenter: TableColumn<DataType>[]
+  currentColumnsRight: TableColumn<DataType>[]
+  cellRenderer?: { [key in keyof DataType]?: (data: DataType & { dragRef: React.RefObject<HTMLDivElement | null> }) => ReactNode }
+  header: React.RefObject<HTMLDivElement | null>
+  rowClasses: string
+  rowLeftWrapperClasses: string
+  rowCenterWrapperClasses: string
+  rowRightWrapperClasses: string
+  subRowClasses?: string
+  subRowLeftWrapperClasses?: string
+  subRowCenterWrapperClasses?: string
+  subRowRightWrapperClasses?: string
+  allowReorder?: boolean
+  detailsRow?: (data: DataType) => ReactNode | DataType[]
+  name: string
 }) {
   const dragRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
 
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  if (allowReorder && !Object.prototype.hasOwnProperty.call(entry, 'index')) {
+  if (allowReorder && !Object.hasOwn(entry as object, 'index')) {
     throw new Error('Entry must have index property');
   }
 
   const [{ handlerId }, drop] = allowReorder
+    // eslint-disable-next-line react/rules-of-hooks
     ? useDrop<DragItem, undefined, { handlerId: Identifier | null }>({
         accept: 'row',
         collect(monitor) {
@@ -732,6 +730,7 @@ function Row<DataType>({
     : [{ handlerId: null }, () => undefined];
 
   const [{ opacity }, drag, preview] = allowReorder
+    // eslint-disable-next-line react/rules-of-hooks
     ? useDrag({
         type: 'row',
         end: (item, monitor) => {
@@ -766,8 +765,8 @@ function Row<DataType>({
         onClick={() => onRowClick(entry)}
         onDoubleClick={() => onRowDoubleClick(entry)}
         ref={previewRef}
-        style={{ opacity }}
-        data-handler-id={handlerId}
+        style={allowReorder ? { opacity } : {}}
+        data-handler-id={allowReorder ? handlerId : undefined}
         data-testid={`${name}-table-row`}
       >
         {(detailsRow || !!currentColumnsLeft.length) && (
@@ -848,38 +847,42 @@ function Row<DataType>({
         <div
           style={{ width: `${(header.current?.scrollWidth || 0) - 1}px` }}
           className="absolute bottom-0 left-0 -right-px h-px bg-secondary-50"
-        ></div>
+        >
+        </div>
       </div>
-      {detailsRow &&
-        detailsOpen &&
-        (Array.isArray(detailsRow(entry)) ? (
-          (detailsRow(entry) as DataType[])?.map((e, i) => (
-            <div className="group" key={i}>
-              <Row<DataType>
-                index={i}
-                name={name}
-                entry={e}
-                allowReorder={allowReorder}
-                onDragRow={onDragRow}
-                onDropRow={onDropRow}
-                currentColumnsCenter={currentColumnsCenter}
-                currentColumnsLeft={currentColumnsLeft}
-                currentColumnsRight={currentColumnsRight}
-                cellRenderer={cellRenderer}
-                header={header}
-                onRowClick={onRowClick}
-                onRowDoubleClick={onRowDoubleClick}
-                rowClasses={subRowClasses || rowClasses}
-                rowLeftWrapperClasses={subRowLeftWrapperClasses || rowLeftWrapperClasses}
-                rowCenterWrapperClasses={subRowCenterWrapperClasses || rowCenterWrapperClasses}
-                rowRightWrapperClasses={subRowRightWrapperClasses || rowRightWrapperClasses}
-                detailsRow={() => undefined}
-              />
-            </div>
-          ))
-        ) : (
-          <div className="ml-12">{detailsRow(entry) as ReactNode}</div>
-        ))}
+      {detailsRow
+        && detailsOpen
+        && (Array.isArray(detailsRow(entry))
+          ? (
+              (detailsRow(entry) as DataType[])?.map((e, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <div className="group" key={i}>
+                  <Row<DataType>
+                    index={i}
+                    name={name}
+                    entry={e}
+                    allowReorder={allowReorder}
+                    onDragRow={onDragRow}
+                    onDropRow={onDropRow}
+                    currentColumnsCenter={currentColumnsCenter}
+                    currentColumnsLeft={currentColumnsLeft}
+                    currentColumnsRight={currentColumnsRight}
+                    cellRenderer={cellRenderer}
+                    header={header}
+                    onRowClick={onRowClick}
+                    onRowDoubleClick={onRowDoubleClick}
+                    rowClasses={subRowClasses || rowClasses}
+                    rowLeftWrapperClasses={subRowLeftWrapperClasses || rowLeftWrapperClasses}
+                    rowCenterWrapperClasses={subRowCenterWrapperClasses || rowCenterWrapperClasses}
+                    rowRightWrapperClasses={subRowRightWrapperClasses || rowRightWrapperClasses}
+                    detailsRow={() => undefined}
+                  />
+                </div>
+              ))
+            )
+          : (
+              <div className="ml-12">{detailsRow(entry) as ReactNode}</div>
+            ))}
     </div>
   );
 }

@@ -20,28 +20,28 @@ export default function Tag({
   dataTestId,
   title,
   onClick = () => {
-    return;
+
   },
   onClickIconLeft = () => {
-    return;
+
   },
   onClickIconRight = () => {
-    return;
+
   },
 }: {
-  wrapperClasses?: string;
-  titleClasses?: string;
-  iconLeftClasses?: string;
-  iconRightClasses?: string;
-  iconLeftPath?: string;
-  iconLeftName?: string;
-  iconRightPath?: string;
-  iconRightName?: string;
-  title: string;
-  dataTestId?: string;
-  onClick?: () => void;
-  onClickIconLeft?: () => void;
-  onClickIconRight?: () => void;
+  wrapperClasses?: string
+  titleClasses?: string
+  iconLeftClasses?: string
+  iconRightClasses?: string
+  iconLeftPath?: string
+  iconLeftName?: string
+  iconRightPath?: string
+  iconRightName?: string
+  title: string
+  dataTestId?: string
+  onClick?: () => void
+  onClickIconLeft?: () => void
+  onClickIconRight?: () => void
 }) {
   return (
     <div className={wrapperClasses} onClick={onClick} data-testid={dataTestId}>

@@ -7,13 +7,13 @@ export default function ColumnChooserEntry<DataType>({
   hiddenColumnClasses,
   updateColumns,
 }: {
-  title: string;
-  id: keyof DataType;
-  entryClasses: string;
-  visibleColumnClasses: string;
-  hiddenColumnClasses: string;
-  visibleColumns: (keyof DataType)[];
-  updateColumns: (id: keyof DataType) => void;
+  title: string
+  id: keyof DataType
+  entryClasses: string
+  visibleColumnClasses: string
+  hiddenColumnClasses: string
+  visibleColumns: (keyof DataType)[]
+  updateColumns: (id: keyof DataType) => void
 }) {
   return (
     <span

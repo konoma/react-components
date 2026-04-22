@@ -1,8 +1,8 @@
-import { Resizable } from 're-resizable';
-import { useMemo, useRef, useState } from 'react';
-
-import Icon from '../ui/icon.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
+import { Resizable } from 're-resizable';
+
+import { useMemo, useRef, useState } from 'react';
+import Icon from '../ui/icon.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes: 'w-full bg-white text-sm cursor-text rounded-krc-textarea p-4 text-secondary-900',
@@ -47,16 +47,17 @@ export default function Textarea<DataType>({
   dataTestId,
   maxLengthLabel,
   /** UNUSED, only listed so that the typing for onInput does not clash with the onInput event of the textarea */
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onInput = () => {
-    return;
+
   },
   onChange = () => {
-    return;
+
   },
   ...props
 }: FormFieldProps<DataType>) {
   const [height] = useState(initialHeight);
-  const textarea = useRef<HTMLTextAreaElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const classesFull = [];
 
   if (disabled) {
@@ -90,7 +91,9 @@ export default function Textarea<DataType>({
       <div className={labelWrapperClasses}>
         {label && (
           <span className={labelClasses}>
-            {label} {required && '*'}
+            {label}
+            {' '}
+            {required && '*'}
           </span>
         )}
         {!!maxLength && <span className={hintClasses}>{maxLengthLabel}</span>}
@@ -115,12 +118,12 @@ export default function Textarea<DataType>({
         >
           <textarea
             maxLength={maxLength || undefined}
-            ref={textarea}
+            ref={textareaRef}
             data-testid={dataTestId}
             value={text}
             disabled={disabled}
             defaultValue={defaultValue?.toString()}
-            onInput={(e) => onChange(e.currentTarget.value)}
+            onInput={e => onChange(e.currentTarget.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             name={name as string}
@@ -129,10 +132,10 @@ export default function Textarea<DataType>({
           />
         </Resizable>
       </div>
-      {error &&
-        error.length > 0 &&
-        error.map((e, i) => (
-          <span key={i} className={errorClasses}>
+      {error
+        && error.length > 0
+        && error.map(e => (
+          <span key={e} className={errorClasses}>
             {e}
           </span>
         ))}

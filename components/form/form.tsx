@@ -1,15 +1,6 @@
 import type { ReactNode, Ref } from 'react';
-import { createContext, useCallback, useEffect, useState } from 'react';
-
-export const ErrorContext = createContext<{
-  errors: Record<string, string[]>;
-  setErrors: (errors: Record<string, string[]>) => void;
-}>({
-  errors: {} as Record<string, string[]>,
-  setErrors: () => {
-    return;
-  },
-});
+import { useCallback, useEffect, useState } from 'react';
+import { ErrorContext } from './ErrorContext.ts';
 
 export default function Form<DataType>({
   children,
@@ -19,18 +10,18 @@ export default function Form<DataType>({
   formRef,
   dataTestId,
   onValidation = () => {
-    return;
+
   },
   onSubmit,
 }: {
-  formRef?: Ref<HTMLFormElement>;
-  children: ReactNode;
-  className?: string;
-  data: DataType;
-  dataTestId?: string;
-  validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>;
-  onValidation?: (errors: Record<keyof DataType, string[]>, triggeredBySubmit?: boolean) => void;
-  onSubmit: () => Promise<void>;
+  formRef?: Ref<HTMLFormElement>
+  children: ReactNode
+  className?: string
+  data: DataType
+  dataTestId?: string
+  validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>
+  onValidation?: (errors: Record<keyof DataType, string[]>, triggeredBySubmit?: boolean) => void
+  onSubmit: () => Promise<void>
 }) {
   const [errors, setErrors] = useState<Record<string, string[]>>({} as Record<string, string[]>);
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -52,7 +43,7 @@ export default function Form<DataType>({
             }
             return validation;
           })
-          .filter((v) => v);
+          .filter(v => v);
       });
       setErrors(newErrors);
       onValidation(newErrors, triggeredBySubmit);
@@ -61,7 +52,8 @@ export default function Form<DataType>({
       }
       return invalid;
     },
-    [data]
+    // eslint-disable-next-line react/exhaustive-deps
+    [data],
   );
 
   useEffect(() => {
@@ -88,7 +80,7 @@ export default function Form<DataType>({
   }
   return (
     <form ref={formRef} data-testid={dataTestId} onSubmit={submit} className={className}>
-      <ErrorContext.Provider value={{ errors, setErrors: updateErrors }}>{children}</ErrorContext.Provider>
+      <ErrorContext value={{ errors, setErrors: updateErrors }}>{children}</ErrorContext>
     </form>
   );
 }

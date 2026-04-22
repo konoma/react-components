@@ -31,17 +31,19 @@ export default function RadioButtonGroup<DataType>({
   dataTestId = '',
   arrangement = 'horizontal',
   onChange = () => {
-    return;
+
   },
 }: FormFieldProps<DataType> & { options: Option[] }) {
   return (
     <div className={wrapperClasses}>
       <span className={labelClasses}>
-        {label} {required && '*'}
+        {label}
+        {' '}
+        {required && '*'}
       </span>
       <div className={['flex gap-5', arrangement === 'vertical' ? 'flex-col' : 'flex-row'].join(' ')}>
         {options.map((option, i) => (
-          <label key={i} className={labelWrapperClasses}>
+          <label key={option.value.toString()} className={labelWrapperClasses}>
             <div className={[controlClasses, value?.toString() === option.value.toString() ? classesFilled : classesEmpty].join(' ')}>
               <div className={classes}></div>
               <input

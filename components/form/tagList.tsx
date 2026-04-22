@@ -1,5 +1,5 @@
-import Tag from '../ui/tag.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
+import Tag from '../ui/tag.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   classes: 'w-full flex flex-row gap-2 flex-wrap items-center rounded-krc-tag-list p-4 bg-white',
@@ -35,7 +35,7 @@ export default function TagList<DataType>({
   allowDelete = true,
   allowNew = true,
   onChange = () => {
-    return;
+
   },
   className = '',
 }: FormFieldProps<DataType>) {
@@ -51,14 +51,16 @@ export default function TagList<DataType>({
     <label className={wrapperClasses}>
       {label && (
         <span className={labelClasses}>
-          {label} {required && '*'}
+          {label}
+          {' '}
+          {required && '*'}
         </span>
       )}
 
       <div className={classesFull.join(' ')}>
-        {values?.map((value, i) => (
+        {values?.map(value => (
           <Tag
-            key={i}
+            key={value.toString()}
             title={value.toString()}
             onClick={() => onChange(value)}
             iconRightName={!disabled && allowDelete ? deleteIconName || 'heroicons:x-mark-16-solid' : undefined}
@@ -76,10 +78,10 @@ export default function TagList<DataType>({
           />
         )}
       </div>
-      {error &&
-        error.length > 0 &&
-        error.map((e, i) => (
-          <span key={i} className={errorClasses}>
+      {error
+        && error.length > 0
+        && error.map(e => (
+          <span key={e} className={errorClasses}>
             {e}
           </span>
         ))}

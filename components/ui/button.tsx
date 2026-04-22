@@ -52,33 +52,33 @@ export default function Button({
   dataTestId,
   onClick,
 }: {
-  classesBase?: string;
-  classesPrimary?: string;
-  classesSecondary?: string;
-  classesActiveSecondary?: string;
-  classesError?: string;
-  classesAlert?: string;
-  loadingClassesBase?: string;
-  loadingClassesPrimary?: string;
-  loadingClassesSecondary?: string;
-  loadingClassesActiveSecondary?: string;
-  loadingClassesError?: string;
-  loadingClassesAlert?: string;
-  iconLeftClasses?: string;
-  iconRightClasses?: string;
-  disabled?: boolean;
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  variant: 'primary' | 'secondary' | 'error' | 'alert' | 'active-secondary';
-  label: string;
-  loading?: boolean;
-  iconLeftPath?: string;
-  iconLeftName?: string;
-  iconRightPath?: string;
-  iconRightName?: string;
-  name?: string;
-  dataTestId?: string;
-  onClick?: (e: MouseEvent) => Promise<void> | void;
+  classesBase?: string
+  classesPrimary?: string
+  classesSecondary?: string
+  classesActiveSecondary?: string
+  classesError?: string
+  classesAlert?: string
+  loadingClassesBase?: string
+  loadingClassesPrimary?: string
+  loadingClassesSecondary?: string
+  loadingClassesActiveSecondary?: string
+  loadingClassesError?: string
+  loadingClassesAlert?: string
+  iconLeftClasses?: string
+  iconRightClasses?: string
+  disabled?: boolean
+  className?: string
+  type?: 'button' | 'submit' | 'reset'
+  variant: 'primary' | 'secondary' | 'error' | 'alert' | 'active-secondary'
+  label?: string
+  loading?: boolean
+  iconLeftPath?: string
+  iconLeftName?: string
+  iconRightPath?: string
+  iconRightName?: string
+  name?: string
+  dataTestId?: string
+  onClick?: (e: MouseEvent) => Promise<void> | void
 }) {
   const classes = [classesBase, className];
   const loadingClasses = [loadingClassesBase];
@@ -108,7 +108,7 @@ export default function Button({
     <button
       data-testid={dataTestId}
       name={name}
-      onClick={async (e) => await onClick?.(e)}
+      onClick={async e => await onClick?.(e)}
       className={classes.join(' ')}
       disabled={disabled}
       type={type}

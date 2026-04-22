@@ -1,4 +1,4 @@
 export interface DataTypeBase {
-  actions: string;
-  id: number;
+  actions: string
+  id: number
 }

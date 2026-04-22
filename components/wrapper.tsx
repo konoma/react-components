@@ -1,7 +1,6 @@
-import { createContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { I18nContext } from './I18nContext.ts';
 
-export const i18nContext = createContext({ locale: 'en' });
-
-export default function ComponentsWrapper({ children, locale }: { children: ReactNode; locale?: string }) {
-  return <i18nContext.Provider value={{ locale: locale ?? 'en' }}>{children}</i18nContext.Provider>;
+export default function ComponentsWrapper({ children, locale }: { children: ReactNode, locale?: string }) {
+  return <I18nContext value={{ locale: locale ?? 'en' }}>{children}</I18nContext>;
 }

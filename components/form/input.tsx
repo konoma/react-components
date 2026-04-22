@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { IMaskInput } from 'react-imask';
-
-import Icon from '../ui/icon.tsx';
 import type { Classes, FormFieldProps } from './types.ts';
+import { useEffect, useRef } from 'react';
+
+import { IMaskInput } from 'react-imask';
+import Icon from '../ui/icon.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   controlClasses:
@@ -53,22 +53,22 @@ export default function Input<DataType>({
   className = '',
   dataTestId,
   onIconRightClick = () => {
-    return;
+
   },
   onIconLeftClick = () => {
-    return;
+
   },
   onChange = () => {
-    return;
+
   },
   onClick = () => {
-    return;
+
   },
   onKeyDown = () => {
-    return;
+
   },
   onBlur = () => {
-    return;
+
   },
   ...props
 }: FormFieldProps<DataType>) {
@@ -89,93 +89,106 @@ export default function Input<DataType>({
   }
   classesFull.push(className);
 
+  const ref = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (autoFocus) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         ref.current?.focus();
       }, 100);
     }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, [autoFocus]);
 
-  const ref = useRef<HTMLInputElement>(null);
   const inputRef = useRef(null);
   return (
     <label className={wrapperClasses}>
       {label && (
         <span className={labelClasses}>
-          {label} {required && '*'}
+          {label}
+          {' '}
+          {required && '*'}
         </span>
       )}
 
       <div className={classes}>
-        {mask ? (
-          <IMaskInput
-            mask={mask}
-            radix="."
-            unmask={true}
-            ref={ref}
-            step={step}
-            data-testid={dataTestId}
-            inputRef={inputRef}
-            placeholder={placeholder}
-            value={value?.toString()}
-            defaultValue={defaultValue?.toString()}
-            {...props}
-            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange(e.currentTarget.value);
-            }}
-            onClick={(e: React.MouseEvent) => {
-              if (e.isTrusted) {
-                ref.current?.showPicker?.();
-              }
-              onClick(e);
-            }}
-            onBlur={onBlur}
-            onKeyDown={onKeyDown}
-            className={classesFull.join(' ')}
-            name={name as string}
-          />
-        ) : (
-          <input
-            {...props}
-            ref={ref}
-            placeholder={placeholder}
-            data-testid={dataTestId}
-            // We do not want to use a fallback to an empty string here, as it would always overwrite the defaultValue
-            value={value?.toString()}
-            defaultValue={defaultValue?.toString() !== undefined ? defaultValue?.toString() : ''}
-            onInput={(e) => {
-              onChange(e.currentTarget.value);
-            }}
-            onClick={(e) => {
-              if (e.isTrusted) {
-                ref.current?.showPicker?.();
-              }
-              onClick(e);
-            }}
-            step={step}
-            onBlur={onBlur}
-            onKeyDown={onKeyDown}
-            className={classesFull.join(' ')}
-            name={name as string}
-          />
-        )}
+        {mask
+          ? (
+              <IMaskInput
+                mask={mask}
+                radix="."
+                unmask={true}
+                ref={ref}
+                step={step}
+                data-testid={dataTestId}
+                inputRef={inputRef}
+                placeholder={placeholder}
+                value={value?.toString()}
+                defaultValue={defaultValue?.toString()}
+                {...props}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange(e.currentTarget.value);
+                }}
+                onClick={(e: React.MouseEvent) => {
+                  if (e.isTrusted) {
+                    ref.current?.showPicker?.();
+                  }
+                  onClick(e);
+                }}
+                onBlur={onBlur}
+                onKeyDown={onKeyDown}
+                className={classesFull.join(' ')}
+                name={name as string}
+              />
+            )
+          : (
+              <input
+                {...props}
+                ref={ref}
+                placeholder={placeholder}
+                data-testid={dataTestId}
+                // We do not want to use a fallback to an empty string here, as it would always overwrite the defaultValue
+                value={value?.toString()}
+                defaultValue={defaultValue?.toString() !== undefined ? defaultValue?.toString() : ''}
+                onInput={(e) => {
+                  onChange(e.currentTarget.value);
+                }}
+                onClick={(e) => {
+                  if (e.isTrusted) {
+                    ref.current?.showPicker?.();
+                  }
+                  onClick(e);
+                }}
+                step={step}
+                onBlur={onBlur}
+                onKeyDown={onKeyDown}
+                className={classesFull.join(' ')}
+                name={name as string}
+              />
+            )}
         {(iconLeftPath || iconLeftName) && (
           <Icon className={iconLeftClasses} name={iconLeftName} path={iconLeftPath} onClick={onIconLeftClick} />
         )}
-        {iconRightPath || iconRightName || textRight ? (
-          <div className={wrapperRightClasses}>
-            {textRight && <span>{textRight}</span>}
-            {(iconRightPath || iconRightName) && (
-              <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} onClick={onIconRightClick} />
-            )}
-          </div>
-        ) : null}
+        {iconRightPath || iconRightName || textRight
+          ? (
+              <div className={wrapperRightClasses}>
+                {textRight && <span>{textRight}</span>}
+                {(iconRightPath || iconRightName) && (
+                  <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} onClick={onIconRightClick} />
+                )}
+              </div>
+            )
+          : null}
       </div>
-      {error &&
-        error.length > 0 &&
-        error.map((e, i) => (
-          <span key={i} className={errorClasses}>
+      {error
+        && error.length > 0
+        && error.map(e => (
+          <span key={e} className={errorClasses}>
             {e}
           </span>
         ))}

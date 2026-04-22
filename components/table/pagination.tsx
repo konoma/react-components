@@ -4,12 +4,12 @@ import Input from '../form/input.tsx';
 import Icon from '../ui/icon.tsx';
 
 export interface PaginationClasses {
-  activeIconClasses: string;
-  inactiveIconClasses: string;
-  wrapperClasses: string;
-  resultsClasses: string;
-  resultsTextClasses: string;
-  controlClasses: string;
+  activeIconClasses: string
+  inactiveIconClasses: string
+  wrapperClasses: string
+  resultsClasses: string
+  resultsTextClasses: string
+  controlClasses: string
 }
 
 const baseClasses: PaginationClasses = {
@@ -42,49 +42,49 @@ export default function Pagination({
   lastPageIconName,
   lastPageIconPath,
   onFirstPage = () => {
-    return;
+
   },
   onPreviousPage = () => {
-    return;
+
   },
   onNextPage = () => {
-    return;
+
   },
   onLastPage = () => {
-    return;
+
   },
   toPage = () => {
-    return;
+
   },
 }: {
-  currentLoaded: number;
-  currentStart: number;
-  currentEnd: number;
-  currentTotal: number;
-  currentPage: number;
-  totalPages: number;
-  inactiveIconClasses?: string;
-  activeIconClasses?: string;
-  wrapperClasses?: string;
-  resultsClasses?: string;
-  resultsTextClasses?: string;
-  controlClasses?: string;
-  xToY: string;
-  showButtons: boolean;
-  firstPageIconName?: string;
-  firstPageIconPath?: string;
-  previousPageIconName?: string;
-  previousPageIconPath?: string;
-  nextPageIconName?: string;
-  nextPageIconPath?: string;
-  lastPageIconName?: string;
-  lastPageIconPath?: string;
-  dataTestId?: string;
-  onFirstPage?: () => void;
-  onPreviousPage?: () => void;
-  onNextPage?: () => void;
-  onLastPage?: () => void;
-  toPage?: (page: number) => void;
+  currentLoaded: number
+  currentStart: number
+  currentEnd: number
+  currentTotal: number
+  currentPage: number
+  totalPages: number
+  inactiveIconClasses?: string
+  activeIconClasses?: string
+  wrapperClasses?: string
+  resultsClasses?: string
+  resultsTextClasses?: string
+  controlClasses?: string
+  xToY: string
+  showButtons: boolean
+  firstPageIconName?: string
+  firstPageIconPath?: string
+  previousPageIconName?: string
+  previousPageIconPath?: string
+  nextPageIconName?: string
+  nextPageIconPath?: string
+  lastPageIconName?: string
+  lastPageIconPath?: string
+  dataTestId?: string
+  onFirstPage?: () => void
+  onPreviousPage?: () => void
+  onNextPage?: () => void
+  onLastPage?: () => void
+  toPage?: (page: number) => void
 }) {
   const previousPageActive = currentPage !== 1;
   const nextPageActive = currentPage !== totalPages;
@@ -113,14 +113,14 @@ export default function Pagination({
           <div className={controlClasses}>
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
-              dataTestId={dataTestId ? dataTestId + '-first-page' : undefined}
+              dataTestId={dataTestId ? `${dataTestId}-first-page` : undefined}
               name={firstPageIconName || 'lucide:chevron-first'}
               path={firstPageIconPath}
               onClick={() => (previousPageActive ? onFirstPage() : undefined)}
             />
             <Icon
               className={previousPageActive ? activeIconClasses : inactiveIconClasses}
-              dataTestId={dataTestId ? dataTestId + '-previous-page' : undefined}
+              dataTestId={dataTestId ? `${dataTestId}-previous-page` : undefined}
               name={previousPageIconName || 'lucide:chevron-left'}
               path={previousPageIconPath}
               onClick={() => (previousPageActive ? onPreviousPage() : undefined)}
@@ -128,22 +128,22 @@ export default function Pagination({
             <div className="w-16 h-10">
               <Input
                 centered
-                dataTestId={dataTestId ? dataTestId + '-page-input' : undefined}
+                dataTestId={dataTestId ? `${dataTestId}-page-input` : undefined}
                 value={pageInternal}
-                onChange={(v) => setPageInternal(+v)}
-                onKeyDown={(e) => onKeyDown(e as React.KeyboardEvent<HTMLInputElement>)}
+                onChange={v => setPageInternal(+v)}
+                onKeyDown={e => onKeyDown(e as React.KeyboardEvent<HTMLInputElement>)}
               />
             </div>
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
-              dataTestId={dataTestId ? dataTestId + '-next-page' : undefined}
+              dataTestId={dataTestId ? `${dataTestId}-next-page` : undefined}
               name={nextPageIconName || 'lucide:chevron-right'}
               path={nextPageIconPath}
               onClick={() => (nextPageActive ? onNextPage() : undefined)}
             />
             <Icon
               className={nextPageActive ? activeIconClasses : inactiveIconClasses}
-              dataTestId={dataTestId ? dataTestId + '-last-page' : undefined}
+              dataTestId={dataTestId ? `${dataTestId}-last-page` : undefined}
               name={lastPageIconName || 'lucide:chevron-last'}
               path={lastPageIconPath}
               onClick={() => (nextPageActive ? onLastPage() : undefined)}

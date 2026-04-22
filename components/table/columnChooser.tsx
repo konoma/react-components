@@ -1,8 +1,8 @@
 import type { ExtendedRefs, FloatingContext } from '@floating-ui/react';
-import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
-
-import ColumnChooserEntry from './columnChooserEntry.tsx';
 import type { TableColumn } from './table.tsx';
+
+import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
+import ColumnChooserEntry from './columnChooserEntry.tsx';
 
 const baseClasses = {
   wrapperClasses: 'flex flex-col rounded-krc-table-column-chooser bg-white px-4 py-3 shadow-sm z-1',
@@ -28,24 +28,24 @@ export default function ColumnChooser<DataType>({
   updateColumns,
   getFloatingProps,
 }: {
-  columns: TableColumn<DataType>[];
-  context: FloatingContext;
-  refs: ExtendedRefs<unknown>;
-  floatingStyles: React.CSSProperties;
-  wrapperClasses?: string;
-  headerClasses?: string;
-  columnsWrapperClasses?: string;
-  visibleColumnClasses?: string;
-  hiddenColumnClasses?: string;
-  entryClasses?: string;
-  columnsLabel?: string;
-  updateColumns: (column: TableColumn<DataType>) => void;
-  getFloatingProps: () => Record<string, unknown>;
+  columns: TableColumn<DataType>[]
+  context: FloatingContext
+  refs: ExtendedRefs<unknown>
+  floatingStyles: React.CSSProperties
+  wrapperClasses?: string
+  headerClasses?: string
+  columnsWrapperClasses?: string
+  visibleColumnClasses?: string
+  hiddenColumnClasses?: string
+  entryClasses?: string
+  columnsLabel?: string
+  updateColumns: (column: TableColumn<DataType>) => void
+  getFloatingProps: () => Record<string, unknown>
 }) {
-  const visibleColumns = columns.filter((column) => !column.hidden).map((column) => column.id);
+  const visibleColumns = columns.filter(column => !column.hidden).map(column => column.id);
 
   function update(id: keyof DataType) {
-    const columnToUpdate = columns.find((column) => column.id === id);
+    const columnToUpdate = columns.find(column => column.id === id);
     if (!columnToUpdate) {
       return;
     }
@@ -59,10 +59,10 @@ export default function ColumnChooser<DataType>({
             <div className={headerClasses}>{columnsLabel}</div>
             <div className={columnsWrapperClasses}>
               {columns
-                .filter((c) => c.title && !c.hideFromChooser)
+                .filter(c => c.title && !c.hideFromChooser)
                 .map((col, i) => (
                   <ColumnChooserEntry
-                    key={i}
+                    key={col.id.toString() ?? i}
                     id={col.id}
                     title={col.title as string}
                     visibleColumns={visibleColumns}
