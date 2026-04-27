@@ -761,7 +761,7 @@ function Row<DataType>({
   return (
     <div className="flex flex-col">
       <div
-        className={rowClasses}
+        className={[rowClasses, detailsRow && detailsOpen ? 'shadow' : ''].join(' ')}
         onClick={() => onRowClick(entry)}
         onDoubleClick={() => onRowDoubleClick(entry)}
         ref={previewRef}

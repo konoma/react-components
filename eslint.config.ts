@@ -14,5 +14,4 @@ export default antfu({
     // TODO: Reevaluate
     'react/set-state-in-effect': 'off',
   },
-  ignores: ['src/services/api/generated/**'],
 });

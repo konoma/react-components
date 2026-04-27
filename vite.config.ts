@@ -33,7 +33,7 @@ async function app(): Promise<UserConfigExport> {
       },
       rolldownOptions: {
         // external: [...Object.keys(peerDependencies)],
-        external: ['react/jsx-runtime', '@emotion/react', '@emotion/styled'],
+        external: ['react/jsx-runtime', '@emotion/react', '@emotion/styled', 'react', 'react-dom'],
         output: {
           minify: false,
           globals: {

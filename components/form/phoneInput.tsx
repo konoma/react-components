@@ -1,8 +1,9 @@
 import type * as React from 'react';
 import type { Classes, FormFieldProps, FormValue } from './types.ts';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { IMaskInput } from 'react-imask';
+import Icon from '../ui/icon.tsx';
 import Select from './select.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
@@ -11,10 +12,14 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   wrapperClasses: 'group flex flex-col gap-1',
   labelClasses: 'flex flex-row justify-start text-sm font-medium text-secondary-900',
   wrapperLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-sm text-secondary-900',
-  wrapperRightClasses: 'absolute bottom-0 right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm',
+  iconLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-secondary-300',
+  iconRightClasses: 'h-5 w-5',
+  wrapperRightClasses: 'absolute right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm h-10',
   errorClasses: 'text-sm text-error-500',
   classesError: 'ring-error-500 ring-2',
   classesNeutral: 'border-secondary-300 border focus:ring-2 hover:border-secondary-400 focus:ring-primary-900',
+  additionalClassesIconLeft: 'pl-10',
+  additionalClassesIconRight: 'pr-12',
 };
 
 interface CountryCode {
@@ -48,10 +53,20 @@ export default function PhoneInput<DataType>({
   classes = baseClasses.classes,
   wrapperClasses = baseClasses.wrapperClasses,
   labelClasses = baseClasses.labelClasses,
+  iconLeftClasses = baseClasses.iconLeftClasses,
+  iconRightClasses = baseClasses.iconRightClasses,
   wrapperLeftClasses = baseClasses.wrapperLeftClasses,
   errorClasses = baseClasses.errorClasses,
   classesError = baseClasses.classesError,
   classesNeutral = baseClasses.classesNeutral,
+  additionalClassesIconLeft = baseClasses.additionalClassesIconLeft,
+  additionalClassesIconRight = baseClasses.additionalClassesIconRight,
+  wrapperRightClasses = baseClasses.wrapperRightClasses,
+  iconLeftPath,
+  iconLeftName,
+  iconRightPath,
+  iconRightName,
+  textRight,
   label,
   centered,
   error,
@@ -59,8 +74,15 @@ export default function PhoneInput<DataType>({
   name,
   value,
   defaultValue,
+  autoFocus,
   dataTestId,
   className = '',
+  onIconRightClick = () => {
+
+  },
+  onIconLeftClick = () => {
+
+  },
   onChange = () => {
 
   },
@@ -76,7 +98,12 @@ export default function PhoneInput<DataType>({
   ...props
 }: FormFieldProps<DataType>) {
   const classesFull = [classes];
-
+  if (iconLeftPath || iconLeftName) {
+    classesFull.push(additionalClassesIconLeft);
+  }
+  if (iconRightPath || iconRightName || textRight) {
+    classesFull.push(additionalClassesIconRight);
+  }
   if (centered) {
     classesFull.push('text-center');
   }
@@ -123,6 +150,21 @@ export default function PhoneInput<DataType>({
   );
 
   const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (autoFocus) {
+      timeout = setTimeout(() => {
+        ref.current?.focus();
+      }, 100);
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [autoFocus]);
+
   return (
     <label className={wrapperClasses} htmlFor={name as string}>
       {label && (
@@ -141,6 +183,7 @@ export default function PhoneInput<DataType>({
           options={countryCodes}
           defaultValue={countryCode}
           value={countryCode}
+          searchable={false}
           onChange={(v: FormValue | FormValue[]) => {
             setCountryCode(v as CountryCode);
             onChangeInternal(internalValue, v as CountryCode);
@@ -171,6 +214,19 @@ export default function PhoneInput<DataType>({
             name={name as string}
           />
           <div className={wrapperLeftClasses}>{countryCode.value}</div>
+          {(iconLeftPath || iconLeftName) && (
+            <Icon className={iconLeftClasses} name={iconLeftName} path={iconLeftPath} onClick={onIconLeftClick} />
+          )}
+          {iconRightPath || iconRightName || textRight
+            ? (
+                <div className={wrapperRightClasses}>
+                  {textRight && <span>{textRight}</span>}
+                  {(iconRightPath || iconRightName) && (
+                    <Icon className={iconRightClasses} name={iconRightName} path={iconRightPath} onClick={onIconRightClick} />
+                  )}
+                </div>
+              )
+            : null}
         </div>
       </div>
       {error

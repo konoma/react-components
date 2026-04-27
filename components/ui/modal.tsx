@@ -92,7 +92,7 @@ export default function Modal({
                         .filter(({ position }) => position === 'right')
                         .map(({ variant, label, ...buttonProps }) => (
                           <div key={label + variant}>
-                            <Button variant={variant ?? 'secondary'} {...buttonProps} />
+                            <Button variant={variant ?? 'secondary'} {...buttonProps} label={label} />
                           </div>
                         ))}
                     </div>
