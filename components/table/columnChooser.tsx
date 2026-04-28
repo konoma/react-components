@@ -27,7 +27,7 @@ export default function ColumnChooser<DataType>({
   columnsLabel,
   updateColumns,
   getFloatingProps,
-}: {
+}: Readonly<{
   columns: TableColumn<DataType>[]
   context: FloatingContext
   refs: ExtendedRefs<unknown>
@@ -41,7 +41,7 @@ export default function ColumnChooser<DataType>({
   columnsLabel?: string
   updateColumns: (column: TableColumn<DataType>) => void
   getFloatingProps: () => Record<string, unknown>
-}) {
+}>) {
   const visibleColumns = columns.filter(column => !column.hidden).map(column => column.id);
 
   function update(id: keyof DataType) {

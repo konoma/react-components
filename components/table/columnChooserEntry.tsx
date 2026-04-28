@@ -6,7 +6,7 @@ export default function ColumnChooserEntry<DataType>({
   visibleColumnClasses,
   hiddenColumnClasses,
   updateColumns,
-}: {
+}: Readonly<{
   title: string
   id: keyof DataType
   entryClasses: string
@@ -14,7 +14,7 @@ export default function ColumnChooserEntry<DataType>({
   hiddenColumnClasses: string
   visibleColumns: (keyof DataType)[]
   updateColumns: (id: keyof DataType) => void
-}) {
+}>) {
   return (
     <span
       className={[entryClasses, visibleColumns.includes(id) ? visibleColumnClasses : hiddenColumnClasses].join(' ')}

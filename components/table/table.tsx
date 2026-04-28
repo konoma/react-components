@@ -21,7 +21,7 @@ export interface TableColumn<DataType> extends TableColumnBase {
   id: keyof DataType
   initialWidth?: string | number
   hidden?: boolean
-  sorting?: '+' | '-' | undefined
+  sorting?: '+' | '-'
   // Mutually exclusive with onClick
   sortKey?: string
   filterKey?: string
@@ -150,7 +150,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   toPage = () => {
 
   },
-}: {
+}: Readonly<{
   wrapperClasses?: string
   tableClasses?: string
   rowClasses?: string
@@ -223,7 +223,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   onUpdateColumnsLeft?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
   onUpdateColumnsCenter?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
   onUpdateColumnsRight?: (columns: TableColumn<DataType>[], updateMeta?: boolean) => void
-}) {
+}>) {
   const { locale } = use(I18nContext);
 
   const hasFilters = !!(
@@ -249,9 +249,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
       return;
     }
     const columnIndex
-      = currentColumnsLeft.findIndex(col => col.filterKey === triggeredFilter) >= 0
+      = currentColumnsLeft.some(col => col.filterKey === triggeredFilter)
         ? currentColumnsLeft.findIndex(col => col.filterKey === triggeredFilter)
-        : currentColumnsCenter.findIndex(col => col.filterKey === triggeredFilter) >= 0
+        : currentColumnsCenter.some(col => col.filterKey === triggeredFilter)
           ? currentColumnsLeft.length + currentColumnsCenter.findIndex(col => col.filterKey === triggeredFilter)
           : currentColumnsLeft.length
             + currentColumnsCenter.length
@@ -296,15 +296,13 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   data-testid={`${name}-table-header-left-${column.id.toString()}`}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                    maxWidth: column.grow ? undefined : column.initialWidth,
                   }}
                   onClick={() => {
                     return (
                       column.sortKey
                       && onSort(
-                        Object.assign({}, column, {
-                          sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
-                        }),
+                        { ...column, sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+' },
                       )
                     );
                   }}
@@ -395,7 +393,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               key={column.id.toString()}
               style={{
                 minWidth: column.initialWidth,
-                maxWidth: !column.grow ? column.initialWidth : undefined,
+                maxWidth: column.grow ? undefined : column.initialWidth,
               }}
               data-testid={`${name}-table-header-center-${column.id.toString()}`}
               className={[
@@ -408,9 +406,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 return (
                   column.sortKey
                   && onSort(
-                    Object.assign({}, column, {
-                      sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+',
-                    }),
+                    { ...column, sorting: column.sorting ? ({ '+': '-', '-': undefined }[column.sorting] as '+' | '-' | undefined) : '+' },
                   )
                 );
               }}
@@ -496,7 +492,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   key={column.id.toString()}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                    maxWidth: column.grow ? undefined : column.initialWidth,
                   }}
                   data-testid={`${name}-table-header-right-${column.id.toString()}`}
                   className="bg-krc-table-header last:rounded-tr-krc-table flex h-full flex-row items-start justify-end truncate px-4 py-3 text-xs font-medium"
@@ -637,7 +633,7 @@ function Row<DataType>({
   allowReorder,
   detailsRow,
   name,
-}: {
+}: Readonly<{
   index: number
   entry: DataType
   onDragRow: (dragIndex: number, hoverIndex: number) => void
@@ -660,7 +656,7 @@ function Row<DataType>({
   allowReorder?: boolean
   detailsRow?: (data: DataType) => ReactNode | DataType[]
   name: string
-}) {
+}>) {
   const dragRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
 
@@ -793,7 +789,7 @@ function Row<DataType>({
                   key={column.id.toString()}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                    maxWidth: column.grow ? undefined : column.initialWidth,
                   }}
                   className={[rowLeftWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                   title={(entry[column.id] as string) || ''}
@@ -812,7 +808,7 @@ function Row<DataType>({
               key={column.id.toString()}
               style={{
                 minWidth: column.initialWidth,
-                maxWidth: !column.grow ? column.initialWidth : undefined,
+                maxWidth: column.grow ? undefined : column.initialWidth,
               }}
               className={[rowCenterWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
               title={entry[column.id] ? (entry[column.id] as string).toString() : ''}
@@ -831,7 +827,7 @@ function Row<DataType>({
                   key={column.id.toString()}
                   style={{
                     minWidth: column.initialWidth,
-                    maxWidth: !column.grow ? column.initialWidth : undefined,
+                    maxWidth: column.grow ? undefined : column.initialWidth,
                   }}
                   className={[rowRightWrapperClasses, column.grow ? 'grow' : ''].join(' ')}
                   title={(entry[column.id] as string) || ''}

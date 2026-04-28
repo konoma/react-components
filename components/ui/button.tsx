@@ -51,7 +51,7 @@ export default function Button({
   name,
   dataTestId,
   onClick,
-}: {
+}: Readonly<{
   classesBase?: string
   classesPrimary?: string
   classesSecondary?: string
@@ -79,7 +79,7 @@ export default function Button({
   name?: string
   dataTestId?: string
   onClick?: (e: MouseEvent) => Promise<void> | void
-}) {
+}>) {
   const classes = [classesBase, className];
   const loadingClasses = [loadingClassesBase];
   switch (variant) {

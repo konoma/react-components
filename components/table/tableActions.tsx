@@ -21,13 +21,13 @@ export default function TableActions({
   floatingWrapperClasses = 'flex w-48 flex-col rounded-md border border-secondary-200 bg-white py-2 text-sm font-medium shadow-sm z-1',
   showActionsIconName,
   showActionsIconPath,
-}: {
+}: Readonly<{
   children: React.ReactNode
   classes?: string
   floatingWrapperClasses?: string
   showActionsIconName?: string
   showActionsIconPath?: string
-}) {
+}>) {
   const [actionsVisible, setActionsVisible] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open: actionsVisible,
@@ -68,13 +68,13 @@ export function TableActionEntry({
   defaultClasses = 'cursor-pointer px-4 py-2 text-secondary-900 hover:bg-primary-100',
   variant = 'default',
   onClick,
-}: {
+}: Readonly<{
   content: string | ReactNode
   errorClasses?: string
   defaultClasses?: string
   variant?: TableActionVariant
   onClick: () => void
-}) {
+}>) {
   switch (variant) {
     case 'error':
       return (

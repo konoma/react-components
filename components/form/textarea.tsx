@@ -55,7 +55,7 @@ export default function Textarea<DataType>({
 
   },
   ...props
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const [height] = useState(initialHeight);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const classesFull = [];
@@ -74,7 +74,7 @@ export default function Textarea<DataType>({
         return t;
       }
       Object.entries(replacements).forEach(([key, value]) => {
-        t = t.replace(new RegExp(`{${key}}`, 'g'), value);
+        t = t.replaceAll(new RegExp(`{${key}}`, 'g'), value);
       });
     }
     return t;

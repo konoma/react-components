@@ -23,7 +23,7 @@ export default function Modal({
   closeIconName,
   closeIconPath,
   onClose,
-}: {
+}: Readonly<{
   backdropClasses?: string
   contentClasses?: string
   headerWrapperClasses?: string
@@ -45,7 +45,7 @@ export default function Modal({
   closeIconName?: string
   closeIconPath?: string
   onClose: () => void
-}) {
+}>) {
   return (
     <>
       {createPortal(
@@ -76,28 +76,26 @@ export default function Modal({
             <div className="grow">{children}</div>
             {footerContent
               || (footerActions && (
-                <>
-                  <div className={footerWrapperClasses}>
-                    <div className={footerLeftClasses}>
-                      {footerActions
-                        .filter(({ position }) => position === 'left')
-                        .map(({ label, variant, onClick }) => (
-                          <div key={label + variant}>
-                            <Button variant={variant ?? 'primary'} onClick={onClick} label={label} />
-                          </div>
-                        ))}
-                    </div>
-                    <div className={footerRightClasses}>
-                      {footerActions
-                        .filter(({ position }) => position === 'right')
-                        .map(({ variant, label, ...buttonProps }) => (
-                          <div key={label + variant}>
-                            <Button variant={variant ?? 'secondary'} {...buttonProps} label={label} />
-                          </div>
-                        ))}
-                    </div>
+                <div className={footerWrapperClasses}>
+                  <div className={footerLeftClasses}>
+                    {footerActions
+                      .filter(({ position }) => position === 'left')
+                      .map(({ label, variant, onClick }) => (
+                        <div key={label + variant}>
+                          <Button variant={variant ?? 'primary'} onClick={onClick} label={label} />
+                        </div>
+                      ))}
                   </div>
-                </>
+                  <div className={footerRightClasses}>
+                    {footerActions
+                      .filter(({ position }) => position === 'right')
+                      .map(({ variant, label, ...buttonProps }) => (
+                        <div key={label + variant}>
+                          <Button variant={variant ?? 'secondary'} {...buttonProps} label={label} />
+                        </div>
+                      ))}
+                  </div>
+                </div>
               ))}
           </div>
         </div>,

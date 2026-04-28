@@ -13,7 +13,7 @@ export default function Form<DataType>({
 
   },
   onSubmit,
-}: {
+}: Readonly<{
   formRef?: Ref<HTMLFormElement>
   children: ReactNode
   className?: string
@@ -22,7 +22,7 @@ export default function Form<DataType>({
   validators: Record<keyof DataType, ((value: string | number | boolean | null) => string)[]>
   onValidation?: (errors: Record<keyof DataType, string[]>, triggeredBySubmit?: boolean) => void
   onSubmit: () => Promise<void>
-}) {
+}>) {
   const [errors, setErrors] = useState<Record<string, string[]>>({} as Record<string, string[]>);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
@@ -43,7 +43,7 @@ export default function Form<DataType>({
             }
             return validation;
           })
-          .filter(v => v);
+          .filter(Boolean);
       });
       setErrors(newErrors);
       onValidation(newErrors, triggeredBySubmit);
@@ -62,7 +62,7 @@ export default function Form<DataType>({
     }
   }, [validate, submitAttempted]);
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
+  async function submit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const invalid = await validate(true);
 

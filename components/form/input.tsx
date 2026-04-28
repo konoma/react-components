@@ -71,7 +71,7 @@ export default function Input<DataType>({
 
   },
   ...props
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const classesFull = [controlClasses];
   if (iconLeftPath || iconLeftName) {
     classesFull.push(additionalClassesIconLeft);
@@ -154,7 +154,7 @@ export default function Input<DataType>({
                 data-testid={dataTestId}
                 // We do not want to use a fallback to an empty string here, as it would always overwrite the defaultValue
                 value={value?.toString()}
-                defaultValue={defaultValue?.toString() !== undefined ? defaultValue?.toString() : ''}
+                defaultValue={defaultValue?.toString() === undefined ? '' : defaultValue?.toString()}
                 onInput={(e) => {
                   onChange(e.currentTarget.value);
                 }}

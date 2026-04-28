@@ -28,7 +28,7 @@ export default function Tag({
   onClickIconRight = () => {
 
   },
-}: {
+}: Readonly<{
   wrapperClasses?: string
   titleClasses?: string
   iconLeftClasses?: string
@@ -42,7 +42,7 @@ export default function Tag({
   onClick?: () => void
   onClickIconLeft?: () => void
   onClickIconRight?: () => void
-}) {
+}>) {
   return (
     <div className={wrapperClasses} onClick={onClick} data-testid={dataTestId}>
       {(iconLeftPath || iconLeftName) && (

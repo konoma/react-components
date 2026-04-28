@@ -38,7 +38,7 @@ export default function TagList<DataType>({
 
   },
   className = '',
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const classesFull = [classes];
   if (error && error.length > 0) {
     classesFull.push(classesError);

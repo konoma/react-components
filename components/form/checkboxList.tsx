@@ -28,7 +28,7 @@ export default function CheckboxList<DataType>({
   onChange = () => {
 
   },
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   return (
     <div className={[wrapperClasses, positionClasses[labelPosition]].join(' ')}>
       <span className={labelClasses}>

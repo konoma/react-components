@@ -56,7 +56,7 @@ export default function Pagination({
   toPage = () => {
 
   },
-}: {
+}: Readonly<{
   currentLoaded: number
   currentStart: number
   currentEnd: number
@@ -85,7 +85,7 @@ export default function Pagination({
   onNextPage?: () => void
   onLastPage?: () => void
   toPage?: (page: number) => void
-}) {
+}>) {
   const previousPageActive = currentPage !== 1;
   const nextPageActive = currentPage !== totalPages;
 
@@ -96,10 +96,8 @@ export default function Pagination({
   }, [currentPage]);
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    switch (event.key) {
-      case 'Enter':
-        toPage(pageInternal);
-        break;
+    if (event.key === 'Enter') {
+      toPage(pageInternal);
     }
   }
   if (showButtons) {

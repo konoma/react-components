@@ -72,19 +72,19 @@ export default function Select<DataType>({
 
   },
   ...props
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const { locale } = use(I18nContext);
 
   const classesFull = [classes, className];
   const optionsInternal = options
     .filter(o => !!o.value && o.value !== CUSTOM_ENTRY_VALUE)
     .concat(
-      !allowCustomValues
-        ? []
-        : [
+      allowCustomValues
+        ? [
             { value: '', label: customValueLabel },
             { value: CUSTOM_ENTRY_VALUE, label: '' },
-          ],
+          ]
+        : [],
     );
   if (error && error.length > 0) {
     classesFull.push(classesError);
@@ -96,10 +96,10 @@ export default function Select<DataType>({
   if (isMulti) {
     defaultOption = defaultValue
       ? optionsInternal.filter((option) => {
-          if (!Array.isArray(defaultValue)) {
-            return option.value === defaultValue;
-          } else {
+          if (Array.isArray(defaultValue)) {
             return defaultValue.find(dv => dv === option.value);
+          } else {
+            return option.value === defaultValue;
           }
         })
       : null;

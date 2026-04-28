@@ -45,7 +45,7 @@ export default function Checkbox<DataType>({
   error,
   dataTestId,
   ...props
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (indeterminate && ref.current) {

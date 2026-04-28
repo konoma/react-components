@@ -10,7 +10,7 @@ import dts from 'vite-plugin-dts';
 import packageJson from './package.json' with { type: 'json' };
 
 async function app(): Promise<UserConfigExport> {
-  const formattedName = packageJson.name.match(/[^/]+$/)?.[0] ?? packageJson.name;
+  const formattedName = /[^/]+$/.exec(packageJson.name)?.[0] ?? packageJson.name;
 
   return defineConfig({
     plugins: [
@@ -33,7 +33,7 @@ async function app(): Promise<UserConfigExport> {
       },
       rolldownOptions: {
         // external: [...Object.keys(peerDependencies)],
-        external: ['react/jsx-runtime', '@emotion/react', '@emotion/styled', 'react', 'react-dom'],
+        external: ['react/jsx-runtime', '@emotion/react', '@emotion/styled', 'react-dom'],
         output: {
           minify: false,
           globals: {

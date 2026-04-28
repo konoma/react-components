@@ -15,6 +15,13 @@ interface Tab<DataType> {
   count: number
 }
 
+function equalTabs<DataType>(tab1: DataType, tab2: DataType) {
+  if (Array.isArray(tab1) && Array.isArray(tab2)) {
+    return tab1.length === tab2.length && tab1.every((value, index) => value === tab2[index]);
+  }
+  return tab1 === tab2;
+}
+
 export default function Tabs<DataType>({
   wrapperClasses = baseClasses.wrapperClasses,
   tabActiveClasses = baseClasses.tabActiveClasses,
@@ -29,7 +36,7 @@ export default function Tabs<DataType>({
   active,
   dataTestId = '',
   onClick,
-}: {
+}: Readonly<{
   wrapperClasses?: string
   tabActiveClasses?: string
   tabInactiveClasses?: string
@@ -43,13 +50,7 @@ export default function Tabs<DataType>({
   active: DataType
   dataTestId?: string
   onClick: (tab: DataType) => void
-}) {
-  function equalTabs<DataType>(tab1: DataType, tab2: DataType) {
-    if (Array.isArray(tab1) && Array.isArray(tab2)) {
-      return tab1.length === tab2.length && tab1.every((value, index) => value === tab2[index]);
-    }
-    return tab1 === tab2;
-  }
+}>) {
   return (
     <div className={wrapperClasses}>
       {tabs.map((tab, i) => (

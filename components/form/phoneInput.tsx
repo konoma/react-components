@@ -96,7 +96,7 @@ export default function PhoneInput<DataType>({
 
   },
   ...props
-}: FormFieldProps<DataType>) {
+}: Readonly<FormFieldProps<DataType>>) {
   const classesFull = [classes];
   if (iconLeftPath || iconLeftName) {
     classesFull.push(additionalClassesIconLeft);
@@ -140,10 +140,10 @@ export default function PhoneInput<DataType>({
 
   const onChangeInternal = useCallback(
     (newValue = internalValue, newCountryCode = countryCode) => {
-      if (!newValue.startsWith(' ')) {
-        onChange(`${newCountryCode.value} ${newValue}`);
-      } else {
+      if (newValue.startsWith(' ')) {
         onChange(newCountryCode.value + newValue);
+      } else {
+        onChange(`${newCountryCode.value} ${newValue}`);
       }
     },
     [countryCode, internalValue, onChange],

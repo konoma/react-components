@@ -44,7 +44,7 @@ export default function FormField<DataType>({
       onChange={(v: FormValue | FormValue[], e?: React.ChangeEvent) => {
         if (typeof v === 'string') {
           // replace non-breaking spaces with regular spaces
-          v = v.replace(/\u00A0/g, ' ');
+          v = v.replaceAll('\u00A0', ' ');
         }
         onChange(v, e);
       }}
