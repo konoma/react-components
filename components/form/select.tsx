@@ -9,7 +9,7 @@ const CUSTOM_ENTRY_VALUE = 'CUSTOM_ENTRY_VALUE';
 
 const baseClasses: { [key in keyof Classes]: string } = {
   classes: 'rounded-krc-select h-10 py-0 border shadow-none',
-  errorClasses: 'text-sm text-error-500 -mt-4',
+  errorClasses: 'text-sm text-error-500',
   labelClasses: 'text-sm font-medium text-secondary-900',
   labelWrapperClasses: 'group flex flex-col gap-1',
   classesNeutral: 'border-secondary-300 group-hover:border-secondary-400',
@@ -110,7 +110,7 @@ export default function Select<DataType>({
   }
   const Component = allowCustomValues ? CreatableSelect : ReactSelect;
   return (
-    <>
+    <div className="flex flex-col gap-1">
       <label className={labelWrapperClasses}>
         {label && (
           <span className={labelClasses}>
@@ -217,6 +217,6 @@ export default function Select<DataType>({
             {e}
           </span>
         ))}
-    </>
+    </div>
   );
 }

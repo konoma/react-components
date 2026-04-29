@@ -12,7 +12,7 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   iconLeftClasses: 'absolute bottom-0 left-3 top-0 my-auto h-5 w-5 text-secondary-300',
   iconRightClasses: 'h-5 w-5',
   wrapperRightClasses: 'absolute right-3 top-0 my-auto flex flex-row items-center gap-2 text-secondary-300 text-sm h-10',
-  errorClasses: 'text-sm text-error-500 -mt-4',
+  errorClasses: 'text-sm text-error-500',
   classesError: 'ring-error-500 ring-2',
   classesNeutral:
     'border-secondary-300 border focus:not-disabled:ring-2 hover:not-disabled:border-secondary-400 focus:not-disabled:ring-primary-900',
