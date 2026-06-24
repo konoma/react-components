@@ -56,7 +56,7 @@ export default function Tabs<DataType>({
       {tabs.map((tab, i) => (
         <div
           data-testid={dataTestId + i}
-          key={(tab.id + tab.label) || i}
+          key={(tab.id + tab.label)}
           onClick={() => {
             onClick(tab.id);
           }}

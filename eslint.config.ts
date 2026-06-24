@@ -3,6 +3,7 @@ import antfu from '@antfu/eslint-config';
 export default antfu({
   react: true,
   nextjs: true,
+  isInEditor: false,
   rules: {
     'style/semi': 'off',
     'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
