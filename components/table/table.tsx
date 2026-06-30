@@ -112,7 +112,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingDescIconPath,
   removeFilterIconName,
   removeFilterIconPath,
+  detailsRowOpenIconName,
+  detailsRowOpenIconPath,
+  detailsRowCloseIconName,
+  detailsRowCloseIconPath,
+  sortingNeutralIconName,
+  sortingNeutralIconPath,
   triggeredFilter,
+  isRowSelectable,
   setTriggeredFilter,
   onDragRow = () => {
 
@@ -206,7 +213,14 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
   sortingDescIconPath?: string
   removeFilterIconName?: string
   removeFilterIconPath?: string
+  detailsRowOpenIconName?: string
+  detailsRowOpenIconPath?: string
+  detailsRowCloseIconName?: string
+  detailsRowCloseIconPath?: string
+  sortingNeutralIconName?: string
+  sortingNeutralIconPath?: string
   triggeredFilter?: string
+  isRowSelectable?: boolean
   setTriggeredFilter?: (filterId: string) => void
   onDragRow?: (dragIndex: number, hoverIndex: number) => void
   onDropRow?: (dragIndex: number, hoverIndex: number) => void
@@ -327,9 +341,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                                   '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
                                   '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                                 }[column.sorting]
-                              : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
+                              : sortingNeutralIconName || 'heroicons:chevron-up-down-16-solid'
                           }
-                          path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
+                          path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : sortingNeutralIconPath}
                         />
                       </div>
                     )}
@@ -377,7 +391,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               }}
                               isClearable
                               classes="h-10 relative"
-                              iconRightName={filters[column.filterKey] ? 'heroicons:x-mark' : ''}
+                              iconRightName={filters[column.filterKey] ? removeFilterIconName || 'heroicons:x-mark' : ''}
+                              iconRightPath={filters[column.filterKey] ? removeFilterIconPath : ''}
                             />
                           )}
                         </>
@@ -425,9 +440,9 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               '+': sortingAscIconName || 'heroicons:chevron-down-16-solid',
                               '-': sortingDescIconName || 'heroicons:chevron-up-16-solid',
                             }[column.sorting]
-                          : sortingDescIconName || 'heroicons:chevron-up-down-16-solid'
+                          : sortingNeutralIconName || 'heroicons:chevron-up-down-16-solid'
                       }
-                      path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : undefined}
+                      path={column.sorting ? (column.sorting === '+' ? sortingAscIconPath : sortingDescIconPath) : sortingNeutralIconPath}
                     />
                   </div>
                 )}
@@ -525,7 +540,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       header={headerRef}
                       onRowClick={onRowClick}
                       onRowDoubleClick={onRowDoubleClick}
-                      rowClasses={rowClasses}
+                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses].join(' ')}
                       rowLeftWrapperClasses={rowLeftWrapperClasses}
                       rowCenterWrapperClasses={rowCenterWrapperClasses}
                       rowRightWrapperClasses={rowRightWrapperClasses}
@@ -533,6 +548,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       subRowLeftWrapperClasses={subRowLeftWrapperClasses}
                       subRowCenterWrapperClasses={subRowCenterWrapperClasses}
                       subRowRightWrapperClasses={subRowRightWrapperClasses}
+                      detailsRowCloseIconName={detailsRowCloseIconName}
+                      detailsRowOpenIconName={detailsRowOpenIconName}
+                      detailsRowCloseIconPath={detailsRowCloseIconPath}
+                      detailsRowOpenIconPath={detailsRowOpenIconPath}
                       detailsRow={detailsRow}
                     />
                   );
@@ -558,7 +577,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       header={headerRef}
                       onRowClick={onRowClick}
                       onRowDoubleClick={onRowDoubleClick}
-                      rowClasses={rowClasses}
+                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses].join(' ')}
                       rowLeftWrapperClasses={rowLeftWrapperClasses}
                       rowCenterWrapperClasses={rowCenterWrapperClasses}
                       rowRightWrapperClasses={rowRightWrapperClasses}
@@ -566,6 +585,10 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       subRowLeftWrapperClasses={subRowLeftWrapperClasses}
                       subRowCenterWrapperClasses={subRowCenterWrapperClasses}
                       subRowRightWrapperClasses={subRowRightWrapperClasses}
+                      detailsRowCloseIconName={detailsRowCloseIconName}
+                      detailsRowOpenIconName={detailsRowOpenIconName}
+                      detailsRowCloseIconPath={detailsRowCloseIconPath}
+                      detailsRowOpenIconPath={detailsRowOpenIconPath}
                       detailsRow={detailsRow}
                     />
                   );
@@ -630,6 +653,10 @@ function Row<DataType>({
   subRowLeftWrapperClasses,
   subRowCenterWrapperClasses,
   subRowRightWrapperClasses,
+  detailsRowOpenIconName,
+  detailsRowOpenIconPath,
+  detailsRowCloseIconName,
+  detailsRowCloseIconPath,
   allowReorder,
   detailsRow,
   name,
@@ -653,6 +680,10 @@ function Row<DataType>({
   subRowLeftWrapperClasses?: string
   subRowCenterWrapperClasses?: string
   subRowRightWrapperClasses?: string
+  detailsRowOpenIconName?: string
+  detailsRowOpenIconPath?: string
+  detailsRowCloseIconName?: string
+  detailsRowCloseIconPath?: string
   allowReorder?: boolean
   detailsRow?: (data: DataType) => ReactNode | DataType[]
   name: string
@@ -778,7 +809,11 @@ function Row<DataType>({
                       setDetailsOpen(!detailsOpen);
                     }}
                   >
-                    <Icon name={detailsOpen ? 'heroicons:chevron-down' : 'heroicons:chevron-right'} className="h-5 w-5" />
+                    <Icon
+                      name={detailsOpen ? (detailsRowOpenIconName || 'heroicons:chevron-down') : (detailsRowCloseIconName || 'heroicons:chevron-right')}
+                      className="h-5 w-5"
+                      path={detailsOpen ? detailsRowOpenIconPath : detailsRowCloseIconPath}
+                    />
                   </button>
                 )}
               </div>
@@ -871,6 +906,10 @@ function Row<DataType>({
                     rowLeftWrapperClasses={subRowLeftWrapperClasses || rowLeftWrapperClasses}
                     rowCenterWrapperClasses={subRowCenterWrapperClasses || rowCenterWrapperClasses}
                     rowRightWrapperClasses={subRowRightWrapperClasses || rowRightWrapperClasses}
+                    detailsRowCloseIconName={detailsRowCloseIconName}
+                    detailsRowOpenIconName={detailsRowOpenIconName}
+                    detailsRowCloseIconPath={detailsRowCloseIconPath}
+                    detailsRowOpenIconPath={detailsRowOpenIconPath}
                     detailsRow={() => undefined}
                   />
                 </div>

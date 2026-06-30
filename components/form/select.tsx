@@ -169,7 +169,7 @@ export default function Select<DataType>({
             singleValue: () => valueClasses || '',
             placeholder: () => placeholderClasses || '',
             dropdownIndicator: () => indicatorClasses || '',
-            menuPortal: () => 'z-20',
+            menuPortal: () => 'z-20!',
             indicatorsContainer: () => (disabled ? 'hidden' : ''),
           }}
           isClearable={isClearable}
