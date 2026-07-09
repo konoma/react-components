@@ -563,7 +563,8 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                 {data.map((entry, i) => {
                   return (
                     <Row<DataType>
-                      key={entry.index}
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={i}
                       index={i}
                       name={name}
                       entry={entry}
