@@ -803,7 +803,7 @@ function Row<DataType>({
               <div className={['flex items-center justify-center w-12', rowLeftWrapperClasses].join(' ')}>
                 {detailsRow?.(entry) && (
                   <button
-                    className="w-8 cursor-pointer"
+                    className="w-8 cursor-pointer flex flex-row items-center justify-center"
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
