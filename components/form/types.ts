@@ -70,6 +70,7 @@ export interface Classes {
   placeholderClasses?: string
   indicatorClasses?: string
   valueContainerClasses?: string
+  loadingClassesBase?: string
 }
 
 export interface Icons {
@@ -135,6 +136,7 @@ export interface FormFieldProps<DataType> extends Classes, Icons {
   isMulti?: boolean
   /** [select only] Default placement of the menu in relation to the control. 'auto' will flip when there isn't enough space below the control. */
   menuPlacement?: 'auto' | 'top' | 'bottom'
+  loading?: boolean
   allowNew?: boolean
   allowDelete?: boolean
   valueTransformer?: (value: FormValue) => FormValue

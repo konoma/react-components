@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 
 import { IMaskInput } from 'react-imask';
 import Icon from '../ui/icon.tsx';
+import LoadingIndicator from '../ui/loadingIndicator.tsx';
 
 const baseClasses: { [key in keyof Classes]?: string } = {
   controlClasses:
@@ -19,6 +20,7 @@ const baseClasses: { [key in keyof Classes]?: string } = {
   additionalClassesIconLeft: 'pl-10',
   additionalClassesIconRight: 'pr-12',
   classes: 'relative h-14',
+  loadingClassesBase: 'h-6 w-6 absolute top-2 right-2.5 animate-spin text-primary-600 fill-white',
 };
 
 export default function Input<DataType>({
@@ -34,6 +36,7 @@ export default function Input<DataType>({
   additionalClassesIconLeft = baseClasses.additionalClassesIconLeft,
   additionalClassesIconRight = baseClasses.additionalClassesIconRight,
   wrapperRightClasses = baseClasses.wrapperRightClasses,
+  loadingClassesBase = baseClasses.loadingClassesBase,
   label,
   iconLeftPath,
   iconLeftName,
@@ -44,6 +47,7 @@ export default function Input<DataType>({
   error,
   step,
   required,
+  loading,
   name,
   value,
   mask,
@@ -88,6 +92,8 @@ export default function Input<DataType>({
     classesFull.push(classesNeutral);
   }
   classesFull.push(className);
+
+  const loadingClasses = [loadingClassesBase];
 
   const ref = useRef<HTMLInputElement>(null);
 
@@ -184,6 +190,7 @@ export default function Input<DataType>({
               </div>
             )
           : null}
+        {loading && <LoadingIndicator className={loadingClasses.join(' ')} />}
       </div>
       {error
         && error.length > 0

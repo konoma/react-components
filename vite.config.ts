@@ -26,7 +26,7 @@ async function app(): Promise<UserConfigExport> {
     ],
     build: {
       lib: {
-        entry: path.resolve(__dirname, 'main.ts'),
+        entry: path.resolve(import.meta.dirname, 'main.ts'),
         name: formattedName,
         formats: ['es'],
         fileName: `@konoma-development/react-components`,
