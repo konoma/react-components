@@ -328,9 +328,18 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                   ].join(' ')}
                 >
                   <div className="flex w-full flex-row items-center justify-between gap-2 truncate">
-                    <span className="truncate" title={typeof column.title === 'string' ? column.title : undefined}>
-                      {column.title}
-                    </span>
+
+                    {typeof column.title === 'string'
+                      ? (
+                          <span className="truncate" title={column.title}>
+                            {column.title}
+                          </span>
+                        )
+                      : (
+                          <>
+                            {column.title}
+                          </>
+                        )}
                     {column.sortKey && (
                       <div>
                         <Icon
@@ -427,9 +436,17 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
               }}
             >
               <div className="flex w-full flex-row items-center justify-between gap-2 truncate">
-                <span className="truncate" title={typeof column.title === 'string' ? column.title : undefined}>
-                  {column.title}
-                </span>
+                {typeof column.title === 'string'
+                  ? (
+                      <span className="truncate" title={column.title}>
+                        {column.title}
+                      </span>
+                    )
+                  : (
+                      <>
+                        {column.title}
+                      </>
+                    )}
                 {column.sortKey && (
                   <div>
                     <Icon
