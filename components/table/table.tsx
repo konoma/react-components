@@ -385,7 +385,6 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                               await updateFilters(newFilters, '');
                             }
                           }}
-                          isClearable
                           classes="h-10 relative"
                           iconRightName={filters[column.filterKey] ? removeFilterIconName || 'heroicons:x-mark' : ''}
                           iconRightPath={filters[column.filterKey] ? removeFilterIconPath : ''}

@@ -2,7 +2,7 @@ import type { ExtendedRefs, FloatingContext } from '@floating-ui/react';
 import type { TableColumn } from './table.tsx';
 
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ColumnChooserEntry from './columnChooserEntry.tsx';
@@ -51,6 +51,10 @@ export default function ColumnChooser<DataType>({
 
   const [orderedColumnsPreview, setOrderedColumnsPreview] = useState<TableColumn<DataType>[]>(columns);
 
+  useEffect(() => {
+    setOrderedColumnsPreview(columns);
+  }, [columns])
+
   function update(id: keyof DataType) {
     const columnToUpdate = columns.find(column => column.id === id);
     if (!columnToUpdate) {
@@ -72,9 +76,15 @@ export default function ColumnChooser<DataType>({
     const updatedColumns = [...orderedColumnsPreview];
     const [draggedColumn] = updatedColumns.splice(dragIndex, 1);
     updatedColumns.splice(hoverIndex, 0, draggedColumn);
-    setOrderedColumnsPreview(updatedColumns);
+    // setOrderedColumnsPreview(updatedColumns);
     updateOrder(updatedColumns);
   };
+
+  const columnOrder = useMemo(() => {
+    return columns.reduce((prev, curr) => {
+      return prev += curr.id.toString();
+    }, '')
+  }, [columns])
 
   return (
     <div>
@@ -88,7 +98,7 @@ export default function ColumnChooser<DataType>({
                   .filter(c => c.title && !c.hideFromChooser)
                   .map((col, i) => (
                     <ColumnChooserEntry
-                      key={col.id.toString() ?? col.id}
+                      key={columnOrder + col.id.toString()}
                       id={col.id}
                       index={i}
                       title={col.title as string}
