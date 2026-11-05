@@ -47,16 +47,20 @@ export default function ColumnChooser<DataType>({
   updateOrder: (columns: TableColumn<DataType>[]) => void
   getFloatingProps: () => Record<string, unknown>
 }>) {
-  const visibleColumns = columns.filter(column => !column.hidden).map(column => column.id);
+  const relevantColumns = useMemo(() => {
+    return columns.filter(c => c.title && !c.hideFromChooser);
+  }, [columns]);
 
-  const [orderedColumnsPreview, setOrderedColumnsPreview] = useState<TableColumn<DataType>[]>(columns);
+  const visibleColumns = relevantColumns.filter(column => !column.hidden).map(column => column.id);
+
+  const [orderedColumnsPreview, setOrderedColumnsPreview] = useState<TableColumn<DataType>[]>(relevantColumns);
 
   useEffect(() => {
-    setOrderedColumnsPreview(columns);
-  }, [columns])
+    setOrderedColumnsPreview(relevantColumns);
+  }, [columns, relevantColumns])
 
   function update(id: keyof DataType) {
-    const columnToUpdate = columns.find(column => column.id === id);
+    const columnToUpdate = relevantColumns.find(column => column.id === id);
     if (!columnToUpdate) {
       return;
     }
@@ -76,7 +80,6 @@ export default function ColumnChooser<DataType>({
     const updatedColumns = [...orderedColumnsPreview];
     const [draggedColumn] = updatedColumns.splice(dragIndex, 1);
     updatedColumns.splice(hoverIndex, 0, draggedColumn);
-    // setOrderedColumnsPreview(updatedColumns);
     updateOrder(updatedColumns);
   };
 
@@ -95,7 +98,6 @@ export default function ColumnChooser<DataType>({
             <div className={columnsWrapperClasses}>
               <DndProvider backend={HTML5Backend} debugMode>
                 {orderedColumnsPreview
-                  .filter(c => c.title && !c.hideFromChooser)
                   .map((col, i) => (
                     <ColumnChooserEntry
                       key={columnOrder + col.id.toString()}
