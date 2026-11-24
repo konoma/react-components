@@ -54,7 +54,7 @@ const baseClasses = {
   columnsClasses: 'flex grow flex-row h-fit overflow-x-auto first:rounded-tl-krc-table last:rounded-tr-krc-table',
   auxColumnsClasses: 'flex flex-row h-fit overflow-x-auto border-l first:rounded-tl-krc-table last:rounded-tr-krc-table',
   noDataClasses: 'flex h-16 items-center justify-start pl-16 rounded-b-krc-table bg-white text-secondary-500 w-full text-sm',
-  rowClasses: 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100 h-fit',
+  rowClasses: () => 'group relative flex flex-row justify-between bg-white last:rounded-b-krc-table hover:bg-primary-100 h-fit',
   subRowClasses: 'group relative flex flex-row justify-between bg-base-200 last:rounded-b-krc-table hover:bg-primary-100 h-fit',
   rowWrapperClasses: 'bg-white first:grow group-hover:bg-primary-100 h-fit',
   rowAuxWrapperClasses: 'bg-white group-hover:bg-primary-100 h-fit',
@@ -154,7 +154,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
 }: Readonly<{
   wrapperClasses?: string
   tableClasses?: string
-  rowClasses?: string
+  rowClasses?: ((data: DataType) => string)
   rowWrapperClasses?: string
   rowAuxWrapperClasses?: string
   subRowClasses?: string
@@ -435,7 +435,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       header={headerRef}
                       onRowClick={onRowClick}
                       onRowDoubleClick={onRowDoubleClick}
-                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses].join(' ')}
+                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses(entry)].join(' ')}
                       rowWrapperClasses={rowWrapperClasses}
                       rowAuxWrapperClasses={rowAuxWrapperClasses}
                       subRowClasses={subRowClasses}
@@ -470,7 +470,7 @@ export default function Table<DataType extends { dragRef?: React.RefObject<HTMLD
                       header={headerRef}
                       onRowClick={onRowClick}
                       onRowDoubleClick={onRowDoubleClick}
-                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses].join(' ')}
+                      rowClasses={[isRowSelectable && 'cursor-pointer', rowClasses(entry)].join(' ')}
                       rowWrapperClasses={rowWrapperClasses}
                       rowAuxWrapperClasses={rowAuxWrapperClasses}
                       subRowClasses={subRowClasses}
